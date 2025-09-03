@@ -4,7 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Buat Subdomain - Rikishopreal</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="data/domain.css">
 </head>
@@ -19,10 +21,13 @@
                     <h2>Layanan Subdomain</h2>
                     <p>Masukkan API Key Anda untuk melanjutkan.</p>
                 </div>
-                <div class="password-input-container">
+                <div class="input-container">
+                    <i class="fas fa-key icon"></i>
                     <input type="text" id="apikey-input" placeholder="Masukkan API Key...">
                 </div>
-                <button type="button" id="apikey-submit-btn">Verifikasi</button>
+                <div class="button-wrapper">
+                    <button type="button" id="apikey-submit-btn">Verifikasi</button>
+                </div>
                 <div class="apikey-actions">
                     <a href="#" id="buy-apikey-link">Belum punya API Key? Beli di sini</a>
                 </div>
@@ -30,115 +35,144 @@
         </div>
 
         <div id="domain-creator-screen" style="display: none;">
-            <header class="admin-header">
-    <img src="logo.jpg" alt="Rikishopreal" class="profile-pic">
-    <h2>Buat Subdomain</h2>
-    <div class="header-actions"> <div class="theme-switch" id="openPanduanBtn"><i class="fas fa-question-circle"></i></div>
-        <div class="theme-switch" id="themeSwitchBtn"><i class="fas fa-moon"></i></div>
-    </div>
-</header>
+            <header class="main-header">
+                <img src="logo.jpg" alt="Rikishopreal" class="profile-pic-header">
+                <h2>Buat Subdomain</h2>
+                <div class="header-actions">
+                    <button class="icon-btn" id="openPanduanBtn" aria-label="Buka Panduan"><i class="fas fa-question-circle"></i></button>
+                    <button class="icon-btn" id="themeSwitchBtn" aria-label="Ganti Tema"><i class="fas fa-moon"></i></button>
+                </div>
+            </header>
 
-            <form class="admin-form" id="createDomainForm">
-                <label for="subdomain-name">Nama Subdomain:</label>
-                <input type="text" id="subdomain-name" placeholder="contoh: tokosaya">
+            <div class="content-wrapper">
+                <form class="form-card creation-form" id="createDomainForm">
+                    <div class="form-section">
+                        <label for="subdomain-name">Nama Subdomain</label>
+                        <div class="input-container">
+                             <i class="fas fa-pencil-alt icon"></i>
+                            <input type="text" id="subdomain-name" placeholder="contoh: tokosaya">
+                        </div>
+                    </div>
+                    
+                    <div class="form-section">
+                        <label for="root-domain">Pilih Domain Utama</label>
+                        <div class="select-wrapper">
+                            <select id="root-domain"></select>
+                        </div>
+                    </div>
+
+                    <div class="form-section">
+                        <label for="record-type">Tipe Record</label>
+                        <div class="select-wrapper">
+                            <select id="record-type">
+                                <option value="A">A (IP Address)</option>
+                                <option value="CNAME">CNAME (Target)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div id="ip-input-section" class="form-section">
+                        <label for="ip-address">IP Address (VPS/Panel)</label>
+                         <div class="input-container">
+                             <i class="fas fa-map-marker-alt icon"></i>
+                            <input type="text" id="ip-address" placeholder="contoh: 103.123.45.67">
+                        </div>
+                    </div>
+
+                    <div id="cname-input-section" class="form-section" style="display: none;">
+                        <label for="cname-target">Target CNAME</label>
+                        <div class="input-container">
+                            <i class="fas fa-link icon"></i>
+                            <input type="text" id="cname-target" placeholder="contoh: cname.vercel-dns.com">
+                        </div>
+                    </div>
+
+                    <div class="proxy-toggle">
+                        <div class="proxy-label">
+                            <i class="fas fa-cloud"></i>
+                            <span>Status Proxy</span>
+                        </div>
+                        <label class="switch">
+                            <input type="checkbox" id="proxy-status">
+                            <span class="slider round"></span>
+                        </label>
+                    </div>
+                    
+                    <div class="button-wrapper">
+                        <button type="button" id="create-domain-btn">
+                            <i class="fas fa-plus-circle"></i> Buat Domain
+                        </button>
+                    </div>
+                </form>
                 
-<label for="root-domain">Pilih Domain Utama:</label>
-<div class="select-wrapper">
-    <select id="root-domain"></select>
-</div>
-
-                <label for="record-type">Tipe Record:</label>
-                <select id="record-type">
-                    <option value="A">IP Address (Untuk VPS/Panel)</option>
-                    <option value="CNAME">CNAME (Untuk Vercel/Lainnya)</option>
-                </select>
-
-                <div id="ip-input-section">
-                    <label for="ip-address">IP Address VPS/Panel:</label>
-                    <input type="text" id="ip-address" placeholder="contoh: 103.123.45.67">
-                </div>
-
-                <div id="cname-input-section" style="display: none;">
-                    <label for="cname-target">Target CNAME:</label>
-                    <input type="text" id="cname-target" placeholder="contoh: cname.vercel-dns.com">
-                </div>
-
-                <div class="proxy-toggle">
-                    <label for="proxy-status">Status Proxy (Orange Cloud):</label>
-                    <label class="switch">
-                        <input type="checkbox" id="proxy-status" checked>
-                        <span class="slider round"></span>
-                    </label>
-                </div>
-                
-                <button type="button" id="create-domain-btn">Buat Domain</button>
-            </form>
-            
-            <div class="admin-form" style="margin-top: 30px;">
-                <h3><i class="fas fa-history"></i> Riwayat Subdomain Anda</h3>
-                <div id="subdomain-history-container">
-                    <p>Belum ada subdomain yang dibuat.</p>
+                <div class="form-card history-card">
+                    <h3><i class="fas fa-history"></i> Riwayat Subdomain</h3>
+                    <div id="subdomain-history-container">
+                        <p>Belum ada riwayat pembuatan subdomain.</p>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
     <div id="success-popup" class="modal">
-        <div class="modal-content confirm-modal-content">
+        <div class="modal-content">
             <i class="fas fa-check-circle success-icon"></i>
             <h2>Berhasil Dibuat!</h2>
+            <p class="modal-subtitle">Subdomain Anda siap digunakan.</p>
             <div id="result-container"></div>
-            <button id="close-popup-btn">Selesai</button>
+            <button id="close-popup-btn" class="modal-close-btn">Selesai</button>
         </div>
     </div>
 
-<div id="buyApiKeyModal" class="modal">
-    <div class="modal-content">
-        <span class="close-button">&times;</span>
-        <h2>Harga API Key</h2>
-        <p>Silakan pilih durasi yang Anda inginkan dan hubungi admin.</p>
-        <div id="api-key-price-list-container">
-            <p>Memuat daftar harga...</p>
+    <div id="buyApiKeyModal" class="modal">
+        <div class="modal-content">
+            <button class="close-button">&times;</button>
+            <h2><i class="fas fa-tags"></i> Harga API Key</h2>
+            <p class="modal-subtitle">Pilih paket dan hubungi admin untuk pembelian.</p>
+            <div id="api-key-price-list-container">
+                <p>Memuat daftar harga...</p>
+            </div>
         </div>
     </div>
-</div> <div id="historyDetailModal" class="modal">
-    <div class="modal-content">
-        <span class="close-button">&times;</span>
-        <h2>Detail Subdomain</h2>
-        <div id="history-detail-container">
-            </div>
-    </div>
-</div>
 
-<div id="panduanModal" class="modal">
-    <div class="modal-content">
-        <span class="close-button">&times;</span>
-        <h2 style="margin-bottom: 20px;"><i class="fas fa-book-open"></i> Panduan Penggunaan</h2>
-        <div class="panduan-container">
-            <div class="panduan-step">
-                <h3><i class="fas fa-pencil-alt"></i> Langkah 1: Isi Nama Subdomain</h3>
-                <p>Ketik nama subdomain yang Anda inginkan. Gunakan huruf kecil tanpa spasi (contoh: <strong>tokosaya</strong>).</p>
-            </div>
-            <div class="panduan-step">
-                <h3><i class="fas fa-server"></i> Langkah 2: Pilih Domain Utama</h3>
-                <p>Pilih salah satu domain utama dari daftar yang tersedia. Ini akan menjadi akhiran dari subdomain Anda (contoh: tokosaya<strong>.bisnis-panel.web.id</strong>).</p>
-            </div>
-            <div class="panduan-step">
-                <h3><i class="fas fa-list-ul"></i> Langkah 3: Pilih Tipe Record</h3>
-                <p><strong>(A) untuk IP Address:</strong> Gunakan ini jika Anda ingin mengarahkan subdomain ke IP VPS atau Panel.<br>
-                   <strong>(CNAME) untuk Target:</strong> Gunakan ini jika Anda ingin mengarahkan ke layanan seperti Vercel, Netlify, dll.</p>
-            </div>
-            <div class="panduan-step">
-                <h3><i class="fas fa-bullseye"></i> Langkah 4: Isi Target</h3>
-                <p>Masukkan IP Address atau target CNAME sesuai dengan Tipe Record yang Anda pilih pada langkah sebelumnya.</p>
-            </div>
-            <div class="panduan-step">
-                <h3><i class="fas fa-cloud"></i> Langkah 5: Atur Proxy</h3>
-                <p>Aktifkan Status Proxy (awan oranye) untuk menyembunyikan IP asli Anda dan mendapatkan perlindungan dari Cloudflare. tetapi untuk panel atau vercel lebihh baik di matikan karena agar tidak terjadi nya eror. soalnya kalo mau nyalain proxy harus di set dari dalam doamik nya jadi aga rumit.</p>
+    <div id="historyDetailModal" class="modal">
+        <div class="modal-content">
+            <button class="close-button">&times;</button>
+            <h2><i class="fas fa-info-circle"></i> Detail Subdomain</h2>
+            <div id="history-detail-container"></div>
+        </div>
+    </div>
+
+    <div id="panduanModal" class="modal">
+        <div class="modal-content">
+            <button class="close-button">&times;</button>
+            <h2 style="margin-bottom: 20px;"><i class="fas fa-book-open"></i> Panduan Penggunaan</h2>
+            <div class="panduan-container">
+                <div class="panduan-step">
+                    <h3><i class="fas fa-pencil-alt"></i> Langkah 1: Isi Nama Subdomain</h3>
+                    <p>Ketik nama subdomain yang Anda inginkan. Gunakan huruf kecil tanpa spasi (contoh: <strong>tokosaya</strong>).</p>
+                </div>
+                <div class="panduan-step">
+                    <h3><i class="fas fa-server"></i> Langkah 2: Pilih Domain Utama</h3>
+                    <p>Pilih salah satu domain utama dari daftar yang tersedia. Ini akan menjadi akhiran dari subdomain Anda (contoh: tokosaya<strong>.bisnis-panel.web.id</strong>).</p>
+                </div>
+                <div class="panduan-step">
+                    <h3><i class="fas fa-list-ul"></i> Langkah 3: Pilih Tipe Record</h3>
+                    <p><strong>(A) untuk IP Address:</strong> Gunakan ini jika Anda ingin mengarahkan subdomain ke IP VPS atau Panel.<br>
+                       <strong>(CNAME) untuk Target:</strong> Gunakan ini jika Anda ingin mengarahkan ke layanan seperti Vercel, Netlify, dll.</p>
+                </div>
+                <div class="panduan-step">
+                    <h3><i class="fas fa-bullseye"></i> Langkah 4: Isi Target</h3>
+                    <p>Masukkan IP Address atau target CNAME sesuai dengan Tipe Record yang Anda pilih pada langkah sebelumnya.</p>
+                </div>
+                <div class="panduan-step">
+                    <h3><i class="fas fa-cloud"></i> Langkah 5: Atur Proxy</h3>
+                    <p>Aktifkan Status Proxy (awan oranye) untuk menyembunyikan IP asli Anda dan mendapatkan perlindungan dari Cloudflare. tetapi untuk panel atau vercel lebihh baik di matikan karena agar tidak terjadi nya eror. soalnya kalo mau nyalain proxy harus di set dari dalam doamik nya jadi aga rumit.</p>
+                </div>
             </div>
         </div>
     </div>
-</div>
 
     <script src="data/domain.js"></script>
 </body>
