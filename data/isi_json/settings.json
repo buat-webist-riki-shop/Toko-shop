@@ -10,5 +10,20 @@
         "Stock Akun": "",
         "Logo": "",
         "Suntik Sosmed": ""
-    }
+    },
+    "apiKeyPurchaseNumber": "6285819066475",
+    "apiKeyPrices": [
+        {
+            "tier": "Paket 1 bulan",
+            "price": 15000,
+            "discountPrice": null,
+            "discountEndDate": null
+        },
+        {
+            "tier": "Paket permanen",
+            "price": 20000,
+            "discountPrice": null,
+            "discountEndDate": null
+        }
+    ]
 }
