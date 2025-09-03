@@ -1,52 +1,50 @@
 /* ============================================== */
-/* DESAIN BARU - MENYALA & ESTETIK (iOS Inspired) */
+/* VARIABLE DAN FONT                            */
 /* ============================================== */
-
-/* --- Variabel & Font --- */
 :root {
     --primary-color: #007aff;
-    --primary-glow: rgba(0, 122, 255, 0.35);
-    --bg-color: #f0f2f5;
-    --card-color: #ffffff;
+    --secondary-color: #f2f2f7;
     --text-color: #1d1d1f;
-    --sub-text-color: #6e6e73;
-    --border-color: #e5e5ea;
-    --shadow-color: rgba(0, 0, 0, 0.06);
-    --success-color: #34c759;
+    --light-text-color: #8e8e93;
+    --white-color: #fff;
+    --border-color: #d1d1d6;
+    --shadow-color: rgba(0, 0, 0, 0.12);
     --error-color: #ff3b30;
-    --font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    --success-color: #34c759;
 }
 
 body.dark-mode {
     --primary-color: #0a84ff;
-    --primary-glow: rgba(10, 132, 255, 0.4);
-    --bg-color: #000000;
-    --card-color: #1c1c1e;
-    --text-color: #f5f5f7;
-    --sub-text-color: #8e8e93;
-    --border-color: #3a3a3c;
-    --shadow-color: rgba(0, 0, 0, 0.2);
+    --secondary-color: #1c1c1e;
+    --text-color: #f2f2f7;
+    --white-color: #2c2c2e;
+    --border-color: #48484a;
+    --shadow-color: rgba(0, 0, 0, 0.5);
 }
 
-/* --- Animasi & Layout Dasar --- */
-@keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
-@keyframes fadeOut { to { opacity: 0; } }
 
+/* Animasi */
+@keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes fadeOut { from { opacity: 1; transform: translateY(0); } to { opacity: 0; transform: translateY(-100%); } }
+
+/* Layout Dasar */
 body {
-    font-family: var(--font-family);
-    background-color: var(--bg-color);
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    font-weight: 450; /* Menambah sedikit ketebalan */
+    background-color: var(--secondary-color);
     margin: 0;
     color: var(--text-color);
-    transition: background-color 0.3s ease, color 0.3s ease;
+    transition: background-color 0.2s ease, color 0.2s ease;
     -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
+    min-height: 100vh;
 }
 
 .page-container {
-    max-width: 550px;
+    width: 100%;
+    max-width: 600px;
     padding: 20px;
-    margin: 0 auto;
     box-sizing: border-box;
+    margin: 0 auto;
 }
 
 #apikey-screen {
@@ -54,182 +52,286 @@ body {
     justify-content: center;
     align-items: center;
     min-height: 100vh;
-}
-
-/* --- Elemen Umum (Judul, Teks) --- */
-h2 { font-weight: 700; margin: 0 0 8px 0; text-align: center; }
-p { color: var(--sub-text-color); font-size: 0.95rem; margin: 0 0 25px 0; text-align: center; line-height: 1.5; }
-label { display: block; margin-bottom: 10px; font-weight: 600; font-size: 0.9rem; color: var(--text-color); }
-
-/* --- Kartu & Form --- */
-.form-card {
-    background-color: var(--card-color);
-    width: 100%;
-    padding: 35px 30px;
-    border-radius: 24px;
-    border: 1px solid var(--border-color);
-    box-shadow: 0 10px 40px var(--shadow-color);
-    animation: fadeIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-    transition: background-color 0.3s, border-color 0.3s;
-}
-
-/* --- Header & Logo --- */
-.login-header { text-align: center; margin-bottom: 30px; }
-.login-header .profile-pic {
-    width: 80px; height: 80px; border-radius: 50%;
-    margin-bottom: 15px; box-shadow: 0 0 0 4px var(--card-color), 0 0 0 5px var(--border-color);
-}
-.main-header {
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 10px 0; margin-bottom: 20px;
-}
-.main-header h2 { font-size: 1.8rem; margin: 0; text-align: left; flex-grow: 1; }
-.main-header .profile-pic-header { width: 40px; height: 40px; border-radius: 50%; margin-right: 15px; }
-.header-actions { display: flex; gap: 10px; }
-.icon-btn {
-    background-color: var(--card-color); border: 1px solid var(--border-color);
-    width: 40px; height: 40px; border-radius: 50%; display: flex;
-    align-items: center; justify-content: center; cursor: pointer;
-    font-size: 1rem; color: var(--sub-text-color); transition: all 0.2s ease;
-}
-.icon-btn:hover { background-color: var(--bg-color); color: var(--primary-color); }
-
-/* --- Input & Select (Gaya iOS) --- */
-.form-section { margin-bottom: 20px; }
-.input-container { position: relative; }
-.input-container .icon {
-    position: absolute; top: 50%; transform: translateY(-50%);
-    left: 15px; color: var(--sub-text-color);
-}
-input, .select-wrapper select {
-    width: 100%;
-    padding: 14px 15px 14px 45px; /* Tambah padding kiri untuk ikon */
-    border: 1px solid var(--border-color);
-    border-radius: 12px;
+    padding: 20px;
     box-sizing: border-box;
-    font-family: var(--font-family); font-size: 1rem;
-    background-color: var(--bg-color);
+}
+
+
+/* Elemen Umum (Tombol, Input, dll) */
+h2, p { text-align: center; }
+h2 { font-weight: 600; margin-top: 0; margin-bottom: 10px; }
+p { color: var(--light-text-color); font-size: 0.95em; margin-bottom: 25px; }
+h3 { text-align: left; font-size: 1.1em; border-bottom: 1px solid var(--border-color); padding-bottom: 8px; }
+h3 i { color: var(--primary-color); margin-right: 8px; }
+label { display: block; margin-top: 20px; margin-bottom: 8px; font-weight: 500; font-size: 0.9em; }
+
+input, select {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    box-sizing: border-box;
+    font-family: inherit;
+    font-size: 1em;
+    background-color: var(--secondary-color);
     color: var(--text-color);
     transition: all 0.2s ease;
-    -webkit-appearance: none; -moz-appearance: none; appearance: none;
 }
-.select-wrapper select { padding-left: 15px; padding-right: 40px; } /* Select tidak butuh ikon di kiri */
 input:focus, select:focus {
     outline: none;
     border-color: var(--primary-color);
-    background-color: var(--card-color);
-    box-shadow: 0 0 0 3px var(--primary-glow);
+    box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.3);
+    background-color: var(--white-color);
 }
-.select-wrapper { position: relative; }
-.select-wrapper::after {
-    content: '\f078'; font-family: 'Font Awesome 6 Free'; font-weight: 900;
-    position: absolute; top: 50%; right: 15px; transform: translateY(-50%);
-    pointer-events: none; color: var(--sub-text-color);
-}
-
-/* --- Tombol "MENYALA" --- */
-.button-wrapper { position: relative; margin-top: 30px; }
 button {
-    width: 100%; padding: 16px; background-color: var(--primary-color);
-    color: #fff; border: none; border-radius: 14px;
-    font-size: 1.05rem; font-weight: 600; cursor: pointer;
-    transition: all 0.2s ease-out; display: flex; align-items: center; justify-content: center; gap: 8px;
+    width: 100%;
+    padding: 14px;
+    margin-top: 30px;
+    background-color: var(--primary-color);
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    font-size: 1.05em;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
 }
-.button-wrapper::before { /* Ini adalah elemen untuk efek GLOW */
-    content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
-    background: var(--primary-color);
-    filter: blur(20px);
-    transform: translateY(5px) scale(0.9);
-    opacity: 0.7;
-    z-index: -1;
-    border-radius: inherit;
-    transition: all 0.3s ease-out;
-}
-button:hover { transform: translateY(-2px); }
-.button-wrapper:hover::before { opacity: 0.9; transform: translateY(2px) scale(0.95); }
-button:active { transform: scale(0.98); }
-button:disabled { background-color: var(--sub-text-color); cursor: not-allowed; }
-.button-wrapper:has(button:disabled)::before { opacity: 0; }
+button:hover { filter: brightness(1.1); }
+button:active { transform: scale(0.97); }
+button:disabled { background-color: var(--light-text-color); cursor: not-allowed; }
 
-/* --- Elemen Spesifik Halaman --- */
-.apikey-actions { text-align: center; margin-top: 20px; }
-.apikey-actions a { color: var(--primary-color); text-decoration: none; font-size: 0.9rem; font-weight: 500; }
-.proxy-toggle {
-    display: flex; justify-content: space-between; align-items: center;
-    margin-top: 25px; background-color: var(--bg-color);
-    padding: 12px 15px; border-radius: 12px;
+/* Card & Form */
+.form-card {
+    background-color: var(--white-color);
+    width: 100%;
+    max-width: 500px;
+    padding: 30px 25px;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px var(--shadow-color);
+    border: 1px solid var(--border-color);
+    animation: fadeIn 0.5s ease-out forwards;
+    margin: 0 auto;
 }
-.proxy-label { display: flex; align-items: center; gap: 10px; font-weight: 600; font-size: 0.9rem; }
+.login-header { margin-bottom: 25px; text-align: center; }
+.login-header .profile-pic {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 15px;
+}
+#domain-creator-screen {
+    width: 100%;
+    animation: fadeIn 0.5s ease-out forwards;
+}
+.admin-header {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 10px 15px; margin-bottom: 20px; background-color: var(--white-color);
+    border-radius: 16px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+.admin-header h2 { font-size: 1.4em; margin: 0; }
+.admin-header .profile-pic { width: 38px; height: 38px; }
+.admin-header .theme-switch {
+    width: 38px; height: 38px; border-radius: 50%; background-color: var(--secondary-color);
+    display: flex; align-items: center; justify-content: center; cursor: pointer;
+}
+.admin-form { padding: 25px; border-radius: 16px; background-color: var(--white-color); box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+
+/* CSS BARU UNTUK PANDUAN */
+.admin-header .header-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.panduan-container {
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.panduan-step {
+    background-color: var(--secondary-color);
+    padding: 15px;
+    border-radius: 10px;
+    border-left: 4px solid var(--primary-color);
+}
+
+.panduan-step h3 {
+    border-bottom: none;
+    padding-bottom: 0;
+    margin-bottom: 8px;
+    font-size: 1em;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.panduan-step p {
+    text-align: left;
+    font-size: 0.9em;
+    margin-bottom: 0;
+    line-height: 1.6;
+}
+
+/* Elemen Spesifik Halaman Domain */
+.apikey-actions a { color: var(--primary-color); text-decoration: none; font-size: 0.9em; margin-top: 15px; display: inline-block; }
+.proxy-toggle { display: flex; justify-content: space-between; align-items: center; margin-top: 20px; background-color: var(--secondary-color); padding: 15px; border-radius: 10px; }
+.proxy-toggle label { margin: 0; }
 .switch { position: relative; display: inline-block; width: 51px; height: 31px; }
 .switch input { opacity: 0; width: 0; height: 0; }
-.slider { position: absolute; cursor: pointer; inset: 0; background-color: var(--border-color); transition: .4s; border-radius: 31px; }
+.slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; border-radius: 31px; }
 .slider:before { position: absolute; content: ""; height: 27px; width: 27px; left: 2px; bottom: 2px; background-color: white; transition: .4s; border-radius: 50%; box-shadow: 0 1px 3px rgba(0,0,0,0.2); }
 input:checked + .slider { background-color: var(--success-color); }
 input:checked + .slider:before { transform: translateX(20px); }
 
-/* --- Riwayat & Hasil --- */
-.history-card { margin-top: 30px; }
-.history-card h3 { font-size: 1.1rem; text-align: left; border-bottom: 1px solid var(--border-color); padding-bottom: 10px; margin-bottom: 15px; display: flex; align-items: center; gap: 10px; }
-.result-item, .history-item {
-    background-color: var(--bg-color); padding: 15px; border-radius: 12px;
-    margin-bottom: 10px; display: flex; justify-content: space-between;
-    align-items: center; font-weight: 500;
-}
-.result-item button, .history-item button { width: auto; margin: 0; padding: 8px 15px; font-size: 0.85rem; background-color: var(--card-color); color: var(--primary-color); border: 1px solid var(--border-color); }
-.history-item-info { display: flex; flex-direction: column; text-align: left; gap: 4px; }
-.history-item-info strong { font-size: 1rem; color: var(--text-color); }
-.history-item-info small { font-size: 0.8rem; color: var(--sub-text-color); }
-
-/* --- Toast Notifikasi --- */
+/* Toast */
 #toast-container { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); z-index: 9999; }
 .toast {
-    display: flex; align-items: center; gap: 10px;
-    background-color: rgba(28, 28, 30, 0.8);
-    color: #fff; padding: 12px 20px; border-radius: 99px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.2); font-size: 0.9rem; font-weight: 500;
-    backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    display: flex; align-items: center; gap: 10px; background-color: rgba(255, 255, 255, 0.9);
+    color: var(--text-color); padding: 12px 20px; border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.15); font-size: 0.95em; font-weight: 500;
+    backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(0,0,0,0.05);
     animation: fadeIn 0.5s ease forwards;
 }
-.toast.success .fa-check-circle { color: var(--success-color); }
-.toast.error .fa-exclamation-circle { color: var(--error-color); }
+.toast.success { background-color: rgba(52, 199, 89, 0.9); color: white; }
+.toast.error { background-color: rgba(255, 59, 48, 0.9); color: white; }
 .toast.fade-out { animation: fadeOut 0.5s ease forwards; }
 
-/* --- Modal & Popup --- */
+/* [PERBAIKAN] Modal */
+/* ============================================== */
+/* MODAL POPUP (CENTERED & RESPONSIVE)            */
+/* ============================================== */
 .modal {
-    position: fixed; z-index: 2000; inset: 0;
-    background-color: rgba(0,0,0,0.5); backdrop-filter: blur(8px);
-    display: flex; align-items: center; justify-content: center;
-    padding: 20px; visibility: hidden; opacity: 0;
+    position: fixed;
+    z-index: 2000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.6);
+    display: flex; /* Menggunakan flexbox untuk menengahkan */
+    align-items: center; /* Menengahkan secara vertikal */
+    justify-content: center; /* Menengahkan secara horizontal */
+    padding: 20px;
+    visibility: hidden;
+    opacity: 0;
     transition: visibility 0s 0.3s, opacity 0.3s ease;
+    box-sizing: border-box;
 }
-.modal.is-visible { visibility: visible; opacity: 1; transition-delay: 0s; }
-.modal-content {
-    background-color: var(--card-color); border-radius: 24px;
-    width: 100%; max-width: 500px;
-    box-shadow: 0 10px 40px rgba(0,0,0,0.2);
-    padding: 30px 25px; position: relative;
-    transform: scale(0.95); transition: transform 0.3s cubic-bezier(0.18, 0.89, 0.32, 1.28);
-    max-height: 90vh; overflow-y: auto; text-align: center;
-}
-.modal.is-visible .modal-content { transform: scale(1); }
-.modal .close-button {
-    font-size: 1.5rem; color: var(--sub-text-color); position: absolute;
-    top: 15px; right: 20px; cursor: pointer;
-    width: 30px; height: 30px; background: var(--bg-color); border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
-}
-.success-icon { font-size: 4rem; color: var(--success-color); margin-bottom: 15px; }
-.modal-subtitle { font-size: 0.9rem; max-width: 300px; margin: -5px auto 25px auto; }
-.modal-close-btn { width: 100%; padding: 14px; background: var(--bg-color); color: var(--text-color); font-weight: 600; margin-top: 20px; }
+/* ▲▲▲ AKHIR DARI KODE YANG DIPERBAIKI ▲▲▲ */
 
-/* --- Panduan & Harga --- */
-.panduan-container, #api-key-price-list-container { margin-top: 15px; }
-.panduan-step, .price-item {
-    background-color: var(--bg-color); padding: 15px; border-radius: 12px;
-    margin-bottom: 10px; text-align: left;
+.modal.is-visible { 
+    visibility: visible; 
+    opacity: 1; 
+    transition-delay: 0s;
 }
-.panduan-step h3 { font-size: 1rem; margin: 0 0 8px 0; display: flex; align-items: center; gap: 8px; }
-.panduan-step p { text-align: left; font-size: 0.9rem; margin: 0; }
-.price-item { display: flex; justify-content: space-between; align-items: center; }
-.buy-button { text-decoration: none; background-color: var(--primary-color); color: white; padding: 8px 15px; border-radius: 8px; font-weight: 500; font-size: 0.9em; white-space: nowrap; }
+
+.modal-content {
+    background-color: var(--white-color);
+    border-radius: 20px;
+    width: 100%; 
+    max-width: 500px; 
+    box-shadow: 0 10px 30px var(--shadow-color);
+    padding: 30px 25px;
+    position: relative;
+    transform: scale(0.9);
+    transition: transform 0.3s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+    box-sizing: border-box; 
+    max-height: 90vh; 
+    overflow-y: auto; 
+    text-align: center; /* Pastikan konten di dalam modal juga rata tengah */
+}
+
+.modal.is-visible .modal-content { 
+    transform: scale(1); 
+}
+.modal .close-button {
+    font-size: 1.8rem;
+    font-weight: 300;
+    color: var(--light-text-color);
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+.modal .close-button:hover { transform: rotate(90deg); }
+
+.success-icon {
+    font-size: 4em;
+    color: var(--success-color);
+    margin-bottom: 15px;
+}
+
+/* Riwayat & Hasil */
+.result-item, .history-item {
+    background-color: var(--secondary-color); padding: 15px; border-radius: 10px; margin-bottom: 10px;
+    display: flex; justify-content: space-between; align-items: center; font-weight: 500;
+}
+.result-item button, .history-item button { width: auto; margin: 0; padding: 8px 15px; font-size: 0.85em; }
+.history-item-info { display: flex; flex-direction: column; text-align: left; }
+.history-item-info strong { font-size: 1.1em; }
+.history-item-info small { font-size: 0.85em; color: var(--light-text-color); }
+
+/* Daftar Harga API Key di Modal */
+#api-key-price-list-container .price-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: var(--secondary-color);
+    padding: 12px 15px;
+    border-radius: 10px;
+    margin-bottom: 10px;
+}
+.price-info { text-align: left; }
+.tier-name { font-weight: 500; font-size: 1.05em; }
+.price-values { margin-top: 4px; }
+.original-price del { color: var(--light-text-color); font-weight: normal; margin-right: 8px; }
+.discounted-price { color: var(--error-color); font-weight: bold; }
+.buy-button {
+    text-decoration: none;
+    background-color: var(--primary-color);
+    color: white;
+    padding: 8px 15px;
+    border-radius: 8px;
+    font-weight: 500;
+    font-size: 0.9em;
+    white-space: nowrap;
+}
+
+/* CSS BARU UNTUK STYLING DROPDOWN */
+.select-wrapper {
+    position: relative;
+    width: 100%;
+}
+
+.select-wrapper::after {
+    content: '\f078'; /* Kode ikon panah ke bawah dari Font Awesome */
+    font-family: 'Font Awesome 6 Free';
+    font-weight: 900;
+    position: absolute;
+    top: 50%;
+    right: 15px;
+    transform: translateY(-50%);
+    pointer-events: none;
+    color: var(--light-text-color);
+}
+
+.select-wrapper select {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    padding-right: 40px; /* Memberi ruang untuk ikon panah */
+}
+
+/* CSS BARU UNTUK TOMBOL DETAIL */
+.history-item button.detail-btn {
+    width: auto;
+    margin: 0;
+    padding: 8px 15px;
+    font-size: 0.85em;
+    background-color: var(--primary-color); /* Warna biru primer */
+    color: white;
+}
