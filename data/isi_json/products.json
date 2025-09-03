@@ -122,17 +122,6 @@
             "nomorWA": "",
             "discountPrice": null,
             "discountEndDate": null
-        },
-        {
-            "id": 66,
-            "nama": "Panel 15gb || yah",
-            "harga": 300000,
-            "hargaAsli": 300000,
-            "deskripsiPanjang": "Oke min",
-            "createdAt": "2025-08-21T13:47:35.208Z",
-            "nomorWA": "",
-            "discountPrice": null,
-            "discountEndDate": null
         }
     ],
     "VPS": [
