@@ -7,7 +7,7 @@ const owner = process.env.REPO_OWNER;
 const repo  = process.env.REPO_NAME;
 const branch = process.env.REPO_BRANCH || "main";
 
-// --- Konfigurasi Cloudflare Global API (BARU) ---
+// --- Konfigurasi Cloudflare Global API ---
 const cfApiToken = process.env.CLOUDFLARE_API_TOKEN;
 const cfAccountId = process.env.CLOUDFLARE_ACCOUNT_ID;
 
@@ -43,7 +43,7 @@ async function writeJsonToGithub(path, json) {
     });
 }
 
-// --- Helper Cloudflare (BARU) ---
+// --- Helper Cloudflare ---
 async function fetchDomainsFromCloudflare() {
     if (!cfApiToken || !cfAccountId) {
         console.warn("Cloudflare Global API Token atau Account ID tidak diatur. Melewatkan pengambilan domain dari API.");
@@ -52,17 +52,13 @@ async function fetchDomainsFromCloudflare() {
     try {
         const response = await fetch(`https://api.cloudflare.com/client/v4/zones?account.id=${cfAccountId}&per_page=100`, {
             method: 'GET',
-            headers: {
-                'Authorization': `Bearer ${cfApiToken}`,
-                'Content-Type': 'application/json'
-            }
+            headers: { 'Authorization': `Bearer ${cfApiToken}`, 'Content-Type': 'application/json' }
         });
         const data = await response.json();
         if (!data.success) {
             console.error("Gagal mengambil domain dari Cloudflare API:", data.errors);
             return [];
         }
-        // Ambil hanya nama domain dari hasil
         return data.result.map(zone => zone.name);
     } catch (error) {
         console.error("Error saat fetch ke Cloudflare API:", error);
@@ -70,10 +66,9 @@ async function fetchDomainsFromCloudflare() {
     }
 }
 
-
 // --- Handler utama ---
 export default async function handler(request, response) {
-    // ✅ CORS
+    // CORS
     response.setHeader("Access-Control-Allow-Origin", "*");
     response.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
     response.setHeader("Access-Control-Allow-Headers", "Content-Type");
@@ -86,11 +81,7 @@ export default async function handler(request, response) {
     const { action, data, adminPassword } = request.body;
     if (!action) return response.status(400).json({ message: "Aksi tidak ditemukan." });
 
-    const adminActions = [
-        "getApiKeys", "createApiKey", "deleteApiKey",
-        "getRootDomainsAdmin", "addRootDomain", "deleteRootDomain"
-    ];
-
+    const adminActions = ["getApiKeys", "createApiKey", "deleteApiKey", "getRootDomainsAdmin", "addRootDomain", "deleteRootDomain"];
     try {
         if (adminActions.includes(action)) {
             if (adminPassword !== process.env.ADMIN_PASSWORD) {
@@ -100,7 +91,6 @@ export default async function handler(request, response) {
 
         const apiKeys = await readJsonFromGithub("data/isi_json/apikeys.json");
 
-        // ✅ Validasi API Key
         if (action === "validateApiKey") {
             const keyData = apiKeys[data.apikey];
             if (!keyData || (keyData.expires_at !== "permanent" && new Date() > new Date(keyData.expires_at))) {
@@ -123,43 +113,55 @@ export default async function handler(request, response) {
         switch (action) {
             // == AKSI UNTUK PENGGUNA ==
             case "getRootDomains": {
-                // MODIFIKASI: Ambil dari 2 sumber dan gabungkan
                 const domainsFromJson = Object.keys(domains);
                 const domainsFromApi = await fetchDomainsFromCloudflare();
-
-                // Gabungkan dan hapus duplikat menggunakan Set
                 const combinedDomains = new Set([...domainsFromJson, ...domainsFromApi]);
-                
                 return response.status(200).json({ domains: Array.from(combinedDomains).sort() });
             }
 
+            // [MODIFIKASI TOTAL] Logika pembuatan subdomain yang lebih canggih
             case "createSubdomain": {
                 const { subdomain, domain, type, content, proxied } = data;
-                
-                // Cek dulu apakah domain ada di JSON (karena butuh API Token spesifik domain)
-                const domainInfo = domains[domain];
-                if (!domainInfo) throw new Error("Domain utama tidak ditemukan atau tidak dikonfigurasi untuk pembuatan subdomain via metode ini.");
+                const domainInfo = domains[domain]; // Cek apakah domain ada di file json
 
-                const headers = {
-                    "Content-Type": "application/json",
-                    "Authorization": `Bearer ${domainInfo.apitoken}`
-                };
+                let cfAuthHeaders;
+                let zoneId;
+
+                // --- Logika Cerdas untuk Otentikasi & Zone ID ---
+                if (domainInfo && domainInfo.apitoken && domainInfo.zone) {
+                    // KASUS 1: Domain ada di domains.json, gunakan token spesifik
+                    console.log(`Menggunakan token spesifik untuk domain: ${domain}`);
+                    cfAuthHeaders = {
+                        "Authorization": `Bearer ${domainInfo.apitoken}`,
+                        "Content-Type": "application/json"
+                    };
+                    zoneId = domainInfo.zone;
+                } else {
+                    // KASUS 2: Domain tidak ada di domains.json, gunakan Global API Key
+                    console.log(`Menggunakan Global API Key untuk domain: ${domain}`);
+                    if (!cfApiToken) throw new Error("Global API Token tidak diatur di server.");
+                    
+                    cfAuthHeaders = {
+                        "Authorization": `Bearer ${cfApiToken}`,
+                        "Content-Type": "application/json"
+                    };
+
+                    // Karena tidak ada di json, kita harus cari Zone ID-nya dulu
+                    const zoneRes = await fetch(`https://api.cloudflare.com/client/v4/zones?name=${domain}`, { headers: cfAuthHeaders });
+                    const zoneData = await zoneRes.json();
+                    if (!zoneData.success || zoneData.result.length === 0) {
+                        throw new Error(`Tidak dapat menemukan Zone ID untuk domain ${domain}. Pastikan domain ada di akun Cloudflare Anda.`);
+                    }
+                    zoneId = zoneData.result[0].id;
+                }
+                // --- Akhir dari Logika Cerdas ---
 
                 const created_domains = [];
 
                 // Record utama
-                const mainRecordData = {
-                    type,
-                    name: `${subdomain}.${domain}`,
-                    content,
-                    proxied,
-                    ttl: 1
-                };
-
-                const mainRes = await fetch(`https://api.cloudflare.com/client/v4/zones/${domainInfo.zone}/dns_records`, {
-                    method: "POST",
-                    headers,
-                    body: JSON.stringify(mainRecordData)
+                const mainRecordData = { type, name: `${subdomain}.${domain}`, content, proxied, ttl: 1 };
+                const mainRes = await fetch(`https://api.cloudflare.com/client/v4/zones/${zoneId}/dns_records`, {
+                    method: "POST", headers: cfAuthHeaders, body: JSON.stringify(mainRecordData)
                 });
                 const mainResult = await mainRes.json();
                 if (!mainResult.success) {
@@ -167,35 +169,29 @@ export default async function handler(request, response) {
                 }
                 created_domains.push(mainResult.result.name);
 
-                // Record node tambahan kalau tipe A
+                // Record node tambahan jika tipe A
                 if (type === "A") {
                     const nodeName = `node${Math.floor(10 + Math.random() * 90)}.${subdomain}.${domain}`;
                     const nodeRecordData = { type: "A", name: nodeName, content, proxied, ttl: 1 };
-
-                    const nodeRes = await fetch(`https://api.cloudflare.com/client/v4/zones/${domainInfo.zone}/dns_records`, {
-                        method: "POST",
-                        headers,
-                        body: JSON.stringify(nodeRecordData)
+                    const nodeRes = await fetch(`https://api.cloudflare.com/client/v4/zones/${zoneId}/dns_records`, {
+                        method: "POST", headers: cfAuthHeaders, body: JSON.stringify(nodeRecordData)
                     });
                     const nodeResult = await nodeRes.json();
-                    if (!nodeResult.success) {
-                        throw new Error(`Record utama dibuat, tapi gagal membuat record node: ${nodeResult.errors[0].message}`);
+                    if (nodeResult.success) {
+                        created_domains.push(nodeResult.result.name);
+                    } else {
+                        console.warn(`Record utama dibuat, tapi gagal membuat record node: ${nodeResult.errors[0].message}`);
                     }
-                    created_domains.push(nodeResult.result.name);
                 }
 
                 return response.status(200).json({ message: "Subdomain berhasil dibuat!", created_domains });
             }
 
-            // == AKSI UNTUK ADMIN ==
-            case "getApiKeys": {
-                return response.status(200).json(apiKeys);
-            }
+            // == AKSI UNTUK ADMIN (Tidak ada perubahan) ==
+            case "getApiKeys": { return response.status(200).json(apiKeys); }
             case "createApiKey": {
                 const { key, duration, unit, isPermanent } = data;
-                if (!key) throw new Error("Nama API Key tidak boleh kosong.");
-                if (apiKeys[key]) throw new Error("API Key ini sudah ada.");
-
+                if (!key || apiKeys[key]) throw new Error("API Key ini sudah ada atau kosong.");
                 let expires_at = "permanent";
                 if (!isPermanent) {
                     const now = new Date();
@@ -206,15 +202,10 @@ export default async function handler(request, response) {
                     if (unit === "years") now.setFullYear(now.getFullYear() + d);
                     expires_at = now.toISOString();
                 }
-                
                 const newKeyData = { created_at: new Date().toISOString(), expires_at };
                 apiKeys[key] = newKeyData;
                 await writeJsonToGithub("data/isi_json/apikeys.json", apiKeys);
-                
-                return response.status(200).json({
-                    message: "API Key berhasil dibuat.",
-                    details: newKeyData
-                });
+                return response.status(200).json({ message: "API Key berhasil dibuat.", details: newKeyData });
             }
             case "deleteApiKey": {
                 const { key } = data;
@@ -223,9 +214,7 @@ export default async function handler(request, response) {
                 await writeJsonToGithub("data/isi_json/apikeys.json", apiKeys);
                 return response.status(200).json({ message: "API Key berhasil dihapus." });
             }
-            case "getRootDomainsAdmin": {
-                return response.status(200).json(domains);
-            }
+            case "getRootDomainsAdmin": { return response.status(200).json(domains); }
             case "addRootDomain": {
                 const { domain, zone, apitoken } = data;
                 if (domains[domain]) throw new Error("Domain ini sudah ada.");
