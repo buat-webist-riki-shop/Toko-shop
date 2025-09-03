@@ -380,18 +380,6 @@
             "nomorWA": "",
             "discountPrice": null,
             "discountEndDate": null
-        },
-        {
-            "id": 67,
-            "nama": "Script pusj",
-            "harga": 13333,
-            "hargaAsli": 13333,
-            "deskripsiPanjang": "Iana",
-            "createdAt": "2025-08-21T13:49:38.544Z",
-            "menuContent": "Auto pusj",
-            "nomorWA": "",
-            "discountPrice": null,
-            "discountEndDate": null
         }
     ],
     "Jasa": [
