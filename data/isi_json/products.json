@@ -458,6 +458,17 @@
     ],
     "murid": [
         {
+            "id": 70,
+            "nama": "RESELLER WEBISTE",
+            "harga": 10000,
+            "hargaAsli": 10000,
+            "deskripsiPanjang": "COCOK UNTUK PEMULA  || MASA AKTIF SEUMUR HIDUP || SUDAH FREE SCRIPT WEBISTE PAYMENT || BISA JUALAN WEBISTE PAYMENT || BIKIN WEBISTE MENGGUNAKAN DOMAIN MY.ID DAN BIZ.ID || DI AJARKAN CARA MEMBUAT WEBISTE NYA",
+            "createdAt": "2025-09-03T23:04:41.907Z",
+            "nomorWA": "",
+            "images": [],
+            "menuContent": ""
+        },
+        {
             "id": 40,
             "nama": "Murid unbend",
             "harga": 15000,
