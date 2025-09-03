@@ -1,0 +1,16 @@
+{
+  "routes": [
+    {
+      "src": "/apikeys.json",
+      "status": 404
+    },
+    {
+      "src": "/domains.json",
+      "status": 404
+    },
+    {
+      "src": "/settings.json",
+      "status": 404
+    }
+  ]
+}

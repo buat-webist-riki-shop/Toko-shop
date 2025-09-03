@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0">
+    <title>TikTok Downloader - Rikishopreal</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary-color: #007aff; --secondary-color: #f2f2f7; --text-color-light: #1d1d1f;
+            --light-text-color: #8e8e93; --white-color: #fff; --border-color-light: #d1d1d6;
+            --success-color: #34c759; --error-color: #ff3b30; --warning-color: #ff9500;
+            --shadow-light: rgba(0, 0, 0, 0.1); --bg-body: var(--secondary-color);
+            --bg-container: var(--white-color); --text-primary: var(--text-color-light);
+            --text-secondary: var(--light-text-color); --border-color: var(--border-color-light); --shadow-color: var(--shadow-light);
+        }
+        body.dark-mode {
+            --bg-body: #000000; --bg-container: #1c1c1e; --text-primary: #f5f5f7;
+            --text-secondary: #8e8e93; --border-color: #3a3a3c; --shadow-color: rgba(0, 0, 0, 0.4);
+        }
+        
+        /* KODE INI MEMBUAT TAMPILAN SELALU DI TENGAH & RESPONSIVE */
+        body {
+            font-family: 'Poppins', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: var(--bg-body); color: var(--text-primary); margin: 0;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            min-height: 100vh; padding: 20px; box-sizing: border-box; transition: background-color 0.3s ease;
+        }
+.container {
+    position: relative; /* Diperlukan untuk tombol kembali */
+    background-color: var(--bg-container); border-radius: 24px; box-shadow: 0 10px 40px var(--shadow-color);
+    padding: 30px 25px; width: 100%; max-width: 500px; text-align: center;
+    animation: fadeIn 0.5s cubic-bezier(0.4, 0, 0.2, 1); box-sizing: border-box;
+}
+.back-button {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    background-color: var(--bg-body);
+    color: var(--text-secondary);
+    border: 1px solid var(--border-color);
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    font-size: 1.2em;
+    transition: all 0.2s ease;
+}
+.back-button:hover {
+    background-color: var(--primary-color);
+    color: white;
+    border-color: var(--primary-color);
+}
+        /* AKHIR DARI KODE RESPONSIVE */
+        
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        h1 { margin-top: 30px; color: var(--text-primary); margin: 0 0 10px; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 12px; }
+        p.subtitle { color: var(--text-secondary); margin-bottom: 30px; }
+        .input-group { display: flex; margin-bottom: 20px; }
+        #tiktok-url {
+            flex-grow: 1; padding: 14px; border: 1px solid var(--border-color);
+            border-radius: 12px 0 0 12px; background-color: var(--bg-body);
+            color: var(--text-primary); font-size: 1em; border-right: none;
+        }
+        #download-btn {
+            padding: 14px 20px; border: none; background-color: var(--primary-color); color: white;
+            border-radius: 0 12px 12px 0; cursor: pointer; font-weight: 600; font-size: 1em;
+            display: flex; align-items: center; justify-content: center; transition: background-color 0.2s ease;
+        }
+        #download-btn:disabled { background-color: var(--light-text-color); cursor: not-allowed; }
+        .spinner {
+            width: 20px; height: 20px; border: 3px solid rgba(255, 255, 255, 0.3);
+            border-top-color: #fff; border-radius: 50%; display: block;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .dark-mode-toggle {
+            position: fixed; top: 20px; right: 20px; background-color: var(--bg-container); color: var(--text-primary);
+            border: 1px solid var(--border-color); border-radius: 50px; padding: 8px; width: 40px; height: 40px;
+            cursor: pointer; font-size: 1.2em; display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 4px 10px var(--shadow-color); z-index: 1001;
+        }
+        .footer { margin-top: 30px; text-align: center; font-size: 0.9em; color: var(--text-secondary); width: 100%; max-width: 500px; }
+        .footer a { color: var(--text-secondary); text-decoration: none; font-weight: 600; display: inline-flex; align-items: center; gap: 8px; transition: color 0.3s ease, text-shadow 0.3s ease; }
+        .footer a:hover { color: var(--primary-color); text-shadow: 0 0 8px var(--primary-color); }
+        .footer .fab.fa-youtube { color: #ff0000; }
+        .footer a:hover .fab.fa-youtube { text-shadow: 0 0 8px #ff0000; }
+        .glow-text { text-shadow: 0 0 5px rgba(0, 122, 255, 0.6); }
+        .glow-youtube { text-shadow: 0 0 5px rgba(255, 0, 0, 0.6); }
+        .click-animation { position: relative; display: inline-flex; }
+        .click-hand {
+            position: absolute; bottom: -25px; left: 50%; width: 25px; height: 25px;
+            background-image: url('https://emojicdn.elk.sh/👆'); background-size: contain; background-repeat: no-repeat;
+            opacity: 0; transform: translateX(-50%); transform-origin: bottom center;
+            animation: pointing-up 2.5s infinite ease-in-out 1.5s; pointer-events: none;
+        }
+        @keyframes pointing-up {
+            0%, 100% { transform: translateX(-50%) translateY(10px); opacity: 0; }
+            30%, 70% { transform: translateX(-50%) translateY(0); opacity: 1; }
+            80% { transform: translateX(-50%) translateY(10px); opacity: 0; }
+        }
+        .popup-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.6);
+            display: none; justify-content: center; align-items: center; z-index: 1000; opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        .popup-overlay.show { display: flex; opacity: 1; }
+        .popup {
+            background-color: var(--bg-container); color: var(--text-primary); border-radius: 20px;
+            padding: 25px; text-align: center; box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            width: 90%; max-width: 400px; animation: popIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        @keyframes popIn { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
+        .popup h3 { margin: 0 0 15px; font-size: 1.3em; line-height: 1.4; word-break: break-word; }
+        .popup-content { margin-top: 20px; text-align: center; }
+        .popup-video { width: 100%; max-height: 400px; border-radius: 12px; }
+        .popup-images {
+            display: flex; overflow-x: auto; scroll-snap-type: x mandatory;
+            -webkit-overflow-scrolling: touch; gap: 15px; padding: 10px 0; scrollbar-width: none;
+        }
+        .popup-images::-webkit-scrollbar { display: none; }
+        .image-slide {
+            flex: 0 0 100%; scroll-snap-align: center; display: flex;
+            flex-direction: column; align-items: center; gap: 10px;
+        }
+        .popup-images img {
+            width: 100%; height: auto; max-height: 450px;
+            object-fit: contain; border-radius: 12px;
+        }
+        .popup-buttons { display: flex; flex-direction: column; gap: 10px; margin-top: 20px; }
+        .popup-button { display: block; padding: 12px; border: none; border-radius: 10px; color: white; font-weight: 600; text-decoration: none; text-align: center; transition: all 0.2s ease; }
+        .btn-download-popup-video { background-color: var(--success-color); }
+        .btn-download-popup-audio { background-color: var(--warning-color); color: var(--text-color-light); }
+        .btn-download-all-images, .btn-download-single-image { background-color: var(--primary-color); }
+        #close-popup-button {
+            width: 100%; margin-top: 15px; padding: 12px; font-weight: 600; cursor: pointer; border-radius: 10px;
+            border: 1px solid var(--border-color); background-color: transparent; color: var(--text-secondary);
+        }
+        #toast-container { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); z-index: 9999; }
+        .toast-notification {
+            padding: 12px 20px; background-color: #333; color: white; border-radius: 25px;
+            font-size: 0.9em; font-weight: 500; display: flex; align-items: center; gap: 10px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+            transform: translateY(-150%); opacity: 0;
+            transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.5s ease;
+        }
+        .toast-notification.show { opacity: 1; transform: translateY(0); }
+        .toast-notification.success { background-color: var(--success-color); }
+        .toast-notification.error { background-color: var(--error-color); }
+    </style>
+</head>
+<body>
+
+    <div id="toast-container"></div>
+    <button id="dark-mode-toggle" class="dark-mode-toggle" aria-label="Ganti Tema"><i class="fas fa-moon"></i></button>
+
+    <div class="container">
+    <a href="index.html" class="back-button" aria-label="Kembali ke Beranda">
+        <i class="fas fa-arrow-left"></i>
+    </a>
+        <h1><i class="fab fa-tiktok"></i> TikTok Downloader</h1>
+        <p class="subtitle">Tempelkan link video TikTok untuk mengunduh tanpa watermark.</p>
+        <div class="input-group">
+            <input type="text" id="tiktok-url" placeholder="https://vt.tiktok.com/xxxxxx/">
+            <button id="download-btn"><i class="fas fa-download"></i></button>
+        </div>
+        
+        <div class="footer">
+            Powered by <a href="https://toko.rikishop.my.id" target="_blank" style="margin-left: 5px;"><span class="glow-text">Riki Shop</span></a>
+            <span style="margin: 0 10px;">|</span>
+            <a href="https://www.youtube.com/@rikishopreal" target="_blank">
+                <i class="fab fa-youtube glow-youtube"></i> Subscribe
+            </a>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const body = document.body;
+            const darkModeToggle = document.getElementById('dark-mode-toggle');
+            const urlInput = document.getElementById('tiktok-url');
+            const downloadBtn = document.getElementById('download-btn');
+            
+            function showToast(message, type = 'success') {
+                const toastContainer = document.getElementById('toast-container');
+                const toast = document.createElement('div');
+                toast.className = `toast-notification ${type}`;
+                const iconClass = type === 'success' ? 'fa-check-circle' : 'fa-times-circle';
+                toast.innerHTML = `<i class="fas ${iconClass}"></i> ${message}`;
+                toastContainer.innerHTML = '';
+                toastContainer.appendChild(toast);
+                setTimeout(() => toast.classList.add('show'), 10);
+                setTimeout(() => {
+                    toast.classList.remove('show');
+                    toast.addEventListener('transitionend', () => toast.remove());
+                }, 3000);
+            }
+            darkModeToggle.addEventListener('click', () => {
+                body.classList.toggle('dark-mode');
+                const isDarkMode = body.classList.contains('dark-mode');
+                darkModeToggle.querySelector('i').className = isDarkMode ? 'fas fa-sun' : 'fas fa-moon';
+                localStorage.setItem('darkMode', isDarkMode);
+            });
+            if (localStorage.getItem('darkMode') === 'true') {
+                 body.classList.add('dark-mode');
+                 darkModeToggle.querySelector('i').className = 'fas fa-sun';
+            }
+            
+            downloadBtn.addEventListener('click', async () => {
+                const tiktokUrl = urlInput.value.trim();
+                if (!tiktokUrl) return showToast('Silakan masukkan URL TikTok.', 'error');
+                const originalBtnContent = downloadBtn.innerHTML;
+                downloadBtn.innerHTML = '<span class="spinner"></span>';
+                downloadBtn.disabled = true;
+                try {
+                    const response = await fetch('/api/tiktok', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ url: tiktokUrl, type: 'tiktok' })
+});
+                    const result = await response.json();
+                    if (!response.ok) throw new Error(result.message || 'Gagal memproses link.');
+                    showToast('Berhasil mendapatkan data!', 'success');
+                    showResultPopup(result);
+                } catch (error) {
+                    showToast(error.message, 'error');
+                } finally {
+                    downloadBtn.innerHTML = originalBtnContent;
+                    downloadBtn.disabled = false;
+                }
+            });
+
+            function showResultPopup(result) {
+                const existingPopup = document.getElementById('download-popup');
+                if (existingPopup) existingPopup.remove();
+
+                const popupOverlay = document.createElement('div');
+                popupOverlay.id = 'download-popup';
+                popupOverlay.className = 'popup-overlay';
+
+                let contentHTML = '';
+                let buttonsHTML = '';
+                const title = result.description ? (result.description.substring(0, 50) + '...') : 'Hasil Ditemukan';
+
+                const generateProxyUrl = (url, ext) => `/api/downloadProxy?url=${encodeURIComponent(url)}&filename=${Date.now()}.${ext}`;
+
+                if (result.slides && result.slides.length > 0) {
+                    contentHTML = '<div class="popup-images">';
+                    // ▼▼▼ INI PERBAIKAN UTAMANYA ▼▼▼
+                    result.slides.forEach((slide, index) => {
+                        const imgUrl = slide.url; // Mengambil URL dari dalam objek
+                        const displayUrl = `/api/imageProxy?url=${encodeURIComponent(imgUrl)}`;
+                        contentHTML += `
+                            <div class="image-slide">
+                                <img src="${displayUrl}" alt="TikTok Slide ${index + 1}">
+                                <a href="${generateProxyUrl(imgUrl, 'jpg')}" class="popup-button btn-download-single-image" style="width:100%"><i class="fas fa-download"></i> Foto ${index + 1}</a>
+                            </div>
+                        `;
+                    });
+                    // ▲▲▲ AKHIR DARI PERBAIKAN ▲▲▲
+                    contentHTML += '</div>';
+                    buttonsHTML += `<button id="downloadAllImagesBtn" class="popup-button btn-download-all-images"><i class="fas fa-images"></i> Semua Foto (${result.slides.length})</button>`;
+                
+                } else if (result.photo) {
+                    const displayUrl = `/api/imageProxy?url=${encodeURIComponent(result.photo)}`;
+                    contentHTML = `<div style="text-align:center;"><img src="${displayUrl}" alt="TikTok Photo" style="max-width:100%;border-radius:12px"></div>`;
+                    buttonsHTML += `<a href="${generateProxyUrl(result.photo, 'jpg')}" class="popup-button btn-download-all-images"><i class="fas fa-image"></i> Download Foto</a>`;
+                
+                } else if (result.video_nowm) {
+                    contentHTML = `<video src="${result.video_nowm}" controls class="popup-video"></video>`;
+                    buttonsHTML += `<a href="${generateProxyUrl(result.video_nowm, 'mp4')}" class="popup-button btn-download-popup-video"><i class="fas fa-video"></i> Download Video</a>`;
+                    if (result.audio_url) {
+                        buttonsHTML += `<a href="${generateProxyUrl(result.audio_url, 'mp3')}" class="popup-button btn-download-popup-audio"><i class="fas fa-music"></i> Download Audio</a>`;
+                    }
+                } else {
+                    contentHTML = '<p>Konten tidak ditemukan atau tidak didukung.</p>';
+                }
+
+                popupOverlay.innerHTML = `
+                    <div class="popup">
+                        <h3>${title}</h3>
+                        <div class="popup-content">${contentHTML}</div>
+                        <div class="popup-buttons">${buttonsHTML}</div>
+                        <button id="close-popup-button">Tutup</button>
+                    </div>
+                `;
+                document.body.appendChild(popupOverlay);
+                setTimeout(() => popupOverlay.classList.add('show'), 10);
+
+                const close = () => {
+                    popupOverlay.classList.remove('show');
+                    popupOverlay.addEventListener('transitionend', () => popupOverlay.remove());
+                };
+                popupOverlay.querySelector('#close-popup-button').onclick = close;
+                
+                const downloadAllBtn = document.getElementById('downloadAllImagesBtn');
+                if (downloadAllBtn) {
+                    downloadAllBtn.onclick = async () => {
+                        downloadAllBtn.textContent = 'Mengunduh... (1/' + result.slides.length + ')';
+                        downloadAllBtn.disabled = true;
+                        // ▼▼▼ PERBAIKAN KEDUA PADA BAGIAN INI ▼▼▼
+                        for (let i = 0; i < result.slides.length; i++) {
+                            const slide = result.slides[i];
+                            const url = slide.url; // Mengambil URL dari dalam objek
+                            const proxyUrl = generateProxyUrl(url, 'jpg');
+                            const a = document.createElement('a');
+                            a.href = proxyUrl;
+                            document.body.appendChild(a);
+                            a.click();
+                            document.body.removeChild(a);
+                            downloadAllBtn.textContent = `Mengunduh... (${i + 1}/${result.slides.length})`;
+                            await new Promise(resolve => setTimeout(resolve, 300));
+                        }
+                        // ▲▲▲ AKHIR DARI PERBAIKAN ▲▲▲
+                        showToast('Semua foto telah diunduh!', 'success');
+                        downloadAllBtn.textContent = `Download Semua Foto (${result.slides.length})`;
+                        downloadAllBtn.disabled = false;
+                    };
+                }
+            }
+            
+            const footer = document.querySelector('.footer');
+            if(footer) {
+                const youtubeLink = footer.querySelector('a[href*="youtube.com"]');
+                if (youtubeLink) {
+                    const hand = document.createElement('div');
+                    hand.className = 'click-hand';
+                    youtubeLink.classList.add('click-animation');
+                    youtubeLink.appendChild(hand);
+                }
+            }
+        });
+    </script>
+</body>
+</html>

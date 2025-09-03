@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0">
+    <title>Ubah Gambar Jadi Link - Rikishopreal</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary-color: #007aff; --secondary-color: #f2f2f7; --text-color-light: #1d1d1f;
+            --light-text-color: #8e8e93; --white-color: #fff; --border-color-light: #d1d1d6;
+            --success-color: #34c759; --error-color: #ff3b30; --shadow-light: rgba(0, 0, 0, 0.1);
+            --bg-body: var(--secondary-color); --bg-container: var(--white-color); --text-primary: var(--text-color-light);
+            --text-secondary: var(--light-text-color); --border-color: var(--border-color-light); --shadow-color: var(--shadow-light);
+        }
+        body.dark-mode {
+            --bg-body: #000000; --bg-container: #1c1c1e; --text-primary: #f5f5f7;
+            --text-secondary: #8e8e93; --border-color: #3a3a3c; --shadow-color: rgba(0, 0, 0, 0.4);
+        }
+        body {
+            font-family: 'Poppins', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: var(--bg-body); color: var(--text-primary); margin: 0;
+            display: flex; justify-content: center; align-items: center; 
+            min-height: 100vh; padding: 20px; box-sizing: border-box; transition: background-color 0.3s ease;
+        }
+.container {
+    position: relative; /* Diperlukan untuk tombol kembali */
+    background-color: var(--bg-container); border-radius: 24px; box-shadow: 0 10px 40px var(--shadow-color);
+    padding: 30px 40px; width: 100%; max-width: 500px; text-align: center;
+    animation: fadeIn 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.back-button {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    background-color: var(--bg-body);
+    color: var(--text-secondary);
+    border: 1px solid var(--border-color);
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    font-size: 1.2em;
+    transition: all 0.2s ease;
+}
+.back-button:hover {
+    background-color: var(--primary-color);
+    color: white;
+    border-color: var(--primary-color);
+}
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        h1 {
+    margin-top: 30px; /* Beri sedikit ruang dari tombol kembali */
+    color: var(--text-primary); margin: 0 0 10px; font-weight: 700; display: flex;
+    align-items: center; justify-content: center; gap: 12px;
+}
+        p.subtitle { color: var(--text-secondary); margin-bottom: 30px; }
+.upload-area {
+    border: 2px dashed var(--border-color); /* Kembali ke dashed untuk gaya iOS */
+    border-radius: 16px;
+    padding: 40px 20px;
+    cursor: pointer;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    transition: all 0.3s ease;
+    background-color: transparent;
+    position: relative; /* Tambahkan ini */
+}
+
+/* Tambahkan pseudo-element untuk ikon awan */
+.upload-area::before {
+    content: '\f0c2'; /* Kode ikon awan dari Font Awesome */
+    font-family: 'Font Awesome 6 Free';
+    font-weight: 900;
+    font-size: 3em;
+    color: var(--primary-color);
+    margin-bottom: 15px;
+}
+        .upload-area i { font-size: 3em; color: var(--primary-color); margin-bottom: 15px; }
+        .upload-area span { display: block; font-weight: 500; }
+        #file-input { display: none; }
+        #preview-container { margin-top: 20px; display: grid; grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); gap: 12px; }
+        .preview-image { width: 100%; height: 80px; object-fit: cover; border-radius: 12px; }
+        #upload-button {
+            width: 100%; padding: 15px; margin-top: 25px; background-color: var(--primary-color); color: white;
+            border: none; border-radius: 12px; font-size: 1.1em; font-weight: 600; cursor: pointer; display: none;
+            transition: all 0.3s ease;
+        }
+        #upload-button:disabled { background-color: var(--light-text-color); cursor: not-allowed; }
+        #upload-button:not(:disabled):hover { transform: translateY(-3px); box-shadow: 0 6px 12px rgba(0, 122, 255, 0.3); }
+        .spinner {
+            width: 20px; height: 20px; border: 3px solid rgba(255, 255, 255, 0.3); border-top-color: #fff;
+            border-radius: 50%; display: inline-block; animation: spin 1s linear infinite;
+            margin-right: 10px; vertical-align: middle;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .dark-mode-toggle {
+            position: fixed; top: 20px; right: 20px; background-color: var(--bg-container); color: var(--text-primary);
+            border: 1px solid var(--border-color); border-radius: 50px; padding: 8px; width: 40px; height: 40px;
+            cursor: pointer; font-size: 1.2em; display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 4px 10px var(--shadow-color); z-index: 1001;
+        }
+        
+        /* FOOTER YANG SUDAH DIPERBAIKI */
+        .footer {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border-color); /* Garis pemisah estetik */
+            text-align: center;
+            font-size: 0.9em;
+            color: var(--text-secondary);
+        }
+        .footer a { color: var(--text-secondary); text-decoration: none; font-weight: 600; display: inline-flex; align-items: center; gap: 8px; transition: color 0.3s ease, text-shadow 0.3s ease; }
+        .footer a:hover { color: var(--primary-color); text-shadow: 0 0 8px var(--primary-color); }
+        .footer .fab.fa-youtube { color: #ff0000; }
+        .footer a:hover .fab.fa-youtube { text-shadow: 0 0 8px #ff0000; }
+        .glow-text { text-shadow: 0 0 5px rgba(0, 122, 255, 0.6); }
+        .glow-youtube { text-shadow: 0 0 5px rgba(255, 0, 0, 0.6); }
+        .click-animation { position: relative; }
+.click-hand {
+    position: absolute;
+    bottom: -30px; /* Pindahkan ke bawah */
+    left: 50%; /* Tengah horizontal */
+    transform: translateX(-50%) rotate(-90deg); /* Geser ke tengah dan putar ke atas */
+    width: 25px;
+    height: 25px;
+    background-image: url('https://em-content.zobj.net/source/twitter/376/backhand-index-pointing-right_1f449.png');
+    background-size: contain; background-repeat: no-repeat;
+    opacity: 0;
+    transform-origin: top center; /* Ubah origin rotasi */
+    animation: clicking-up 2s infinite ease-in-out 1s; /* Ganti nama animasi */
+    pointer-events: none;
+}
+@keyframes clicking-up { /* Animasi menunjuk ke atas */
+    0%, 80%, 100% { opacity: 0; transform: translateX(-50%) rotate(-90deg) scale(0.9); }
+    10%, 50% { opacity: 1; transform: translateX(-50%) rotate(-90deg) scale(1); }
+    30% { transform: translateX(-50%) rotate(-90deg) scale(0.85); }
+    60% { opacity: 0; transform: translateX(-50%) rotate(-90deg) scale(0.9); }
+}
+
+        /* GAYA POPUP */
+        .popup-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.6);
+            display: none; justify-content: center; align-items: center; z-index: 1000; opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        .popup-overlay.show { display: flex; opacity: 1; }
+        .popup {
+            background-color: var(--bg-container); color: var(--text-primary); border-radius: 20px;
+            padding: 25px 30px; text-align: center; box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            width: 90%; max-width: 500px; animation: popIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        @keyframes popIn { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
+        .popup .icon { font-size: 3em; color: var(--success-color); margin-bottom: 15px; }
+        .popup h3 { margin: 0 0 15px; font-size: 1.4em; }
+        .popup-results-container { max-height: 250px; overflow-y: auto; margin-top: 20px; text-align: left; }
+        .popup-results-container .result-item {
+            display: flex; align-items: center; margin-bottom: 10px; background-color: var(--bg-body);
+            padding: 8px; border-radius: 12px;
+        }
+        .popup-results-container .result-item input {
+            flex-grow: 1; padding: 10px; border: 1px solid var(--border-color); border-radius: 8px 0 0 8px;
+            background-color: var(--bg-container); color: var(--text-primary); font-family: monospace; border-right: none;
+        }
+        .popup-results-container .result-item button {
+            padding: 10px 15px; border: none; background-color: var(--primary-color); color: white;
+            border-radius: 0 8px 8px 0; cursor: pointer; font-weight: 600;
+        }
+        .popup #close-popup-button {
+            width: 100%; margin-top: 20px; padding: 12px; font-weight: 600; font-size: 1em;
+            border-radius: 10px; cursor: pointer; border: none; background-color: var(--secondary-color);
+            color: var(--text-secondary); border: 1px solid var(--border-color);
+        }
+    </style>
+</head>
+<body class="light-mode">
+
+    <button id="dark-mode-toggle" class="dark-mode-toggle" aria-label="Ganti Tema">
+        <i class="fas fa-moon"></i>
+    </button>
+
+    <div class="container">
+    <a href="index.html" class="back-button" aria-label="Kembali ke Beranda">
+        <i class="fas fa-arrow-left"></i>
+    </a>
+        <h1><i class="fas fa-link"></i> Ubah Gambar Jadi Link</h1>
+        <p class="subtitle">Pilih atau seret satu atau beberapa gambar untuk diunggah.</p>
+        
+        <label for="file-input" class="upload-area" id="upload-area">
+            <span id="upload-text">Klik atau seret gambar ke sini</span>
+        </label>
+        <input type="file" id="file-input" accept="image/jpeg, image/png, image/gif, image/webp" multiple>
+        
+        <div id="preview-container"></div>
+        
+        <button id="upload-button">Unggah Gambar</button>
+
+        <div class="footer">
+            Powered by <a href="https://toko.rikishop.my.id" target="_blank" style="margin-left: 5px;"><span class="glow-text">Riki Shop</span></a>
+            <span style="margin: 0 10px;">|</span>
+            <a href="https://www.youtube.com/@rikishopreal" target="_blank">
+                <i class="fab fa-youtube glow-youtube"></i> Subscribe
+            </a>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const body = document.body;
+            const darkModeToggle = document.getElementById('dark-mode-toggle');
+            const uploadArea = document.getElementById('upload-area');
+            const fileInput = document.getElementById('file-input');
+            const previewContainer = document.getElementById('preview-container');
+            const uploadText = document.getElementById('upload-text');
+            const uploadButton = document.getElementById('upload-button');
+
+            let selectedFiles = [];
+
+            darkModeToggle.addEventListener('click', () => {
+                body.classList.toggle('dark-mode');
+                const isDarkMode = body.classList.contains('dark-mode');
+                darkModeToggle.querySelector('i').className = isDarkMode ? 'fas fa-sun' : 'fas fa-moon';
+            });
+
+            ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+                uploadArea.addEventListener(eventName, e => { e.preventDefault(); e.stopPropagation(); });
+            });
+            uploadArea.addEventListener('dragenter', () => uploadArea.classList.add('drag-over'));
+            uploadArea.addEventListener('dragleave', () => uploadArea.classList.remove('drag-over'));
+            uploadArea.addEventListener('drop', e => {
+                uploadArea.classList.remove('drag-over');
+                handleFiles(e.dataTransfer.files);
+            });
+            fileInput.addEventListener('change', (event) => handleFiles(event.target.files));
+
+            function handleFiles(files) {
+                selectedFiles = Array.from(files).filter(file => file.type.startsWith('image/'));
+                previewContainer.innerHTML = '';
+                if (selectedFiles.length === 0) {
+                    uploadText.innerHTML = '<i class="fas fa-cloud-upload-alt"></i><span>Klik atau seret gambar ke sini</span>';
+                    uploadButton.style.display = 'none';
+                    return;
+                }
+                uploadText.textContent = `${selectedFiles.length} gambar dipilih.`;
+                uploadButton.style.display = 'block';
+                uploadButton.textContent = `Unggah ${selectedFiles.length} Gambar`;
+                selectedFiles.forEach(file => {
+                    const reader = new FileReader();
+                    reader.onload = e => {
+                        const img = document.createElement('img');
+                        img.src = e.target.result;
+                        img.className = 'preview-image';
+                        previewContainer.appendChild(img);
+                    };
+                    reader.readAsDataURL(file);
+                });
+            }
+
+            uploadButton.addEventListener('click', async () => {
+                if (selectedFiles.length === 0) return;
+                uploadButton.disabled = true;
+                let successfulLinks = [];
+                let failedFiles = [];
+
+                for (let i = 0; i < selectedFiles.length; i++) {
+                    const file = selectedFiles[i];
+                    uploadButton.innerHTML = `<span class="spinner"></span> Mengunggah ${i + 1} dari ${selectedFiles.length}...`;
+                    const formData = new FormData();
+                    formData.append('image', file);
+                    try {
+                        const response = await fetch('/api/tourl', { method: 'POST', body: formData });
+                        const result = await response.json();
+                        if (!response.ok) throw new Error(result.message || 'Gagal');
+                        successfulLinks.push(result.link);
+                    } catch (error) {
+                        failedFiles.push(file.name);
+                        console.error(`Gagal mengunggah ${file.name}:`, error);
+                    }
+                }
+
+                if (successfulLinks.length > 0) {
+                    showSuccessPopup(successfulLinks);
+                }
+                if (failedFiles.length > 0) {
+                    alert(`Gagal mengunggah: ${failedFiles.join(', ')}`);
+                }
+                
+                resetUI();
+            });
+            
+            function showSuccessPopup(links) {
+                const existingPopup = document.getElementById('multi-upload-success-popup');
+                if (existingPopup) existingPopup.remove();
+
+                const popupOverlay = document.createElement('div');
+                popupOverlay.id = 'multi-upload-success-popup';
+                popupOverlay.className = 'popup-overlay';
+
+                let linksHTML = '';
+                links.forEach(link => {
+                    linksHTML += `
+                        <div class="result-item">
+                            <input type="text" value="${link}" readonly>
+                            <button class="copy-btn-popup">Salin</button>
+                        </div>
+                    `;
+                });
+
+                popupOverlay.innerHTML = `
+                    <div class="popup">
+                        <div class="icon"><i class="fas fa-check-circle"></i></div>
+                        <h3>${links.length} Gambar Berhasil Diunggah!</h3>
+                        <div class="popup-results-container">${linksHTML}</div>
+                        <button id="close-popup-button">Tutup</button>
+                    </div>
+                `;
+                
+                document.body.appendChild(popupOverlay);
+                setTimeout(() => popupOverlay.classList.add('show'), 10);
+
+                popupOverlay.querySelector('#close-popup-button').onclick = () => {
+                    popupOverlay.classList.remove('show');
+                    setTimeout(() => popupOverlay.remove(), 300);
+                };
+                
+                popupOverlay.querySelectorAll('.copy-btn-popup').forEach(button => {
+                    button.onclick = (e) => {
+                        const input = e.target.previousElementSibling;
+                        input.select();
+                        navigator.clipboard.writeText(input.value);
+                        e.target.textContent = 'Tersalin!';
+                        setTimeout(() => { e.target.textContent = 'Salin'; }, 2000);
+                    };
+                });
+            }
+
+            function resetUI() {
+                uploadButton.innerHTML = 'Unggah Gambar';
+                uploadButton.disabled = false;
+                uploadButton.style.display = 'none';
+                previewContainer.innerHTML = '';
+                uploadText.innerHTML = '<i class="fas fa-cloud-upload-alt"></i><span>Klik atau seret gambar ke sini</span>';
+                selectedFiles = [];
+                fileInput.value = '';
+            }
+
+            const youtubeLink = document.querySelector('.footer a[href*="youtube.com"]');
+            if (youtubeLink) {
+                const hand = document.createElement('div');
+                hand.className = 'click-hand';
+                youtubeLink.classList.add('click-animation');
+                youtubeLink.appendChild(hand);
+            }
+        });
+    </script>
+
+</body>
+</html>

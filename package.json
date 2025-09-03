@@ -1,0 +1,24 @@
+{
+  "name": "rikishopreal-project",
+  "version": "1.0.0",
+  "description": "Website toko digital Rikishopreal",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "vercel dev",
+    "start": "node ./api/yt-download.js"
+  },
+  "keywords": [
+    "toko",
+    "digital",
+    "vercel"
+  ],
+  "author": "Riki Shop Real",
+  "license": "ISC",
+  "dependencies": {
+    "@octokit/rest": "^20.0.2",
+    "formidable": "^3.5.1",
+    "node-fetch": "^3.3.2",
+    "node-upload-images": "^1.0.1"
+  }
+}

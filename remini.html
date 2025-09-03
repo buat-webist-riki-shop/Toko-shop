@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0">
+    <title>AI Image Enhancer - Rikishopreal</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary-color: #5865F2; --secondary-color: #f2f2f7; --text-color-light: #1d1d1f;
+            --light-text-color: #8e8e93; --white-color: #fff; --border-color-light: #d1d1d6;
+            --success-color: #34c759; --error-color: #ff3b30; --shadow-light: rgba(0, 0, 0, 0.1);
+            --bg-body: var(--secondary-color); --bg-container: var(--white-color); --text-primary: var(--text-color-light);
+            --text-secondary: var(--light-text-color); --border-color: var(--border-color-light); --shadow-color: var(--shadow-light);
+        }
+        body.dark-mode {
+            --bg-body: #000000; --bg-container: #1c1c1e; --text-primary: #f5f5f7;
+            --text-secondary: #8e8e93; --border-color: #3a3a3c; --shadow-color: rgba(0, 0, 0, 0.4);
+        }
+        body {
+            font-family: 'Poppins', sans-serif; background-color: var(--bg-body); color: var(--text-primary); margin: 0;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            min-height: 100vh; padding: 20px; box-sizing: border-box;
+        }
+        .container {
+            background-color: var(--bg-container); border-radius: 24px; box-shadow: 0 10px 40px var(--shadow-color);
+            padding: 30px 25px; width: 100%; max-width: 500px; text-align: center;
+            animation: fadeIn 0.5s ease;
+            position: relative;
+        }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        h1 { margin: 0 0 10px; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 12px; font-size: 1.8em; }
+        p.subtitle { color: var(--text-secondary); margin-bottom: 30px; }
+        .upload-area {
+            border: 2px dashed var(--border-color); border-radius: 16px; cursor: pointer; transition: all 0.2s ease;
+            width: 100%; min-height: 120px; max-height: 250px; padding: 20px; 
+            box-sizing: border-box; display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
+        }
+        .upload-area:hover { border-color: var(--primary-color); background-color: var(--bg-body); }
+        .upload-area i { font-size: clamp(2em, 8vw, 3em); color: var(--primary-color); margin-bottom: 15px; }
+        .upload-area span { font-size: clamp(0.85em, 3.5vw, 1em); }
+        #file-input { display: none; }
+        #preview-container { margin-top: 20px; text-align: center; }
+        #image-preview { max-width: 100%; max-height: 200px; border-radius: 12px; }
+        #enhance-btn {
+            width: 100%; padding: 15px; margin-top: 25px; background-color: var(--primary-color); color: white;
+            border: none; border-radius: 12px; font-size: 1.1em; font-weight: 600; cursor: pointer; display: none;
+            transition: all 0.3s ease;
+        }
+        #enhance-btn:disabled { background-color: var(--light-text-color); cursor: not-allowed; }
+        .spinner {
+            width: 20px; height: 20px; border: 3px solid rgba(255, 255, 255, 0.3); border-top-color: #fff;
+            border-radius: 50%; display: inline-block; animation: spin 1s linear infinite;
+            margin-right: 10px; vertical-align: middle;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .dark-mode-toggle {
+            position: fixed; top: 20px; right: 20px; background-color: var(--bg-container); color: var(--text-primary);
+            border: 1px solid var(--border-color); border-radius: 50px; padding: 8px; width: 40px; height: 40px;
+            cursor: pointer; font-size: 1.2em; display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 4px 10px var(--shadow-color); z-index: 1001;
+        }
+        #back-button {
+            position: absolute; top: 25px; left: 25px; background-color: transparent; border: none; font-size: 1.5em; 
+            cursor: pointer; color: var(--text-secondary); transition: color 0.3s ease;
+            display: flex; align-items: center; justify-content: center;
+            padding: 5px; border-radius: 50%; text-decoration: none;
+        }
+        #back-button:hover { color: var(--primary-color); background-color: rgba(0,0,0,0.05); }
+        body.dark-mode #back-button:hover { background-color: rgba(255,255,255,0.05); }
+        .footer { margin-top: 30px; text-align: center; font-size: 0.9em; color: var(--text-secondary); }
+
+        /* CSS FOOTER & ANIMASI YOUTUBE DARI KODE ASLI */
+        .footer a { color: var(--text-secondary); text-decoration: none; font-weight: 600; display: inline-flex; align-items: center; gap: 8px; transition: color 0.3s ease, text-shadow 0.3s ease; }
+        .footer a:hover { color: var(--primary-color); text-shadow: 0 0 8px var(--primary-color); }
+        .footer .fab.fa-youtube { color: #ff0000; }
+        .footer a:hover .fab.fa-youtube { text-shadow: 0 0 8px #ff0000; }
+        .glow-text { text-shadow: 0 0 5px var(--primary-color); }
+        .glow-youtube { text-shadow: 0 0 5px rgba(255, 0, 0, 0.6); }
+        .click-animation { position: relative; display: inline-flex; }
+        .click-hand {
+            position: absolute; bottom: -25px; left: 50%; width: 25px; height: 25px;
+            background-image: url('https://emojicdn.elk.sh/👆'); background-size: contain; background-repeat: no-repeat;
+            opacity: 0; transform: translateX(-50%); transform-origin: bottom center;
+            animation: pointing-up 2.5s infinite ease-in-out 1.5s; pointer-events: none;
+        }
+        @keyframes pointing-up {
+            0%, 100% { transform: translateX(-50%) translateY(10px); opacity: 0; }
+            30%, 70% { transform: translateX(-50%) translateY(0); opacity: 1; }
+            80% { transform: translateX(-50%) translateY(10px); opacity: 0; }
+        }
+
+        /* CSS BARU UNTUK SLIDER GESER */
+        .popup-overlay {
+            position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.8);
+            display: flex; align-items: center; justify-content: center; padding: 10px;
+            visibility: hidden; opacity: 0; transition: visibility 0s 0.3s, opacity 0.3s ease; box-sizing: border-box;
+        }
+        .popup-overlay.show { visibility: visible; opacity: 1; transition-delay: 0s; }
+        .popup {
+            background-color: var(--bg-container); border-radius: 20px; width: 100%; 
+            max-width: 600px;
+            padding: 25px; text-align: center; max-height: 90vh; overflow-y: auto; 
+            transform: scale(0.95); transition: transform 0.3s ease; display: flex; flex-direction: column;
+        }
+        .popup-overlay.show .popup { transform: scale(1); }
+
+        .slider-container {
+            width: 100%;
+            position: relative;
+            overflow: hidden;
+            border-radius: 12px;
+            margin-top: 15px;
+            border: 1px solid var(--border-color);
+            touch-action: pan-y;
+        }
+
+        .slider-wrapper {
+            display: flex;
+            width: 200%; /* Karena ada 2 gambar */
+            transition: transform 0.4s ease-in-out;
+        }
+
+        .slide {
+            width: 50%; /* Lebar per slide */
+            flex-shrink: 0;
+            box-sizing: border-box;
+            position: relative;
+        }
+
+        .slide img {
+            width: 100%;
+            height: auto;
+            display: block;
+            user-select: none;
+            -webkit-user-drag: none; /* Mencegah ghost image saat drag di Chrome */
+        }
+        .slide .label {
+            position: absolute; top: 10px; left: 10px; background-color: rgba(0, 0, 0, 0.6);
+            color: white; padding: 4px 10px; border-radius: 8px; font-size: 0.9em;
+        }
+
+        .slider-btn {
+            position: absolute; top: 50%; transform: translateY(-50%);
+            background-color: rgba(0, 0, 0, 0.4); color: white; border: none;
+            width: 40px; height: 40px; border-radius: 50%; cursor: pointer;
+            font-size: 1.2em; display: flex; align-items: center; justify-content: center;
+            transition: background-color 0.2s ease; z-index: 10;
+        }
+        .slider-btn:hover { background-color: rgba(0, 0, 0, 0.7); }
+        .slider-btn.prev { left: 10px; }
+        .slider-btn.next { right: 10px; }
+
+        .slider-dots {
+            display: flex; gap: 8px; justify-content: center; margin-top: 15px;
+        }
+        .dot {
+            width: 10px; height: 10px; background-color: var(--border-color);
+            border-radius: 50%; cursor: pointer; transition: background-color 0.3s ease;
+        }
+        .dot.active { background-color: var(--primary-color); }
+        
+        .popup-buttons { display: flex; flex-direction: column; gap: 10px; margin-top: 20px; }
+        .popup-button { display: block; padding: 12px; border: none; border-radius: 10px; color: white; font-weight: 600; text-decoration: none; background-color: var(--primary-color); }
+        #close-popup-button { background-color: transparent; color: var(--text-secondary); border: 1px solid var(--border-color); }
+        
+        #toast-container { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); z-index: 9999; }
+        .toast-notification {
+            padding: 12px 20px; background-color: #333; color: white; border-radius: 25px;
+            font-size: 0.9em; font-weight: 500; display: flex; align-items: center; gap: 10px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2); transform: translateY(-150%); opacity: 0;
+            transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.5s ease;
+        }
+        .toast-notification.show { opacity: 1; transform: translateY(0); }
+        .toast-notification.success { background-color: var(--success-color); }
+        .toast-notification.error { background-color: var(--error-color); }
+    </style>
+</head>
+<body>
+    <div id="toast-container"></div>
+    <button id="dark-mode-toggle" class="dark-mode-toggle" aria-label="Ganti Tema"><i class="fas fa-moon"></i></button>
+
+    <div class="container">
+        <a href="index.html" id="back-button" aria-label="Kembali"><i class="fas fa-arrow-left"></i></a>
+        <h1><i class="fas fa-magic-sparkles"></i> AI Image Enhancer</h1>
+        <p class="subtitle">Unggah gambar buram untuk diubah menjadi kualitas HD.</p>
+        <label for="file-input" class="upload-area" id="upload-area">
+            <i class="fas fa-cloud-upload-alt"></i>
+            <span id="upload-text">Klik atau seret gambar ke sini</span>
+        </label>
+        <input type="file" id="file-input" accept="image/jpeg, image/png, image/webp">
+        <div id="preview-container"></div>
+        <button id="enhance-btn"><span>HD-kan Gambar Ini</span></button>
+        <div class="footer">
+            Powered by <a href="https://toko.rikishop.my.id" target="_blank" style="margin-left: 5px;"><span class="glow-text">Riki Shop</span></a>
+            <span style="margin: 0 10px;">|</span>
+            <a href="https://www.youtube.com/@rikishopreal" target="_blank" class="click-animation">
+                <i class="fab fa-youtube glow-youtube"></i> Subscribe
+            </a>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const body = document.body;
+            const darkModeToggle = document.getElementById('dark-mode-toggle');
+          
+            darkModeToggle.addEventListener('click', () => {
+                body.classList.toggle('dark-mode');
+                const isDarkMode = body.classList.contains('dark-mode');
+                darkModeToggle.querySelector('i').className = isDarkMode ? 'fas fa-sun' : 'fas fa-moon';
+                localStorage.setItem('darkMode', isDarkMode);
+            });
+            if (localStorage.getItem('darkMode') === 'true') {
+                 body.classList.add('dark-mode');
+                 darkModeToggle.querySelector('i').className = 'fas fa-sun';
+            }
+
+            function showToast(message, type = 'error') {
+                const toastContainer = document.getElementById('toast-container');
+                const toast = document.createElement('div');
+                toast.className = `toast-notification ${type}`;
+                const icon = type === 'success' ? 'fa-check-circle' : 'fa-times-circle';
+                toast.innerHTML = `<i class="fas ${icon}"></i> ${message}`;
+                toastContainer.innerHTML = '';
+                toastContainer.appendChild(toast);
+                setTimeout(() => toast.classList.add('show'), 10);
+                setTimeout(() => {
+                    toast.classList.remove('show');
+                    toast.addEventListener('transitionend', () => toast.remove());
+                }, 3000);
+            }
+
+            const uploadArea = document.getElementById('upload-area');
+            const fileInput = document.getElementById('file-input');
+            const previewContainer = document.getElementById('preview-container');
+            const enhanceBtn = document.getElementById('enhance-btn');
+            let selectedFile = null;
+
+            const handleFiles = (files) => {
+                if (files.length === 0) return;
+                selectedFile = files[0];
+                if (!selectedFile.type.startsWith('image/')) {
+                    showToast('Hanya file gambar yang diizinkan.', 'error');
+                    selectedFile = null;
+                    previewContainer.innerHTML = '';
+                    enhanceBtn.style.display = 'none';
+                    return;
+                }
+                
+                previewContainer.innerHTML = `<img id="image-preview" src="${URL.createObjectURL(selectedFile)}" alt="Preview">`;
+                enhanceBtn.style.display = 'block';
+            };
+
+            fileInput.addEventListener('change', (e) => handleFiles(e.target.files));
+            ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+                uploadArea.addEventListener(eventName, e => { e.preventDefault(); e.stopPropagation(); });
+            });
+            uploadArea.addEventListener('drop', e => handleFiles(e.dataTransfer.files));
+
+            enhanceBtn.addEventListener('click', async () => {
+                if (!selectedFile) {
+                    showToast('Harap unggah gambar terlebih dahulu.', 'error');
+                    return;
+                }
+                const originalBtnText = enhanceBtn.innerHTML;
+                enhanceBtn.innerHTML = '<span class="spinner"></span> Mengunggah (1/2)...';
+                enhanceBtn.disabled = true;
+
+                try {
+                    const formData = new FormData();
+                    formData.append('image', selectedFile);
+
+                    const uploadResponse = await fetch('/api/tourl', { method: 'POST', body: formData });
+                    const uploadResult = await uploadResponse.json();
+                    if (!uploadResponse.ok) throw new Error(uploadResult.message || 'Gagal mengubah gambar ke link.');
+                    
+                    const beforeUrl = uploadResult.link;
+
+                    enhanceBtn.innerHTML = '<span class="spinner"></span> Memproses HD (2/2)...';
+                    const reminiResponse = await fetch('/api/remini', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ url: beforeUrl, type: 'remini' })
+                    });
+                    const reminiResult = await reminiResponse.json();
+                    if (!reminiResponse.ok) throw new Error(reminiResult.message || 'Gagal memproses gambar HD.');
+                    if (!reminiResult || !reminiResult.result) throw new Error('Format hasil Remini tidak valid.');
+
+                    const afterUrl = reminiResult.result;
+                    showResultPopup(beforeUrl, afterUrl);
+
+                } catch (error) {
+                    showToast(error.message, 'error');
+                } finally {
+                    enhanceBtn.innerHTML = originalBtnText;
+                    enhanceBtn.disabled = false;
+                }
+            });
+
+            function showResultPopup(beforeUrl, afterUrl) {
+                const existingPopup = document.querySelector('.popup-overlay');
+                if (existingPopup) existingPopup.remove();
+
+                const popupOverlay = document.createElement('div');
+                popupOverlay.className = 'popup-overlay';
+                
+                const downloadHref = `/api/downloadProxy?url=${encodeURIComponent(afterUrl)}&filename=enhanced_riki.png`;
+                
+                popupOverlay.innerHTML = `
+                    <div class="popup">
+                        <h3>Hasil Perbandingan (Geser Gambar)</h3>
+                        <div class="slider-container">
+                            <div class="slider-wrapper">
+                                <div class="slide">
+                                    <span class="label">Hasil HD</span>
+                                    <img src="/api/imageProxy?url=${encodeURIComponent(afterUrl)}" alt="Sesudah">
+                                </div>
+                                <div class="slide">
+                                    <span class="label">Gambar Asli</span>
+                                    <img src="/api/imageProxy?url=${encodeURIComponent(beforeUrl)}" alt="Sebelum">
+                                </div>
+                            </div>
+                            <button class="slider-btn prev"><i class="fas fa-chevron-left"></i></button>
+                            <button class="slider-btn next"><i class="fas fa-chevron-right"></i></button>
+                        </div>
+                        <div class="slider-dots">
+                            <span class="dot active"></span>
+                            <span class="dot"></span>
+                        </div>
+                        <div class="popup-buttons">
+                            <a href="${downloadHref}" class="popup-button"><i class="fas fa-download"></i> Download Hasil HD</a>
+                            <button id="close-popup-button">Tutup</button>
+                        </div>
+                    </div>
+                `;
+                document.body.appendChild(popupOverlay);
+                popupOverlay.classList.add('show');
+                
+                // --- LOGIKA SLIDER GESER ---
+                const sliderContainer = popupOverlay.querySelector('.slider-container');
+                const sliderWrapper = popupOverlay.querySelector('.slider-wrapper');
+                const prevBtn = popupOverlay.querySelector('.slider-btn.prev');
+                const nextBtn = popupOverlay.querySelector('.slider-btn.next');
+                const dots = popupOverlay.querySelectorAll('.dot');
+                
+                let currentIndex = 0;
+                const totalSlides = 2;
+                let isDragging = false, startPosX = 0, currentTranslate = 0, animationID;
+
+                function getPositionX(event) {
+                    return event.type.includes('mouse') ? event.pageX : event.touches[0].clientX;
+                }
+                
+                function setSliderPosition() {
+                    sliderWrapper.style.transform = `translateX(${currentTranslate}px)`;
+                }
+
+                function goToSlide(index) {
+                    const slideWidth = sliderContainer.clientWidth;
+                    currentTranslate = -index * slideWidth;
+                    sliderWrapper.style.transition = 'transform 0.4s ease-in-out';
+                    setSliderPosition();
+                    dots.forEach((dot, i) => dot.classList.toggle('active', i === index));
+                    currentIndex = index;
+                }
+
+                prevBtn.addEventListener('click', () => goToSlide(currentIndex === 0 ? totalSlides - 1 : currentIndex - 1));
+                nextBtn.addEventListener('click', () => goToSlide(currentIndex === totalSlides - 1 ? 0 : currentIndex + 1));
+                dots.forEach((dot, i) => dot.addEventListener('click', () => goToSlide(i)));
+
+                function dragStart(e) {
+                    isDragging = true;
+                    startPosX = getPositionX(e);
+                    animationID = requestAnimationFrame(animation);
+                    sliderWrapper.style.transition = 'none';
+                }
+
+                function dragging(e) {
+                    if (isDragging) {
+                        const currentPosition = getPositionX(e);
+                        const slideWidth = sliderContainer.clientWidth;
+                        currentTranslate = -currentIndex * slideWidth + currentPosition - startPosX;
+                    }
+                }
+
+                function dragEnd(e) {
+                    if (!isDragging) return;
+                    isDragging = false;
+                    cancelAnimationFrame(animationID);
+                    
+                    const movedBy = getPositionX(e) - startPosX;
+
+                    if (movedBy < -50 && currentIndex < totalSlides - 1) currentIndex += 1;
+                    if (movedBy > 50 && currentIndex > 0) currentIndex -= 1;
+                    
+                    goToSlide(currentIndex);
+                }
+
+                function animation() {
+                    setSliderPosition();
+                    if (isDragging) requestAnimationFrame(animation);
+                }
+
+                sliderContainer.addEventListener('mousedown', dragStart);
+                sliderContainer.addEventListener('touchstart', dragStart, { passive: true });
+                
+                sliderContainer.addEventListener('mousemove', dragging);
+                sliderContainer.addEventListener('touchmove', dragging, { passive: true });
+
+                sliderContainer.addEventListener('mouseup', dragEnd);
+                sliderContainer.addEventListener('mouseleave', (e) => { if(isDragging) dragEnd(e) });
+                sliderContainer.addEventListener('touchend', dragEnd);
+                
+                window.addEventListener('resize', () => goToSlide(currentIndex));
+
+                // Inisialisasi posisi
+                goToSlide(0);
+
+                popupOverlay.querySelector('#close-popup-button').onclick = () => {
+                    popupOverlay.classList.remove('show');
+                    popupOverlay.addEventListener('transitionend', () => popupOverlay.remove(), { once: true });
+                };
+            }
+
+            // Script untuk animasi YouTube
+            const footer = document.querySelector('.footer');
+            if(footer) {
+                const youtubeLink = footer.querySelector('a[href*="youtube.com"]');
+                if (youtubeLink) {
+                    const hand = document.createElement('div');
+                    hand.className = 'click-hand';
+                    youtubeLink.appendChild(hand);
+                }
+            }
+        });
+    </script>
+</body>
+</html>
