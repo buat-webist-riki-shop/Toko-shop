@@ -5,7 +5,11 @@ import fetch from "node-fetch";
 const octokit = new Octokit({ auth: process.env.GITHUB_TOKEN });
 const owner = process.env.REPO_OWNER;
 const repo  = process.env.REPO_NAME;
-const branch = process.env.REPO_BRANCH || "main"; // bisa tambah REPO_BRANCH di .env kalau mau fleksibel
+const branch = process.env.REPO_BRANCH || "main";
+
+// --- Konfigurasi Cloudflare Global API (BARU) ---
+const cfApiToken = process.env.CLOUDFLARE_API_TOKEN;
+const cfAccountId = process.env.CLOUDFLARE_ACCOUNT_ID;
 
 // --- Helper GitHub ---
 async function readJsonFromGithub(path) {
@@ -38,6 +42,35 @@ async function writeJsonToGithub(path, json) {
         branch
     });
 }
+
+// --- Helper Cloudflare (BARU) ---
+async function fetchDomainsFromCloudflare() {
+    if (!cfApiToken || !cfAccountId) {
+        console.warn("Cloudflare Global API Token atau Account ID tidak diatur. Melewatkan pengambilan domain dari API.");
+        return [];
+    }
+    try {
+        const response = await fetch(`https://api.cloudflare.com/client/v4/zones?account.id=${cfAccountId}&per_page=100`, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${cfApiToken}`,
+                'Content-Type': 'application/json'
+            }
+        });
+        const data = await response.json();
+        if (!data.success) {
+            console.error("Gagal mengambil domain dari Cloudflare API:", data.errors);
+            return [];
+        }
+        // Ambil hanya nama domain dari hasil
+        return data.result.map(zone => zone.name);
+    } catch (error) {
+        console.error("Error saat fetch ke Cloudflare API:", error);
+        return [];
+    }
+}
+
+
 // --- Handler utama ---
 export default async function handler(request, response) {
     // ✅ CORS
@@ -90,13 +123,22 @@ export default async function handler(request, response) {
         switch (action) {
             // == AKSI UNTUK PENGGUNA ==
             case "getRootDomains": {
-                return response.status(200).json({ domains: Object.keys(domains) });
+                // MODIFIKASI: Ambil dari 2 sumber dan gabungkan
+                const domainsFromJson = Object.keys(domains);
+                const domainsFromApi = await fetchDomainsFromCloudflare();
+
+                // Gabungkan dan hapus duplikat menggunakan Set
+                const combinedDomains = new Set([...domainsFromJson, ...domainsFromApi]);
+                
+                return response.status(200).json({ domains: Array.from(combinedDomains).sort() });
             }
 
             case "createSubdomain": {
                 const { subdomain, domain, type, content, proxied } = data;
+                
+                // Cek dulu apakah domain ada di JSON (karena butuh API Token spesifik domain)
                 const domainInfo = domains[domain];
-                if (!domainInfo) throw new Error("Domain utama tidak ditemukan.");
+                if (!domainInfo) throw new Error("Domain utama tidak ditemukan atau tidak dikonfigurasi untuk pembuatan subdomain via metode ini.");
 
                 const headers = {
                     "Content-Type": "application/json",
@@ -165,16 +207,10 @@ export default async function handler(request, response) {
                     expires_at = now.toISOString();
                 }
                 
-                // Simpan data key yang baru ke dalam variabel
                 const newKeyData = { created_at: new Date().toISOString(), expires_at };
-                
-                // Masukkan ke daftar semua key
                 apiKeys[key] = newKeyData;
-                
-                // Tulis ke file data/isi_json/apikeys.json
                 await writeJsonToGithub("data/isi_json/apikeys.json", apiKeys);
                 
-                // Kirim kembali respons dengan menyertakan "details"
                 return response.status(200).json({
                     message: "API Key berhasil dibuat.",
                     details: newKeyData
