@@ -392,17 +392,6 @@
             "nomorWA": "",
             "discountPrice": null,
             "discountEndDate": null
-        },
-        {
-            "id": 68,
-            "nama": "Halo",
-            "harga": 3999,
-            "hargaAsli": 3999,
-            "deskripsiPanjang": "Ssjs",
-            "createdAt": "2025-08-21T14:36:32.649Z",
-            "nomorWA": "",
-            "discountPrice": null,
-            "discountEndDate": null
         }
     ],
     "Jasa": [
