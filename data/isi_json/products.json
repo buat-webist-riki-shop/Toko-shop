@@ -1,19 +1,6 @@
 {
     "Panel": [
         {
-            "id": 69,
-            "nama": "Panel",
-            "harga": 1000,
-            "hargaAsli": 1000,
-            "deskripsiPanjang": "Akaka",
-            "createdAt": "2025-08-23T17:47:01.519Z",
-            "nomorWA": "6285891142486",
-            "images": [],
-            "menuContent": "",
-            "discountPrice": null,
-            "discountEndDate": null
-        },
-        {
             "id": 1,
             "nama": "Panel Ram 1GB",
             "harga": 3000,
