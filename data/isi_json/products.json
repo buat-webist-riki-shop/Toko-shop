@@ -669,7 +669,23 @@
             "discountEndDate": null
         }
     ],
-    "Logo": [],
+    "Logo": [
+        {
+            "id": 73,
+            "nama": "Lohi",
+            "harga": 100000,
+            "hargaAsli": 100000,
+            "deskripsiPanjang": "Y",
+            "createdAt": "2025-09-04T23:42:46.981Z",
+            "nomorWA": "",
+            "images": [
+                "https://img1.pixhost.to/images/8467/637734999_by_rikishopreal.png",
+                "https://img1.pixhost.to/images/8467/637735000_by_rikishopreal.png",
+                "https://img1.pixhost.to/images/8467/637734998_by_rikishopreal.png"
+            ],
+            "menuContent": ""
+        }
+    ],
     "Suntik Sosmed": [],
     "Domain Claudflare": []
 }
