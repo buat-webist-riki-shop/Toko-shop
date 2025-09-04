@@ -1,1 +1,10 @@
-{}
+{
+    "RIKI": {
+        "type": "percentage",
+        "value": 50,
+        "expiresAt": "2025-09-04T21:16:00.000Z",
+        "maxUses": 1,
+        "totalUses": 0,
+        "createdAt": "2025-09-04T21:15:47.901Z"
+    }
+}
