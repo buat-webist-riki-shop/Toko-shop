@@ -45,6 +45,9 @@ export default async function handler(request, response) {
         switch (action) {
             // --- KASUS: MENAMBAHKAN PRODUK BARU ---
             case 'addProduct': {
+                if (!data.category) {
+                    return response.status(400).json({ message: 'Kategori harus dipilih.' });
+                }
                 let maxId = 0;
                 Object.values(productsJson).flat().forEach(p => { if (p.id > maxId) maxId = p.id; });
                 
@@ -99,6 +102,34 @@ export default async function handler(request, response) {
 
                 await updateGithubFile(octokit, REPO_OWNER, REPO_NAME, FILE_PATH, sha, productsJson, `feat: Menghapus produk ID ${id}`);
                 return response.status(200).json({ message: 'Produk berhasil dihapus.' });
+            }
+            
+            // --- [MODIFIKASI #2] KASUS BARU: MENAMBAH KATEGORI ---
+            case 'addCategory': {
+                const { categoryName } = data;
+                if (!categoryName) {
+                    return response.status(400).json({ message: 'Nama kategori wajib diisi.' });
+                }
+                if (productsJson[categoryName]) {
+                    return response.status(409).json({ message: 'Kategori dengan nama tersebut sudah ada.' });
+                }
+                productsJson[categoryName] = []; // Buat array kosong untuk produk baru
+                await updateGithubFile(octokit, REPO_OWNER, REPO_NAME, FILE_PATH, sha, productsJson, `feat: Menambah kategori baru "${categoryName}"`);
+                return response.status(200).json({ message: 'Kategori berhasil ditambahkan!' });
+            }
+
+            // --- [MODIFIKASI #2] KASUS BARU: MENGHAPUS KATEGORI ---
+            case 'deleteCategory': {
+                const { categoryName } = data;
+                if (!categoryName) {
+                    return response.status(400).json({ message: 'Nama kategori wajib diisi.' });
+                }
+                if (typeof productsJson[categoryName] === 'undefined') {
+                    return response.status(404).json({ message: 'Kategori tidak ditemukan.' });
+                }
+                delete productsJson[categoryName]; // Hapus properti (kategori) dari objek
+                await updateGithubFile(octokit, REPO_OWNER, REPO_NAME, FILE_PATH, sha, productsJson, `feat: Menghapus kategori "${categoryName}"`);
+                return response.status(200).json({ message: 'Kategori berhasil dihapus.' });
             }
 
             // --- KASUS: MENGURUTKAN ULANG PRODUK ---
