@@ -1,31 +1,31 @@
 {
-  "mypanelstore.web.id": {
-    "zone": "c61c442d70392500611499c5af816532",
-    "apitoken": "ImdyjF7XVU7ObDbdCr7LwSUZ4eDQJ-QozAbUIWoF"
+  "alltrxonbang.my.id": {
+    "zone": "c12b2dbe40a495089931641a4979f584",
+    "apitoken": "7IZuQOewlLUxmcj2NxC0QsIGbXPpVnEv9TKybt7j"
   },
-  "privatserver.my.id": {
-    "zone": "699bb9eb65046a886399c91daacb1968",
-    "apitoken": "fnl7ixlJ-Y-7zxJ7EUGEXitfmfLiPGW985iXobdu"
+  "dpr-dewan-perampok-rakyat.my.id": {
+    "zone": "93fc2c9ab8d171e9b8db219d5e727d62",
+    "apitoken": "7IZuQOewlLUxmcj2NxC0QsIGbXPpVnEv9TKybt7j"
   },
-  "serverku.biz.id": {
-    "zone": "4e4feaba70b41ed78295d2dcc090dd3a",
-    "apitoken": "d6kmqwlvi0qwCyMxoGuc3EBAYRYvbulhjhR9T0I7"
+  "cintaayah.biz.id": {
+    "zone": "b2ade28531567a3217b07d9928ebf27d",
+    "apitoken": "7IZuQOewlLUxmcj2NxC0QsIGbXPpVnEv9TKybt7j"
   },
-  "panelwebsite.biz.id": {
-    "zone": "2d6aab40136299392d66eed44a7b1122",
-    "apitoken": "ImdyjF7XVU7ObDbdCr7LwSUZ4eDQJ-QozAbUIWoF"
+  "cintaibu.biz.id": {
+    "zone": "cf4a6db8031035baf428faf6607bc233",
+    "apitoken": "7IZuQOewlLUxmcj2NxC0QsIGbXPpVnEv9TKybt7j"
   },
-  "pteroserver.us.kg": {
-    "zone": "f693559a94aebc553a68c27a3ffe3b55",
-    "apitoken": "ImdyjF7XVU7ObDbdCr7LwSUZ4eDQJ-QozAbUIWoF"
+  "dpr-dnya-dongo.biz.id": {
+    "zone": "0f352f03b5fba7d5460a4353ffd2e77d",
+    "apitoken": "7IZuQOewlLUxmcj2NxC0QsIGbXPpVnEv9TKybt7j"
   },
-  "digitalserver.us.kg": {
-    "zone": "df13e6e4faa4de9edaeb8e1f05cf1a36",
-    "apitoken": "ImdyjF7XVU7ObDbdCr7LwSUZ4eDQJ-QozAbUIWoF"
+  "idolmesbrewc.my.id": {
+    "zone": "9888d06b6df01c47a00d0371d615e5c6",
+    "apitoken": "7IZuQOewlLUxmcj2NxC0QsIGbXPpVnEv9TKybt7j"
   },
-  "shopserver.us.kg": {
-    "zone": "54ca38e266bfdf2dcdb7f51fd79c2db5",
-    "apitoken": "ImdyjF7XVU7ObDbdCr7LwSUZ4eDQJ-QozAbUIWoF"
+  "kenagigi-uangkembali-kenatai-elapsemdiri.my.id": {
+    "zone": "bef847424c222b4cfa59576ae6aa6c0c",
+    "apitoken": "7IZuQOewlLUxmcj2NxC0QsIGbXPpVnEv9TKybt7j"
   },
   "bisnis-panel.web.id": {
     "zone": "5002eff0a93516bcf233c7034c5979b5",
@@ -70,5 +70,137 @@
   "kangpanel.biz.id": {
     "zone": "90ab3a017b7b29dd9ee92fdbb5831b0a",
     "apitoken": "MbuO3DVbNX9aTG2Sj5OLZ67lcZyM0MILLdnzXt8w-O"
+  }, 
+  "mangun.my.id": {
+    "zone": "de615970e0736865b9bdce242475f530",
+    "apitoken": "7IZuQOewlLUxmcj2NxC0QsIGbXPpVnEv9TKybt7j"
+  }, 
+  "marketplaceriki.biz.id": {
+    "zone": "6a94d02cc9649467131a17423fcec976",
+    "apitoken": "7IZuQOewlLUxmcj2NxC0QsIGbXPpVnEv9TKybt7j"
+  }, 
+  "marketrikishop.my.id": {
+    "zone": "33970794e3373167a9c9556ad19fdb6a",
+    "apitoken": "7IZuQOewlLUxmcj2NxC0QsIGbXPpVnEv9TKybt7j"
+  }, 
+  "panelbadak.my.id": {
+    "zone": "888f7c2f167796048a059466b780844c",
+    "apitoken": "7IZuQOewlLUxmcj2NxC0QsIGbXPpVnEv9TKybt7j"
+  }, 
+  "panelbotpublic.biz.id": {
+    "zone": "ba06df32d6fc0b299bd7fe5e50e4762d",
+    "apitoken": "7IZuQOewlLUxmcj2NxC0QsIGbXPpVnEv9TKybt7j"
+  }, 
+  "panel-bot-whatsapp.my.id": {
+    "zone": "4bcb1162c21bb4154827e226f5bd5fcb",
+    "apitoken": "7IZuQOewlLUxmcj2NxC0QsIGbXPpVnEv9TKybt7j"
+  }, 
+  "panelfjkt.my.id": {
+    "zone": "45548e368d39cee2dc45f3df26517f51",
+    "apitoken": "7IZuQOewlLUxmcj2NxC0QsIGbXPpVnEv9TKybt7j"
+  }, 
+  "panelkishop.web.id": {
+    "zone": "8f4812b3c78ca478b5d162b6cb35d1b3",
+    "apitoken": "7IZuQOewlLUxmcj2NxC0QsIGbXPpVnEv9TKybt7j"
+  }, 
+  "panel-murah.my.id": {
+    "zone": "dad2bd7185e2215ec7805f8d3efdfb70",
+    "apitoken": "7IZuQOewlLUxmcj2NxC0QsIGbXPpVnEv9TKybt7j"
+  }, 
+  "panelvripate.my.id": {
+    "zone": "2ccc5c3ccfb27100908209ee06861e7b",
+    "apitoken": "7IZuQOewlLUxmcj2NxC0QsIGbXPpVnEv9TKybt7j"
+  },
+  "pejuangpanel.biz.id": {
+    "zone": "7bb58593dc5d4dbddaa611a50704fb74",
+    "apitoken": "7IZuQOewlLUxmcj2NxC0QsIGbXPpVnEv9TKybt7j"
+  }, 
+  "petrodactyl.biz.id": {
+    "zone": "b01ae7165870c31ec09abddf1789c15a",
+    "apitoken": "7IZuQOewlLUxmcj2NxC0QsIGbXPpVnEv9TKybt7j"
+  }, 
+  "republik-indonesia.biz.id": {
+    "zone": "ca623e2fb7698ae5656d81503552926f",
+    "apitoken": "7IZuQOewlLUxmcj2NxC0QsIGbXPpVnEv9TKybt7j"
+  }, 
+  "reseller-vripat.my.id": {
+    "zone": "6cd06ffccd5dc1361713c64fa7718b4f",
+    "apitoken": "7IZuQOewlLUxmcj2NxC0QsIGbXPpVnEv9TKybt7j"
+  }, 
+  "rikionline.shop": {
+    "zone": "082ec80d7367d6d4f7c52600034ac635",
+    "apitoken": "7IZuQOewlLUxmcj2NxC0QsIGbXPpVnEv9TKybt7j"
+  }, 
+  "rikishop.my.id": {
+    "zone": "24db55c91521feeb88972f2724198356",
+    "apitoken": "7IZuQOewlLUxmcj2NxC0QsIGbXPpVnEv9TKybt7j"
+  }, 
+  "rikishopreal.my.id": {
+    "zone": "4b22e7534957cd56c5cd5f95e2af761a",
+    "apitoken": "7IZuQOewlLUxmcj2NxC0QsIGbXPpVnEv9TKybt7j"
+  }, 
+  "shop-online.my.id": {
+    "zone": "8791ffc96a428296fa1ae52110e5ebd0",
+    "apitoken": "7IZuQOewlLUxmcj2NxC0QsIGbXPpVnEv9TKybt7j"
+  }, 
+  "stropanel48.biz.id": {
+    "zone": "cbe0636ee313b416ff9aded2edd716ab",
+    "apitoken": "7IZuQOewlLUxmcj2NxC0QsIGbXPpVnEv9TKybt7j"
+  }, 
+  "sukatobrut.my.id": {
+    "zone": "ef010f5eb038f41f53ac0f7fa60de44f",
+    "apitoken": "7IZuQOewlLUxmcj2NxC0QsIGbXPpVnEv9TKybt7j"
+  }, 
+  "tokogame.biz.id": {
+    "zone": "70f8aabfca25a1867f1360dd0ef11c6f",
+    "apitoken": "7IZuQOewlLUxmcj2NxC0QsIGbXPpVnEv9TKybt7j"
+  }, 
+  "tokohostku.biz.id": {
+    "zone": "7abf09147f6b2dc5b712f6cc366cc63a",
+    "apitoken": "7IZuQOewlLUxmcj2NxC0QsIGbXPpVnEv9TKybt7j"
+  }, 
+  "tokohost.my.id": {
+    "zone": "44af81b5fd7ce223e446eb1839a9e62d",
+    "apitoken": "7IZuQOewlLUxmcj2NxC0QsIGbXPpVnEv9TKybt7j"
+  }, 
+  "tokoshop-murah.my.id": {
+    "zone": "36d334a62ea3234ea304ef195d57e1d8",
+    "apitoken": "7IZuQOewlLUxmcj2NxC0QsIGbXPpVnEv9TKybt7j"
+  }, 
+  "topup-murah.my.id": {
+    "zone": "2b920d6763585796bda68c888a909fa9",
+    "apitoken": "7IZuQOewlLUxmcj2NxC0QsIGbXPpVnEv9TKybt7j"
+  }, 
+  "webdigital.biz.id": {
+    "zone": "236cddb72cbe8ae2b278c0d3ae0bd739",
+    "apitoken": "7IZuQOewlLUxmcj2NxC0QsIGbXPpVnEv9TKybt7j"
+  }, 
+  "webdigitalpoke.my.id": {
+    "zone": "fa8ce0ee7bda98cec3db9ac97acb8fc0",
+    "apitoken": "7IZuQOewlLUxmcj2NxC0QsIGbXPpVnEv9TKybt7j"
+  }, 
+  "web-host.biz.id": {
+    "zone": "e737ae15836b19d70a187a132d901997",
+    "apitoken": "7IZuQOewlLUxmcj2NxC0QsIGbXPpVnEv9TKybt7j"
+  }, 
+  "webtermurah.biz.id": {
+    "zone": "cd0fe12d8e73015d8578a2d96407b3c3",
+    "apitoken": "7IZuQOewlLUxmcj2NxC0QsIGbXPpVnEv9TKybt7j"
+  }, 
+  "webtokomurah.my.id": {
+    "zone": "e81990768bd55a4e37e2fd1ad30568e9",
+    "apitoken": "7IZuQOewlLUxmcj2NxC0QsIGbXPpVnEv9TKybt7j"
+  }, 
+  "xxnnxx.my.id": {
+    "zone": "d7ddf3ff53cf1cb1da5c6cd570b9e1a0",
+    "apitoken": "7IZuQOewlLUxmcj2NxC0QsIGbXPpVnEv9TKybt7j"
+  }, 
+  "yandex-x-proxy.my.id": {
+    "zone": "e86999524a28c8969264931dfe72b9b2",
+    "apitoken": "7IZuQOewlLUxmcj2NxC0QsIGbXPpVnEv9TKybt7j"
+  }, 
+  "yt-rikishopreal.my.id": {
+    "zone": "7ca7919c3005d94ebe8220025b2c9801",
+    "apitoken": "7IZuQOewlLUxmcj2NxC0QsIGbXPpVnEv9TKybt7j"
   }
 }
