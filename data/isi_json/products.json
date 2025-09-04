@@ -643,7 +643,7 @@
     "Stock Akun": [
         {
             "id": 72,
-            "nama": "SCTOK AKUN #1",
+            "nama": "STOCK AKUN #1",
             "harga": 10000,
             "hargaAsli": 10000,
             "deskripsiPanjang": "LOG FB || A2F OFF || SPEK LIAT AJA FOTO || DATA ALL AMAN ||",
@@ -663,7 +663,10 @@
                 "https://img1.pixhost.to/images/8463/637690744_by_rikishopreal.jpg",
                 "https://img1.pixhost.to/images/8463/637690739_by_rikishopreal.jpg"
             ],
-            "menuContent": ""
+            "menuContent": "",
+            "category": "Stock Akun",
+            "discountPrice": null,
+            "discountEndDate": null
         },
         {
             "id": 60,
