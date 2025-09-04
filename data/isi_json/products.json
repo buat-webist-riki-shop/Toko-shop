@@ -716,5 +716,17 @@
     ],
     "Logo": [],
     "Suntik Sosmed": [],
-    "KUOTA MY3": []
+    "KUOTA MY3": [
+        {
+            "id": 73,
+            "nama": "Kuota",
+            "harga": 1000,
+            "hargaAsli": 1000,
+            "deskripsiPanjang": "Hajaba",
+            "createdAt": "2025-09-04T19:07:26.749Z",
+            "nomorWA": "",
+            "images": [],
+            "menuContent": ""
+        }
+    ]
 }
