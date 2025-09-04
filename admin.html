@@ -9,10 +9,8 @@
     <link rel="stylesheet" href="data/admin.css">
 </head>
 <body class="light-mode">
-    <!-- Container untuk notifikasi toast -->
     <div id="toast-container"></div>
 
-    <!-- Layar Login -->
     <div id="login-screen" class="main-container">
         <div class="form-card login-card">
             <div class="login-header">
@@ -29,7 +27,6 @@
         </div>
     </div>
     
-    <!-- Layar Panel Admin Utama -->
     <div id="product-form-screen" class="main-container" style="display: none;">
     <a href="index.html" class="back-button" aria-label="Kembali ke Beranda">
         <i class="fas fa-arrow-left"></i>
@@ -40,7 +37,6 @@
             <div class="theme-switch" id="themeSwitchBtnPanel"><i class="fas fa-moon"></i></div>
         </header>
         
-        <!-- Navigasi Tab -->
         <nav class="admin-tabs">
             <button type="button" class="tab-button active" data-tab="addProduct">Tambah Produk</button>
             <button type="button" class="tab-button" data-tab="manageProducts">Kelola Produk</button>
@@ -48,22 +44,12 @@
             <button type="button" class="tab-button" data-tab="settings">Pengaturan</button>
         </nav>
         
-        <!-- Konten Tab: Tambah Produk -->
         <div id="addProduct" class="admin-tab-content active">
              <form class="admin-form" id="addProductForm">
                 <h2><i class="fas fa-plus-circle"></i> Tambah Produk</h2>
                 <label for="category">Kategori Produk:</label>
                 <select id="category">
-                    <option value="Panel">Panel</option>
-                    <option value="VPS">VPS</option>
-                    <option value="Script">Script</option>
-                    <option value="Jasa">Jasa</option>
-                    <option value="murid">Join Murid</option>
-                    <option value="Sewa Bot">Sewa Bot</option>
-                    <option value="Stock Akun">Stock Akun</option>
-                    <option value="Logo">Logo</option>
-                    <option value="Suntik Sosmed">Suntik Sosmed</option>
-                </select>
+                    </select>
                 <label for="product-name">Nama Produk:</label>
                 <input type="text" id="product-name" placeholder="Contoh: Panel Ram 1GB">
                 <label for="product-price">Harga Produk (hanya angka):</label>
@@ -77,30 +63,21 @@
                     <textarea id="script-menu-content" rows="10" placeholder="Tulis menu script di sini..."></textarea>
                 </div>
                 <div id="stock-photo-section" style="display: none;">
-                    <label for="product-photos">Link Foto (pisahkan dengan koma):</label>
-                    <input type="text" id="product-photos" placeholder="https://url.com/foto1.jpg, https://url.com/foto2.jpg">
+                    <label for="product-photos">Upload Foto (bisa lebih dari satu):</label>
+                    <input type="file" id="product-photos" multiple accept="image/*">
+                    <small>Fitur upload ini masih memerlukan setup back-end/server tambahan untuk berfungsi.</small>
                 </div>
                 <button type="button" id="add-product-button">Tambah Produk</button>
             </form>
         </div>
         
-        <!-- Konten Tab: Kelola Produk -->
         <div id="manageProducts" class="admin-tab-content">
             <form class="admin-form">
                 <h2><i class="fas fa-cogs"></i> Kelola Produk</h2>
                 <label for="manage-category">Pilih Kategori:</label>
                 <select id="manage-category">
                     <option value="">-- Pilih Kategori --</option>
-                    <option value="Panel">Panel</option>
-                    <option value="VPS">VPS</option>
-                    <option value="Script">Script</option>
-                    <option value="Jasa">Jasa</option>
-                    <option value="murid">Join Murid</option>
-                    <option value="Sewa Bot">Sewa Bot</option>
-                    <option value="Stock Akun">Stock Akun</option>
-                    <option value="Logo">Logo</option>
-                    <option value="Suntik Sosmed">Suntik Sosmed</option>
-                </select>
+                    </select>
                 <div id="manage-product-list"></div>
                 <button type="button" id="save-order-button" style="display:none;">Simpan Urutan</button>
                 <div id="bulk-price-edit-container" class="bulk-price-edit-container" style="display: none;">
@@ -114,7 +91,6 @@
             </form>
         </div>
 
-        <!-- Konten Tab: Manajer Domain -->
         <div id="domainManager" class="admin-tab-content">
             <div class="admin-form" style="margin-bottom: 30px;">
                 <div class="section-header">
@@ -133,13 +109,22 @@
             </div>
         </div>
 
-        <!-- Konten Tab: Pengaturan -->
         <div id="settings" class="admin-tab-content">
             <form class="admin-form" id="settingsForm">
                 <h2><i class="fas fa-cogs"></i> Pengaturan Website</h2>
                 
-                <hr>
+                <h3><i class="fas fa-tags"></i> Kelola Kategori Produk</h3>
+                <div id="manage-categories-list">
+                    </div>
+                <label for="new-category-name">Tambah Kategori Baru:</label>
+                <div class="bulk-price-input-group">
+                    <input type="text" id="new-category-name" placeholder="Contoh: Kuota My3">
+                    <button type="button" id="add-category-btn">Tambah</button>
+                </div>
+                <small>Menghapus kategori juga akan menghapus SEMUA produk di dalamnya secara permanen.</small>
                 
+                <hr>
+
                 <h3><i class="fas fa-shopping-cart"></i> Pengaturan Pembelian API Key</h3>
                 <label for="apikey-whatsapp-number">Nomor WA untuk Pembelian API Key (Wajib):</label>
                 <input type="text" id="apikey-whatsapp-number" placeholder="Contoh: 628123456789">
@@ -148,8 +133,7 @@
                 <label style="margin-top: 20px;">Daftar Harga API Key:</label>
                 <small>Atur harga dan diskon untuk penjualan API Key. Biarkan harga diskon kosong jika tidak ada diskon.</small>
                 <div id="api-key-price-settings-container">
-                    <!-- Daftar harga akan dimuat di sini oleh JS -->
-                </div>
+                    </div>
                 <button type="button" id="add-new-price-tier-btn" class="secondary-button"><i class="fas fa-plus"></i> Tambah Paket Harga</button>
 
                 <hr>
@@ -159,14 +143,12 @@
                 <input type="text" id="global-whatsapp-number" placeholder="Contoh: 628123456789">
                 <small>Nomor ini akan digunakan untuk pembelian produk jika nomor spesifik per produk/kategori tidak diatur.</small>
                 <div id="category-whatsapp-numbers-container">
-                    <!-- Nomor WA per kategori akan dimuat di sini oleh JS -->
-                </div>
+                    </div>
                 <button type="button" id="save-settings-button">Simpan Semua Pengaturan</button>
             </form>
         </div>
     </div>
     
-    <!-- Modal: Edit Produk -->
     <div id="editProductModal" class="modal">
         <div class="modal-content">
             <form class="admin-form" id="editProductForm">
@@ -190,9 +172,10 @@
                     <label>Kelola Foto:</label>
                     <div class="photo-grid" id="edit-photo-grid"></div>
                     <div class="add-photo-container">
-                        <input type="text" id="add-photo-input" placeholder="URL foto baru">
-                        <button type="button" id="add-photo-btn">Tambah</button>
+                        <input type="file" id="add-photo-input" multiple accept="image/*" style="width: 100%;">
+                        <button type="button" id="add-photo-btn">Upload</button>
                     </div>
+                     <small>Fitur upload ini masih memerlukan setup back-end/server tambahan untuk berfungsi.</small>
                 </div>
                 <div id="edit-script-menu-section" style="display: none;">
                     <label for="edit-script-menu-content">Konten Menu Script:</label>
@@ -203,7 +186,6 @@
         </div>
     </div>
 
-    <!-- Modal: Konfirmasi Custom -->
     <div id="customConfirmModal" class="modal">
         <div class="modal-content confirm-modal-content">
             <div class="confirm-message" id="confirmMessage"></div>
@@ -214,7 +196,6 @@
         </div>
     </div>
 
-    <!-- Modal: Tambah API Key -->
     <div id="addApiKeyModal" class="modal">
         <div class="modal-content">
             <form class="admin-form" id="addApiKeyForm">
@@ -243,7 +224,6 @@
         </div>
     </div>
 
-    <!-- Modal: Tambah Domain -->
     <div id="addDomainModal" class="modal">
         <div class="modal-content">
             <form class="admin-form" id="addDomainForm">
@@ -260,7 +240,6 @@
         </div>
     </div>
     
-    <!-- [MODIFIKASI] Modal Baru untuk Sukses Buat API Key -->
     <div id="apiKeySuccessModal" class="modal">
         <div class="modal-content">
             <span class="close-button">&times;</span>
