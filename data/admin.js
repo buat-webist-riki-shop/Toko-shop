@@ -45,9 +45,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const apiKeyPriceSettingsContainer = document.getElementById('api-key-price-settings-container');
     const addNewPriceTierBtn = document.getElementById('add-new-price-tier-btn');
     
-    // --- [MODIFIKASI] Variabel Kategori ---
     const newCategoryNameInput = document.getElementById('new-category-name');
-    const newCategoryIconInput = document.getElementById('new-category-icon'); // Baru
+    const newCategoryIconInput = document.getElementById('new-category-icon');
     const addCategoryBtn = document.getElementById('add-category-btn');
     const manageCategoriesList = document.getElementById('manage-categories-list');
 
@@ -77,12 +76,10 @@ document.addEventListener('DOMContentLoaded', () => {
     let activeToastTimeout = null;
     let siteSettings = {};
     let allCategories = [];
-    let productsDataCache = {};
     
-    // --- [FUNGSI BARU] UNTUK MENGUNGGAH GAMBAR ---
     async function uploadImages(fileList, buttonElement) {
         if (!fileList || fileList.length === 0) {
-            return []; // Kembalikan array kosong jika tidak ada file
+            return [];
         }
 
         const uploadPromises = Array.from(fileList).map(file => {
@@ -97,7 +94,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     return response.json().then(err => Promise.reject(err));
                 }
                 return response.json();
-            }).then(result => result.link); // Ambil link dari respons
+            }).then(result => result.link);
         });
 
         const originalButtonText = buttonElement ? buttonElement.textContent : '';
@@ -107,7 +104,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 return await promise;
             }));
             if (buttonElement) buttonElement.textContent = originalButtonText;
-            return urls; // Kembalikan array berisi URL gambar
+            return urls;
         } catch (error) {
             if (buttonElement) buttonElement.textContent = originalButtonText;
             throw new Error(error.message || 'Gagal mengunggah salah satu gambar.');
@@ -193,8 +190,8 @@ document.addEventListener('DOMContentLoaded', () => {
     });
     
     function validatePhoneNumber(number) {
-        if (!number) return true; // Opsional boleh kosong
-        const phoneRegex = /^[1-9]\d{7,}$/; // Harus angka, tidak diawali 0, minimal 8 digit
+        if (!number) return true;
+        const phoneRegex = /^[1-9]\d{7,}$/;
         return phoneRegex.test(number);
     }
     
@@ -218,17 +215,13 @@ document.addEventListener('DOMContentLoaded', () => {
         try {
             const productsRes = await fetch(`data/isi_json/products.json?v=${Date.now()}`);
             if (!productsRes.ok) throw new Error('Gagal memuat produk untuk kategori.');
-            productsDataCache = await productsRes.json();
-            allCategories = Object.keys(productsDataCache);
+            const productsData = await productsRes.json();
+            allCategories = Object.keys(productsData);
 
             const categoryDropdowns = document.querySelectorAll('#category, #manage-category');
             categoryDropdowns.forEach(dropdown => {
                 const currentValue = dropdown.value;
-                if (dropdown.id === 'manage-category') {
-                    dropdown.innerHTML = '<option value="">-- Pilih Kategori --</option>';
-                } else {
-                    dropdown.innerHTML = '';
-                }
+                dropdown.innerHTML = (dropdown.id === 'manage-category') ? '<option value="">-- Pilih Kategori --</option>' : '';
 
                 allCategories.forEach(cat => {
                     const option = document.createElement('option');
@@ -308,9 +301,16 @@ document.addEventListener('DOMContentLoaded', () => {
             tabContents.forEach(content => content.classList.remove('active'));
             document.getElementById(button.dataset.tab).classList.add('active');
             
-            if (button.dataset.tab === 'manageProducts' && manageCategorySelect.value) manageCategorySelect.dispatchEvent(new Event('change'));
-            if (button.dataset.tab === 'domainManager') { loadApiKeys(); loadRootDomains(); }
-            if (button.dataset.tab === 'settings') await loadCategoriesAndSettings();
+            if (button.dataset.tab === 'manageProducts' && manageCategorySelect.value) {
+                manageCategorySelect.dispatchEvent(new Event('change'));
+            }
+            if (button.dataset.tab === 'domainManager') { 
+                loadApiKeys(); 
+                loadRootDomains(); 
+            }
+            if (button.dataset.tab === 'settings') {
+                await loadCategoriesAndSettings();
+            }
         });
     });
 
@@ -321,16 +321,12 @@ document.addEventListener('DOMContentLoaded', () => {
         scriptMenuSection.style.display = category === 'Script' ? 'block' : 'none';
     });
     
-    // --- [LOGIKA BARU] UNTUK TOMBOL TAMBAH PRODUK ---
     addButton.addEventListener('click', async (e) => { 
         e.preventDefault();
         addButton.disabled = true;
 
         try {
-            // Langkah 1: Upload semua gambar yang dipilih dan dapatkan URL-nya
             const imageUrls = await uploadImages(photosInput.files, addButton);
-
-            // Langkah 2: Kumpulkan data produk lainnya dari form
             const waNumber = productWhatsappNumberInput.value.trim();
             if (!validatePhoneNumber(waNumber)) {
                 throw new Error("Format Nomor WA salah. Harus diawali kode negara (contoh: 628...)");
@@ -340,17 +336,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 nama: nameInput.value.trim(),
                 harga: parseInt(priceInput.value, 10),
                 deskripsiPanjang: descriptionInput.value.trim(),
-                images: imageUrls, // Gunakan URL dari hasil upload
+                images: imageUrls,
                 nomorWA: waNumber,
                 menuContent: scriptMenuContentInput.value.trim()
             };
 
-            // Validasi data
             if (!productData.category || !productData.nama || isNaN(productData.harga) || productData.harga < 0 || !productData.deskripsiPanjang) {
                 throw new Error('Kategori, Nama, Harga, dan Deskripsi wajib diisi.');
             }
 
-            // Langkah 3: Kirim data lengkap ke API /api/products
             addButton.textContent = 'Menyimpan Produk...';
             const result = await fetch(API_PRODUCTS_URL, {
                 method: 'POST',
@@ -386,10 +380,8 @@ document.addEventListener('DOMContentLoaded', () => {
         try {
             const res = await fetch(`data/isi_json/products.json?v=${new Date().getTime()}`);
             if (!res.ok) throw new Error(`Gagal memuat produk: ${res.status}`);
-            const data = await res.json();
-            // --- [MODIFIKASI] Sesuaikan dengan struktur data baru ---
-            const productsInCat = (data[category] && data[category].products) ? data[category].products : [];
-            
+            const data = await res.json(); 
+            const productsInCat = data[category] || [];
             if (productsInCat.length === 0) {
                 manageProductList.innerHTML = '<p>Tidak ada produk di kategori ini.</p>';
                 saveOrderButton.style.display = 'none';
@@ -472,9 +464,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 editWhatsappNumberInput.value = product.nomorWA || '';
                 
                 const photoCategories = ['Stock Akun', 'Logo'];
-                const isPhotoCategory = photoCategories.includes(category);
-                editPhotoSection.style.display = isPhotoCategory ? 'block' : 'none';
-                if (isPhotoCategory) {
+                editPhotoSection.style.display = photoCategories.includes(category) ? 'block' : 'none';
+                if (photoCategories.includes(category)) {
                     editPhotoGrid.innerHTML = '';
                     (product.images || []).forEach(img => {
                         const photoItem = document.createElement('div');
@@ -496,7 +487,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
         closeEditModalBtn.addEventListener('click', () => closeModal(editModal));
         
-        // --- [LOGIKA BARU] UNTUK TOMBOL UPLOAD DI MODAL EDIT ---
         addPhotoBtn.addEventListener('click', async (e) => {
              const button = e.currentTarget;
              button.disabled = true;
@@ -509,7 +499,7 @@ document.addEventListener('DOMContentLoaded', () => {
                      editPhotoGrid.appendChild(photoItem);
                      photoItem.querySelector('.delete-photo-btn').addEventListener('click', (e_photo) => e_photo.currentTarget.closest('.photo-item').remove());
                 });
-                addPhotoInput.value = ''; // Reset input file
+                addPhotoInput.value = '';
              } catch(err) {
                 showToast(err.message || 'Gagal mengunggah foto.', 'error');
              } finally {
@@ -517,7 +507,7 @@ document.addEventListener('DOMContentLoaded', () => {
              }
         });
 
-        saveEditBtn.addEventListener('click', async (e) => {
+        saveEditBtn.addEventListener('click', async () => {
             const newWaNumber = editWhatsappNumberInput.value.trim();
             if (!validatePhoneNumber(newWaNumber)) {
                 return showToast("Format Nomor WA salah. Harus diawali kode negara (contoh: 628...)", 'error');
@@ -583,7 +573,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
 
-        saveOrderButton.addEventListener('click', async (e) => {
+        saveOrderButton.addEventListener('click', async () => {
             const newOrder = [...manageProductList.children].map(item => parseInt(item.dataset.id));
             const category = manageCategorySelect.value;
             if (!category || newOrder.length === 0) return;
@@ -603,7 +593,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
 
-        applyBulkPriceBtn.addEventListener('click', async (e) => {
+        applyBulkPriceBtn.addEventListener('click', async () => {
             const category = manageCategorySelect.value;
             const newBulkPrice = parseInt(bulkPriceInput.value, 10);
             if (!category || isNaN(newBulkPrice)) return;
@@ -626,7 +616,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
         
-        resetPricesBtn.addEventListener('click', async (e) => {
+        resetPricesBtn.addEventListener('click', async () => {
             const category = manageCategorySelect.value;
             if (!category) return;
             if (!(await showCustomConfirm(`Yakin mengembalikan harga SEMUA produk di "<b>${category}</b>" ke harga awal?`))) return;
@@ -653,18 +643,16 @@ document.addEventListener('DOMContentLoaded', () => {
         return draggableElements.reduce((closest, child) => {
             const box = child.getBoundingClientRect();
             const offset = y - box.top - box.height / 2;
-            if (offset < 0 && offset > closest.offset) {
-                return { offset: offset, element: child };
-            } else {
-                return closest;
-            }
+            if (offset < 0 && offset > closest.offset) return { offset: offset, element: child };
+            return closest;
         }, { offset: Number.NEGATIVE_INFINITY }).element;
     }
     
     function renderApiKeyPriceSettings(prices) {
         apiKeyPriceSettingsContainer.innerHTML = '';
-        if (prices.length === 0) {
+        if (!prices || prices.length === 0) {
              apiKeyPriceSettingsContainer.innerHTML = '<p>Belum ada tingkatan harga. Klik tombol di bawah untuk menambahkan.</p>';
+             return;
         }
         prices.forEach((price) => {
             const div = document.createElement('div');
@@ -682,7 +670,7 @@ document.addEventListener('DOMContentLoaded', () => {
         apiKeyPriceSettingsContainer.querySelectorAll('.delete-tier-btn').forEach(btn => {
             btn.addEventListener('click', () => {
                 btn.parentElement.remove();
-                if (apiKeyPriceSettingsContainer.children.length === 0 || apiKeyPriceSettingsContainer.children.length === 1 && apiKeyPriceSettingsContainer.querySelector('p')) {
+                if (apiKeyPriceSettingsContainer.children.length === 0) {
                     apiKeyPriceSettingsContainer.innerHTML = '<p>Belum ada tingkatan harga. Klik tombol di bawah untuk menambahkan.</p>';
                 }
                 showToast('Paket harga dihapus. Klik "Simpan" untuk konfirmasi.', 'info');
@@ -713,6 +701,28 @@ document.addEventListener('DOMContentLoaded', () => {
         return prices;
     }
 
+    // --- [MODIFIKASI] Logika simpan pengaturan (termasuk ikon kategori) ---
+    async function saveAllSettings(updatedSettings) {
+        saveSettingsButton.disabled = true;
+        saveSettingsButton.textContent = 'Menyimpan...';
+        try {
+            const result = await fetch(`${API_BASE_URL}/updateSettings`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'Admin-Password': sessionStorage.getItem('adminPassword') },
+                body: JSON.stringify(updatedSettings)
+            }).then(res => res.json());
+
+            if (result.message !== 'Pengaturan berhasil disimpan!') throw new Error(result.message);
+            showToast('Pengaturan berhasil disimpan!', 'success');
+            siteSettings = updatedSettings; // Update cache lokal
+        } catch (err) {
+            showToast(err.message, 'error');
+        } finally {
+            saveSettingsButton.disabled = false;
+            saveSettingsButton.textContent = 'Simpan Semua Pengaturan';
+        }
+    }
+
     saveSettingsButton.addEventListener('click', async () => {
         const globalNumber = globalWhatsappNumberInput.value.trim();
         const apiKeyNumber = apikeyWhatsappNumberInput.value.trim();
@@ -736,42 +746,24 @@ document.addEventListener('DOMContentLoaded', () => {
         if (apiKeyPriceSettingsContainer.querySelectorAll('.price-tier-item').length > apiKeyPrices.length) {
              return showToast('Pastikan semua Nama Paket dan Harga Asli pada tingkatan harga API Key terisi dengan benar.', 'error');
         }
+        
+        const settingsData = {
+            ...siteSettings, // Pertahankan data lama
+            globalPhoneNumber: globalNumber,
+            categoryPhoneNumbers: categoryNumbers,
+            apiKeyPurchaseNumber: apiKeyNumber,
+            apiKeyPrices: apiKeyPrices
+        };
 
-        saveSettingsButton.disabled = true;
-        saveSettingsButton.textContent = 'Menyimpan...';
-
-        try {
-            const settingsData = {
-                globalPhoneNumber: globalNumber,
-                categoryPhoneNumbers: categoryNumbers,
-                apiKeyPurchaseNumber: apiKeyNumber,
-                apiKeyPrices: apiKeyPrices
-            };
-
-            const result = await fetch(`${API_BASE_URL}/updateSettings`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json', 'Admin-Password': sessionStorage.getItem('adminPassword') },
-                body: JSON.stringify(settingsData)
-            }).then(res => res.json());
-
-            if (result.message !== 'Pengaturan berhasil disimpan!') throw new Error(result.message);
-            showToast('Pengaturan berhasil disimpan!', 'success');
-
-        } catch (err) {
-            showToast(err.message, 'error');
-        } finally {
-            saveSettingsButton.disabled = false;
-            saveSettingsButton.textContent = 'Simpan Semua Pengaturan';
-        }
+        await saveAllSettings(settingsData);
     });
 
-    // --- [MODIFIKASI] Tampilkan ikon kategori ---
     function renderManageCategoryList() {
         manageCategoriesList.innerHTML = '';
+        const metadata = siteSettings.categoryMetadata || {};
         if (allCategories.length > 0) {
             allCategories.forEach(cat => {
-                const categoryData = productsDataCache[cat] || {};
-                const iconUrl = categoryData.icon || 'https://via.placeholder.com/40'; // Default icon
+                const iconUrl = metadata[cat]?.icon || 'https://via.placeholder.com/40';
                 const item = document.createElement('div');
                 item.className = 'delete-item';
                 item.innerHTML = `
@@ -789,45 +781,48 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
     
-    // --- [MODIFIKASI] Logika tambah kategori dengan ikon ---
+    // --- [MODIFIKASI] Logika tambah kategori (2 langkah) ---
     addCategoryBtn.addEventListener('click', async () => {
         const categoryName = newCategoryNameInput.value.trim();
-        if (!categoryName) {
-            return showToast('Nama kategori tidak boleh kosong.', 'error');
-        }
+        if (!categoryName) return showToast('Nama kategori tidak boleh kosong.', 'error');
+
         addCategoryBtn.disabled = true;
         addCategoryBtn.textContent = "Menambah...";
 
         try {
-            let iconUrl = '';
-            // Jika ada file ikon yang dipilih, unggah dulu
+            // Langkah 1: Buat kategori di products.json
+            const resultProd = await fetch(API_PRODUCTS_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ action: 'addCategory', data: { categoryName } })
+            }).then(res => {
+                if (!res.ok) return res.json().then(err => Promise.reject(err));
+                return res.json();
+            });
+
+            // Langkah 2: Jika berhasil dan ada ikon, simpan ikon di settings.json
             if (newCategoryIconInput.files.length > 0) {
                 const uploadedUrls = await uploadImages(newCategoryIconInput.files, addCategoryBtn);
                 if (uploadedUrls.length > 0) {
-                    iconUrl = uploadedUrls[0];
+                    const iconUrl = uploadedUrls[0];
+                    if (!siteSettings.categoryMetadata) {
+                        siteSettings.categoryMetadata = {};
+                    }
+                    siteSettings.categoryMetadata[categoryName] = { icon: iconUrl };
+                    await saveAllSettings(siteSettings); // Panggil fungsi simpan
                 }
             }
 
-            const result = await fetch(API_PRODUCTS_URL, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ 
-                    action: 'addCategory', 
-                    data: { categoryName, iconUrl } // Kirim URL ikon ke API
-                })
-            }).then(res => {
-                if (!res.ok) { return res.json().then(err => Promise.reject(err)); }
-                return res.json();
-            });
-            showToast(result.message, 'success');
+            showToast(resultProd.message, 'success');
             newCategoryNameInput.value = '';
-            newCategoryIconInput.value = ''; // Reset input file
+            newCategoryIconInput.value = '';
             await loadCategoriesAndSettings();
+
         } catch (err) {
             showToast(err.message || 'Gagal menambah kategori.', 'error');
         } finally {
             addCategoryBtn.disabled = false;
-            addCategoryBtn.textContent = "Tambah";
+            addCategoryBtn.textContent = "Tambah Kategori";
         }
     });
 
@@ -861,8 +856,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     showToast(err.message, 'error');
                 }
             }
-        }
-        else if (deleteBtn.classList.contains('delete-category-btn')) {
+        } else if (deleteBtn.classList.contains('delete-category-btn')) {
             const category = deleteBtn.dataset.category;
             const confirm = await showCustomConfirm(`Yakin menghapus kategori "<b>${category}</b>"?<br><br><b>PERINGATAN:</b> Semua produk di dalam kategori ini akan ikut terhapus secara permanen!`);
             if (confirm) {
@@ -872,7 +866,14 @@ document.addEventListener('DOMContentLoaded', () => {
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({ action: 'deleteCategory', data: { categoryName: category } })
                     }).then(res => res.json());
-                     if (result.message !== 'Kategori berhasil dihapus.') throw new Error(result.message);
+                    if (result.message !== 'Kategori berhasil dihapus.') throw new Error(result.message);
+                    
+                    // Juga hapus metadata ikon dari settings jika ada
+                    if (siteSettings.categoryMetadata && siteSettings.categoryMetadata[category]) {
+                        delete siteSettings.categoryMetadata[category];
+                        await saveAllSettings(siteSettings);
+                    }
+                    
                     showToast(result.message, 'success');
                     if (manageCategorySelect.value === category) {
                         manageCategorySelect.value = '';
@@ -883,8 +884,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     showToast(err.message, 'error');
                 }
             }
-        }
-        else if (deleteBtn.classList.contains('delete-apikey-btn')) {
+        } else if (deleteBtn.classList.contains('delete-apikey-btn')) {
             const key = deleteBtn.dataset.key;
             if (await showCustomConfirm(`Yakin menghapus API Key "<b>${key}</b>"?`)) {
                 try {
@@ -895,8 +895,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     showToast(err.message, 'error');
                 }
             }
-        }
-        else if (deleteBtn.classList.contains('delete-domain-btn')) {
+        } else if (deleteBtn.classList.contains('delete-domain-btn')) {
             const domain = deleteBtn.dataset.domain;
             if (await showCustomConfirm(`Yakin menghapus Domain "<b>${domain}</b>"?`)) {
                  try {
@@ -920,7 +919,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const keys = await fetchAdminApi('getApiKeys', {});
             let html = '';
             if (Object.keys(keys).length === 0) {
-                html += '<p>Belum ada API Key.</p>';
+                html = '<p>Belum ada API Key.</p>';
             } else {
                 for (const key in keys) {
                     const keyData = keys[key];
@@ -948,7 +947,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const domains = await fetchAdminApi('getRootDomainsAdmin', {});
             let html = '';
             if (Object.keys(domains).length === 0) {
-                html += '<p>Belum ada Domain Utama.</p>';
+                html = '<p>Belum ada Domain Utama.</p>';
             } else {
                 for (const domain in domains) {
                     html += `
@@ -988,18 +987,12 @@ document.addEventListener('DOMContentLoaded', () => {
             loadApiKeys();
             closeModal(addApiKeyModal);
 
-            if (result.details && typeof result.details === 'object' && result.details.created_at && result.details.expires_at) {
+            if (result.details && typeof result.details === 'object') {
                 const keyData = result.details;
                 const createdAt = new Date(keyData.created_at).toLocaleString('id-ID', { dateStyle: 'full', timeStyle: 'short' });
                 const expiresAt = keyData.expires_at === 'permanent' ? 'Permanen' : new Date(keyData.expires_at).toLocaleString('id-ID', { dateStyle: 'full', timeStyle: 'short' });
                 
-                const detailsText = `✨ API Key Telah Dibuat! ✨
-    -------------------------
-    🔑 Kunci API   : ${key}
-    🗓️ Dibuat Pada : ${createdAt}
-    ⏳ Kedaluwarsa : ${expiresAt}
-    -------------------------
-    Harap simpan dan berikan kunci ini kepada pengguna.`;
+                const detailsText = `✨ API Key Telah Dibuat! ✨\n-------------------------\n🔑 Kunci API   : ${key}\n🗓️ Dibuat Pada : ${createdAt}\n⏳ Kedaluwarsa : ${expiresAt}\n-------------------------\nHarap simpan dan berikan kunci ini kepada pengguna.`;
                 
                 apiKeyDetailsTextarea.value = detailsText;
                 openModal(apiKeySuccessModal);
@@ -1013,21 +1006,13 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     copyApiKeyDetailsBtn.addEventListener('click', () => {
-        const textToCopy = apiKeyDetailsTextarea.value;
-        if (navigator.clipboard && window.isSecureContext) {
-            navigator.clipboard.writeText(textToCopy).then(() => {
-                showToast('Detail berhasil disalin!', 'success');
-            }).catch(err => {
-                showToast('Gagal menyalin secara otomatis.', 'error');
-            });
-        } else {
-            apiKeyDetailsTextarea.select();
-            try {
-                document.execCommand('copy');
-                showToast('Detail berhasil disalin! (mode fallback)', 'success');
-            } catch (e) {
-                showToast('Gagal menyalin secara otomatis.', 'error');
-            }
+        apiKeyDetailsTextarea.select();
+        apiKeyDetailsTextarea.setSelectionRange(0, 99999);
+        try {
+            navigator.clipboard.writeText(apiKeyDetailsTextarea.value);
+            showToast('Detail berhasil disalin!', 'success');
+        } catch (err) {
+            showToast('Gagal menyalin. Coba salin manual.', 'error');
         }
     });
 
@@ -1049,7 +1034,7 @@ document.addEventListener('DOMContentLoaded', () => {
             document.getElementById('addDomainForm').reset();
             loadRootDomains();
             closeModal(addDomainModal);
-        } catch (err)
+        } catch (err) {
             showToast(err.message, 'error');
         } finally {
             addDomainBtn.textContent = 'Tambah Domain';
