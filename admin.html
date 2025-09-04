@@ -65,7 +65,6 @@
                 <div id="stock-photo-section" style="display: none;">
                     <label for="product-photos">Upload Foto (bisa lebih dari satu):</label>
                     <input type="file" id="product-photos" multiple accept="image/*">
-                    <small>Fitur upload ini masih memerlukan setup back-end/server tambahan untuk berfungsi.</small>
                 </div>
                 <button type="button" id="add-product-button">Tambah Produk</button>
             </form>
@@ -116,10 +115,14 @@
                 <h3><i class="fas fa-tags"></i> Kelola Kategori Produk</h3>
                 <div id="manage-categories-list">
                     </div>
-                <label for="new-category-name">Tambah Kategori Baru:</label>
-                <div class="bulk-price-input-group">
-                    <input type="text" id="new-category-name" placeholder="Contoh: Kuota My3">
-                    <button type="button" id="add-category-btn">Tambah</button>
+                <label for="new-category-name">Nama Kategori Baru:</label>
+                <input type="text" id="new-category-name" placeholder="Contoh: Kuota My3">
+                
+                <label for="new-category-icon">Ikon Kategori (Opsional):</label>
+                <input type="file" id="new-category-icon" accept="image/*">
+                
+                <div class="bulk-price-input-group" style="margin-top: 15px;">
+                    <button type="button" id="add-category-btn" style="margin-top:0; width:100%;">Tambah Kategori</button>
                 </div>
                 <small>Menghapus kategori juga akan menghapus SEMUA produk di dalamnya secara permanen.</small>
                 
@@ -175,7 +178,6 @@
                         <input type="file" id="add-photo-input" multiple accept="image/*" style="width: 100%;">
                         <button type="button" id="add-photo-btn">Upload</button>
                     </div>
-                     <small>Fitur upload ini masih memerlukan setup back-end/server tambahan untuk berfungsi.</small>
                 </div>
                 <div id="edit-script-menu-section" style="display: none;">
                     <label for="edit-script-menu-content">Konten Menu Script:</label>
