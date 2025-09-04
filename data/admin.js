@@ -45,7 +45,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const apiKeyPriceSettingsContainer = document.getElementById('api-key-price-settings-container');
     const addNewPriceTierBtn = document.getElementById('add-new-price-tier-btn');
     
+    // --- [MODIFIKASI] Variabel Kategori ---
     const newCategoryNameInput = document.getElementById('new-category-name');
+    const newCategoryIconInput = document.getElementById('new-category-icon'); // Baru
     const addCategoryBtn = document.getElementById('add-category-btn');
     const manageCategoriesList = document.getElementById('manage-categories-list');
 
@@ -75,6 +77,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let activeToastTimeout = null;
     let siteSettings = {};
     let allCategories = [];
+    let productsDataCache = {};
     
     // --- [FUNGSI BARU] UNTUK MENGUNGGAH GAMBAR ---
     async function uploadImages(fileList, buttonElement) {
@@ -97,16 +100,16 @@ document.addEventListener('DOMContentLoaded', () => {
             }).then(result => result.link); // Ambil link dari respons
         });
 
-        const originalButtonText = buttonElement.textContent;
+        const originalButtonText = buttonElement ? buttonElement.textContent : '';
         try {
             const urls = await Promise.all(uploadPromises.map(async (promise, index) => {
-                buttonElement.textContent = `Mengunggah ${index + 1} dari ${fileList.length}...`;
+                if (buttonElement) buttonElement.textContent = `Mengunggah ${index + 1} dari ${fileList.length}...`;
                 return await promise;
             }));
-            buttonElement.textContent = originalButtonText;
+            if (buttonElement) buttonElement.textContent = originalButtonText;
             return urls; // Kembalikan array berisi URL gambar
         } catch (error) {
-            buttonElement.textContent = originalButtonText;
+            if (buttonElement) buttonElement.textContent = originalButtonText;
             throw new Error(error.message || 'Gagal mengunggah salah satu gambar.');
         }
     }
@@ -215,8 +218,8 @@ document.addEventListener('DOMContentLoaded', () => {
         try {
             const productsRes = await fetch(`data/isi_json/products.json?v=${Date.now()}`);
             if (!productsRes.ok) throw new Error('Gagal memuat produk untuk kategori.');
-            const productsData = await productsRes.json();
-            allCategories = Object.keys(productsData);
+            productsDataCache = await productsRes.json();
+            allCategories = Object.keys(productsDataCache);
 
             const categoryDropdowns = document.querySelectorAll('#category, #manage-category');
             categoryDropdowns.forEach(dropdown => {
@@ -383,8 +386,10 @@ document.addEventListener('DOMContentLoaded', () => {
         try {
             const res = await fetch(`data/isi_json/products.json?v=${new Date().getTime()}`);
             if (!res.ok) throw new Error(`Gagal memuat produk: ${res.status}`);
-            const data = await res.json(); 
-            const productsInCat = data[category] || [];
+            const data = await res.json();
+            // --- [MODIFIKASI] Sesuaikan dengan struktur data baru ---
+            const productsInCat = (data[category] && data[category].products) ? data[category].products : [];
+            
             if (productsInCat.length === 0) {
                 manageProductList.innerHTML = '<p>Tidak ada produk di kategori ini.</p>';
                 saveOrderButton.style.display = 'none';
@@ -760,14 +765,18 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    // --- [MODIFIKASI] Tampilkan ikon kategori ---
     function renderManageCategoryList() {
         manageCategoriesList.innerHTML = '';
         if (allCategories.length > 0) {
             allCategories.forEach(cat => {
+                const categoryData = productsDataCache[cat] || {};
+                const iconUrl = categoryData.icon || 'https://via.placeholder.com/40'; // Default icon
                 const item = document.createElement('div');
                 item.className = 'delete-item';
                 item.innerHTML = `
                     <div class="item-header">
+                        <img src="${iconUrl}" class="category-icon-preview" alt="Ikon">
                         <span>${cat}</span>
                         <div class="item-actions">
                             <button type="button" class="delete-btn delete-category-btn" data-category="${cat}"><i class="fas fa-trash-alt"></i> Hapus</button>
@@ -780,28 +789,45 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
     
+    // --- [MODIFIKASI] Logika tambah kategori dengan ikon ---
     addCategoryBtn.addEventListener('click', async () => {
         const categoryName = newCategoryNameInput.value.trim();
         if (!categoryName) {
             return showToast('Nama kategori tidak boleh kosong.', 'error');
         }
         addCategoryBtn.disabled = true;
+        addCategoryBtn.textContent = "Menambah...";
+
         try {
+            let iconUrl = '';
+            // Jika ada file ikon yang dipilih, unggah dulu
+            if (newCategoryIconInput.files.length > 0) {
+                const uploadedUrls = await uploadImages(newCategoryIconInput.files, addCategoryBtn);
+                if (uploadedUrls.length > 0) {
+                    iconUrl = uploadedUrls[0];
+                }
+            }
+
             const result = await fetch(API_PRODUCTS_URL, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ action: 'addCategory', data: { categoryName } })
+                body: JSON.stringify({ 
+                    action: 'addCategory', 
+                    data: { categoryName, iconUrl } // Kirim URL ikon ke API
+                })
             }).then(res => {
                 if (!res.ok) { return res.json().then(err => Promise.reject(err)); }
                 return res.json();
             });
             showToast(result.message, 'success');
             newCategoryNameInput.value = '';
+            newCategoryIconInput.value = ''; // Reset input file
             await loadCategoriesAndSettings();
         } catch (err) {
             showToast(err.message || 'Gagal menambah kategori.', 'error');
         } finally {
             addCategoryBtn.disabled = false;
+            addCategoryBtn.textContent = "Tambah";
         }
     });
 
@@ -1023,7 +1049,7 @@ document.addEventListener('DOMContentLoaded', () => {
             document.getElementById('addDomainForm').reset();
             loadRootDomains();
             closeModal(addDomainModal);
-        } catch (err) {
+        } catch (err)
             showToast(err.message, 'error');
         } finally {
             addDomainBtn.textContent = 'Tambah Domain';

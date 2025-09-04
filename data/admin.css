@@ -493,6 +493,16 @@ button:disabled { background-color: var(--light-text-color); cursor: not-allowed
     vertical-align: middle;
 }
 
+/* --- [MODIFIKASI] CSS untuk ikon kategori --- */
+.category-icon-preview {
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    object-fit: cover;
+    margin-right: 15px;
+    background-color: var(--border-color);
+}
+
 .add-photo-container { display: flex; gap: 10px; margin-top: 10px; }
 .add-photo-container input { flex-grow: 1; } 
 .add-photo-container button { width: auto; margin-top: 0; } 

@@ -20,7 +20,7 @@ const closeMenuBtn = document.getElementById('closeMenu');
 const openCartBtn = document.getElementById('openCart');
 const cartCountSpan = document.getElementById('cartCount');
 const currentDateTimeSpan = document.getElementById('currentDateTime');
-const serviceItems = document.querySelectorAll('.service-item');
+const serviceGrid = document.getElementById('serviceGrid'); // [MODIFIKASI]
 const productListDiv = document.getElementById('productList');
 const productDetailViewDiv = document.getElementById('productDetailView');
 const serviceDetailPageTitle = document.getElementById('serviceDetailPageTitle');
@@ -283,20 +283,40 @@ window.addEventListener('click', (event) => {
     }
 });
 
+// --- [MODIFIKASI] Fungsi untuk menampilkan kategori di halaman utama ---
+function renderServiceGrid() {
+    serviceGrid.innerHTML = ''; // Kosongkan grid yang ada
+    for (const categoryName in products) {
+        if (Object.hasOwnProperty.call(products, categoryName)) {
+            const categoryData = products[categoryName];
+            const item = document.createElement('a');
+            item.href = '#';
+            item.className = 'service-item';
+            item.dataset.service = categoryName;
+
+            item.innerHTML = `
+                <img src="${categoryData.icon || 'image/default.png'}" alt="${categoryName} Icon" onerror="this.onerror=null;this.src='https://via.placeholder.com/45';">
+                <span>${categoryName}</span>
+            `;
+
+            item.addEventListener('click', (e) => {
+                e.preventDefault();
+                loadServiceProducts(categoryName);
+                showPage('service-detail-page');
+            });
+            serviceGrid.appendChild(item);
+        }
+    }
+}
+
 // --- Logika Produk ---
-serviceItems.forEach(item => {
-    item.addEventListener('click', (e) => {
-        e.preventDefault();
-        const serviceType = item.dataset.service;
-        loadServiceProducts(serviceType);
-        showPage('service-detail-page');
-    });
-});
 function loadServiceProducts(serviceType) {
     serviceDetailPageTitle.textContent = serviceType;
     productListDiv.innerHTML = '';
     productDetailViewDiv.style.display = 'none';
-    let productData = products[serviceType];
+
+    // --- [MODIFIKASI] Sesuaikan dengan struktur data baru ---
+    const productData = products[serviceType] ? products[serviceType].products : [];
     
     if (productData && productData.length > 0) {
         productData.forEach(product => {
@@ -313,20 +333,17 @@ function loadServiceProducts(serviceType) {
                 }
             }
 
-            // --- CHANGED: Logika harga dipindahkan ke sini ---
             let finalPrice = product.harga;
             const originalPrice = product.hargaAsli;
 
-            // Cek apakah diskon sudah berakhir
             if (product.discountEndDate && new Date(product.discountEndDate) < new Date()) {
-                finalPrice = originalPrice; // Kembalikan ke harga asli jika sudah berakhir
+                finalPrice = originalPrice;
             }
 
             let priceDisplay = `<span class="product-price-list">${formatRupiah(finalPrice)}</span>`;
             if (originalPrice && originalPrice > finalPrice) {
                 priceDisplay = `<span class="original-price"><del>${formatRupiah(originalPrice)}</del></span> <span class="discounted-price">${formatRupiah(finalPrice)}</span>`;
             }
-            // --- END CHANGED ---
             
             productItem.innerHTML = `
                 <div>
@@ -359,7 +376,6 @@ function showProductDetail(product, serviceType) {
     let finalPrice = product.harga;
     let originalPrice = product.hargaAsli;
     
-    // Cek apakah diskon sudah berakhir
     if (product.discountEndDate && new Date(product.discountEndDate) < new Date()) {
         finalPrice = originalPrice; 
     }
@@ -371,7 +387,6 @@ function showProductDetail(product, serviceType) {
     detailProductPrice.innerHTML = priceHtml;
     detailProductActions.innerHTML = '';
     
-    // Logika Countdown Timer
     if (countdownInterval) clearInterval(countdownInterval);
     if (product.discountEndDate && new Date(product.discountEndDate) > new Date()) {
         countdownTimerDiv.style.display = 'block';
@@ -403,17 +418,38 @@ function showProductDetail(product, serviceType) {
         countdownTimerDiv.style.display = 'none';
     }
 
+    // --- [MODIFIKASI] Logika untuk penomoran 'Stock Akun' dan pemilihan 'Logo' ---
     if ((serviceType === 'Stock Akun' || serviceType === 'Logo') && product.images && product.images.length > 0) {
         stockImageSliderContainer.style.display = 'block';
         detailProductDescriptionContent.innerHTML = product.deskripsiPanjang ? product.deskripsiPanjang.replace(/\|\|/g, '<br>') : 'Tidak ada deskripsi.';
         
         stockImageSlider.innerHTML = '';
-        product.images.forEach((imgUrl) => {
-            const slide = document.createElement('div');
-            slide.className = 'image-slide';
-            slide.style.backgroundImage = `url('${imgUrl}')`;
-            slide.addEventListener('click', () => openLightbox(imgUrl));
-            stockImageSlider.appendChild(slide);
+        product.images.forEach((imgUrl, index) => {
+            const slideWrapper = document.createElement('div');
+            slideWrapper.className = 'image-slide-wrapper';
+
+            let slideContent = '';
+            if (serviceType === 'Stock Akun') {
+                slideContent = `
+                    <div class="image-slide" style="background-image: url('${imgUrl}');"></div>
+                    <span class="image-number-badge">${index + 1}</span>
+                `;
+                slideWrapper.addEventListener('click', () => openLightbox(imgUrl));
+            } else if (serviceType === 'Logo') {
+                slideContent = `
+                    <div class="image-slide logo-selectable" style="background-image: url('${imgUrl}');">
+                        <div class="logo-overlay"></div>
+                        <i class="fas fa-check-circle logo-checkmark"></i>
+                    </div>
+                    <span class="image-number-badge">${index + 1}</span>
+                `;
+                slideWrapper.dataset.imageUrl = imgUrl;
+                slideWrapper.addEventListener('click', () => {
+                    slideWrapper.classList.toggle('selected');
+                });
+            }
+            slideWrapper.innerHTML = slideContent;
+            stockImageSlider.appendChild(slideWrapper);
         });
         
         totalStockImages = product.images.length;
@@ -431,7 +467,7 @@ function showProductDetail(product, serviceType) {
     Object.assign(addToCartBtn.dataset, {
         productId: product.id,
         productName: product.nama,
-        productPrice: finalPrice, // Gunakan harga final untuk keranjang
+        productPrice: finalPrice,
         serviceType: serviceType
     });
     addToCartBtn.addEventListener('click', addToCart);
@@ -443,17 +479,33 @@ function showProductDetail(product, serviceType) {
 
     const targetPhoneNumber = getPhoneNumberForProduct(product, serviceType);
 
-    let buyNowMessage = '';
-    if (serviceType === 'Stock Akun' && product.images && product.images.length > 0) {
-        buyNowMessage = `Halo Kak, saya tertarik memesan Akun:\n\nProduk: *${product.nama}*\nHarga: *${formatRupiah(finalPrice)}*\n\nReferensi gambar:\n${product.images[0]}\n\nMohon info ketersediaannya. Terima kasih! ðŸ™ `;
-    } else if (serviceType === 'Logo' && product.images && product.images.length > 0) {
-        buyNowMessage = `Halo Kak, saya tertarik memesan Logo:\n\nNama Logo: *${product.nama}*\nHarga: *${formatRupiah(finalPrice)}*\n\nReferensi gambar:\n${product.images[0]}\n\nMohon info ketersediaannya. Terima kasih! ðŸ™ `;
-    } else {
-        buyNowMessage = `Halo Kak, saya tertarik memesan produk:\n\nProduk: *${product.nama}*\nHarga: *${formatRupiah(finalPrice)}*\n\nMohon info selanjutnya. Terima kasih! ðŸ™ `;
-    }
+    // --- [MODIFIKASI] Logika pesan WhatsApp untuk 'Logo' multi-pilihan ---
+    buyNowLink.addEventListener('click', (e) => {
+        e.preventDefault();
+        let buyNowMessage = '';
+        if (serviceType === 'Logo') {
+            const selectedImages = document.querySelectorAll('.image-slide-wrapper.selected');
+            let imagesText = '';
+            if(selectedImages.length > 0) {
+                selectedImages.forEach((img, index) => {
+                    imagesText += `\n${index + 1}. ${img.dataset.imageUrl}`;
+                });
+                buyNowMessage = `Halo Kak, saya tertarik memesan Logo:\n\nNama Logo: *${product.nama}*\nHarga: *${formatRupiah(finalPrice)}*\n\nReferensi gambar yang dipilih:${imagesText}\n\nMohon info ketersediaannya. Terima kasih! 🙏`;
+            } else {
+                 // Jika tidak ada yang dipilih, kirim gambar pertama sebagai referensi
+                imagesText = product.images[0] ? `\n${product.images[0]}` : '\n(Tidak ada referensi gambar)';
+                buyNowMessage = `Halo Kak, saya tertarik memesan Logo:\n\nNama Logo: *${product.nama}*\nHarga: *${formatRupiah(finalPrice)}*\n\nReferensi gambar:${imagesText}\n\nMohon info ketersediaannya. Terima kasih! 🙏`;
+            }
+        } else if (serviceType === 'Stock Akun' && product.images && product.images.length > 0) {
+            buyNowMessage = `Halo Kak, saya tertarik memesan Akun:\n\nProduk: *${product.nama}*\nHarga: *${formatRupiah(finalPrice)}*\n\nReferensi gambar:\n${product.images[0]}\n\nMohon info ketersediaannya. Terima kasih! 🙏`;
+        } else {
+            buyNowMessage = `Halo Kak, saya tertarik memesan produk:\n\nProduk: *${product.nama}*\nHarga: *${formatRupiah(finalPrice)}*\n\nMohon info selanjutnya. Terima kasih! 🙏`;
+        }
+        
+        const waUrl = `https://wa.me/${targetPhoneNumber}?text=${encodeURIComponent(buyNowMessage)}`;
+        window.open(waUrl, "_blank");
+    });
     
-    buyNowLink.href = `https://wa.me/${targetPhoneNumber}?text=${encodeURIComponent(buyNowMessage)}`;
-    buyNowLink.target = "_blank";
     detailProductActions.appendChild(buyNowLink);
 
     if (serviceType === 'Script' && product.menuContent) {
@@ -635,7 +687,7 @@ checkoutButton.addEventListener('click', () => {
         totalOrder += item.price * item.quantity;
     });
 
-    let message = `Halo Kak, saya ingin mengonfirmasi pesanan dari keranjang:\n\n--- PESANAN ---\n${itemsText}--------------------\n\n*Total: ${formatRupiah(totalOrder)}*\n\nMohon konfirmasinya. Terima kasih! ðŸ™ `;
+    let message = `Halo Kak, saya ingin mengonfirmasi pesanan dari keranjang:\n\n--- PESANAN ---\n${itemsText}--------------------\n\n*Total: ${formatRupiah(totalOrder)}*\n\nMohon konfirmasinya. Terima kasih! 🙏`;
     
     const checkoutNumber = siteSettings.globalPhoneNumber || WA_ADMIN_NUMBER;
     window.open(`https://wa.me/${checkoutNumber}?text=${encodeURIComponent(message)}`, '_blank');
@@ -769,6 +821,9 @@ async function initializeApp() {
         } else {
             console.warn("Gagal memuat settings.json, menggunakan nomor fallback.");
         }
+        
+        // --- [MODIFIKASI] Panggil fungsi untuk render kategori ---
+        renderServiceGrid();
 
     } catch (error) {
         console.error("Gagal memuat data awal:", error);
