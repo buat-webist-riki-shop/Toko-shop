@@ -642,6 +642,30 @@
     ],
     "Stock Akun": [
         {
+            "id": 72,
+            "nama": "SCTOK AKUN #1",
+            "harga": 10000,
+            "hargaAsli": 10000,
+            "deskripsiPanjang": "LOG FB || A2F OFF || SPEK LIAT AJA FOTO || DATA ALL AMAN ||",
+            "createdAt": "2025-09-04T19:02:19.464Z",
+            "nomorWA": "",
+            "images": [
+                "https://img1.pixhost.to/images/8463/637690730_by_rikishopreal.jpg",
+                "https://img1.pixhost.to/images/8463/637690733_by_rikishopreal.jpg",
+                "https://img1.pixhost.to/images/8463/637690740_by_rikishopreal.jpg",
+                "https://img1.pixhost.to/images/8463/637690732_by_rikishopreal.jpg",
+                "https://img1.pixhost.to/images/8463/637690728_by_rikishopreal.jpg",
+                "https://img1.pixhost.to/images/8463/637690754_by_rikishopreal.jpg",
+                "https://img1.pixhost.to/images/8463/637690738_by_rikishopreal.jpg",
+                "https://img1.pixhost.to/images/8463/637690742_by_rikishopreal.jpg",
+                "https://img1.pixhost.to/images/8463/637690731_by_rikishopreal.jpg",
+                "https://img1.pixhost.to/images/8463/637690735_by_rikishopreal.jpg",
+                "https://img1.pixhost.to/images/8463/637690744_by_rikishopreal.jpg",
+                "https://img1.pixhost.to/images/8463/637690739_by_rikishopreal.jpg"
+            ],
+            "menuContent": ""
+        },
+        {
             "id": 60,
             "nama": "Akun F-B Lawas",
             "harga": 25000,
