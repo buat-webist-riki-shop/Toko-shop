@@ -669,22 +669,6 @@
             "discountEndDate": null
         }
     ],
-    "Logo": [
-        {
-            "id": 74,
-            "nama": "Logo #1",
-            "harga": 100,
-            "hargaAsli": 100,
-            "deskripsiPanjang": "Nyoba",
-            "createdAt": "2025-09-04T19:08:56.640Z",
-            "nomorWA": "",
-            "images": [
-                "https://img1.pixhost.to/images/8463/637691684_by_rikishopreal.png",
-                "https://img1.pixhost.to/images/8463/637691685_by_rikishopreal.png",
-                "https://img1.pixhost.to/images/8463/637691683_by_rikishopreal.png"
-            ],
-            "menuContent": ""
-        }
-    ],
+    "Logo": [],
     "Suntik Sosmed": []
 }
