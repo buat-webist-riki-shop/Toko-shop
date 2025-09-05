@@ -643,22 +643,6 @@
             "nomorWA": "",
             "discountPrice": null,
             "discountEndDate": null
-        },
-        {
-            "id": 65,
-            "nama": "Akun roblok",
-            "harga": 1000000,
-            "hargaAsli": 1000000,
-            "deskripsiPanjang": "Bagus dong",
-            "images": [
-                "https://g.top4top.io/p_3520njyrl3.jpg",
-                "https://f.top4top.io/p_35205ehum2.jpg",
-                "https://e.top4top.io/p_3520od8be1.jpg",
-                "https://d.top4top.io/p_3520eqk5b0.jpg"
-            ],
-            "nomorWA": "",
-            "discountPrice": null,
-            "discountEndDate": null
         }
     ],
     "Logo": [],
