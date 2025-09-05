@@ -10,7 +10,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const themeSwitchBtnPanel = document.getElementById('themeSwitchBtnPanel');
     const body = document.body;
     
-    // Variabel Produk
     const categorySelect = document.getElementById('category');
     const nameInput = document.getElementById('product-name');
     const priceInput = document.getElementById('product-price');
@@ -29,7 +28,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const applyBulkPriceBtn = document.getElementById('apply-bulk-price-btn');
     const resetPricesBtn = document.getElementById('reset-prices-btn');
 
-    // Variabel Modal
     const modals = document.querySelectorAll('.modal');
     const customConfirmModal = document.getElementById('customConfirmModal');
     const confirmMessage = document.getElementById('confirmMessage');
@@ -37,7 +35,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const confirmCancelBtn = document.getElementById('confirmCancelBtn');
     let resolveConfirmPromise;
     
-    // Variabel Pengaturan
     const saveSettingsButton = document.getElementById('save-settings-button');
     const globalWhatsappNumberInput = document.getElementById('global-whatsapp-number');
     const categoryWhatsappNumbersContainer = document.getElementById('category-whatsapp-numbers-container');
@@ -49,10 +46,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const addCategoryBtn = document.getElementById('add-category-btn');
     const manageCategoriesList = document.getElementById('manage-categories-list');
 
-    // Variabel Modal Edit
     const editWhatsappNumberInput = document.getElementById('edit-whatsapp-number');
 
-    // Variabel Manajer Domain
     const apiKeyListContainer = document.getElementById('apiKeyListContainer');
     const createApiKeyBtn = document.getElementById('create-apikey-btn');
     const rootDomainListContainer = document.getElementById('rootDomainListContainer');
@@ -67,7 +62,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const apiKeyDetailsTextarea = document.getElementById('apiKeyDetails');
     const copyApiKeyDetailsBtn = document.getElementById('copyApiKeyDetailsBtn');
 
-    // Variabel Form Promo
     const addPromoForm = document.getElementById('addPromoForm');
     const promoCodeInput = document.getElementById('promo-code');
     const promoPercentageInput = document.getElementById('promo-percentage');
@@ -76,7 +70,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const addPromoBtn = document.getElementById('add-promo-btn');
     const promoListContainer = document.getElementById('promo-list-container');
 
-    // Alamat API
     const API_PRODUCTS_URL = '/api/products';
     const API_CLOUDFLARE_URL = '/api/cloudflare';
     const API_BASE_URL = '/api'; 
@@ -88,11 +81,9 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!fileList || fileList.length === 0) {
             return [];
         }
-
         const uploadPromises = Array.from(fileList).map(file => {
             const formData = new FormData();
             formData.append('image', file);
-            
             return fetch('/api/tourl', {
                 method: 'POST',
                 body: formData,
@@ -103,7 +94,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 return response.json();
             }).then(result => result.link);
         });
-
         const originalButtonText = buttonElement ? buttonElement.textContent : '';
         try {
             const urls = await Promise.all(uploadPromises.map(async (promise, index) => {
@@ -128,7 +118,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
     updateThemeButton();
-
     function toggleTheme() {
         body.classList.toggle('light-mode');
         body.classList.toggle('dark-mode');
@@ -897,7 +886,8 @@ document.addEventListener('DOMContentLoaded', () => {
             globalPhoneNumber: globalNumber,
             categoryPhoneNumbers: categoryNumbers,
             apiKeyPurchaseNumber: apiKeyNumber,
-            apiKeyPrices: apiKeyPrices
+            apiKeyPrices: apiKeyPrices,
+            categoryMetadata: siteSettings.categoryMetadata || {}
         };
 
         await saveAllSettings(settingsData);
@@ -1056,6 +1046,104 @@ document.addEventListener('DOMContentLoaded', () => {
         } finally {
             addDomainBtn.textContent = 'Tambah Domain';
             addDomainBtn.disabled = false;
+        }
+    });
+
+    // KODE YANG SEBELUMNYA HILANG - EVENT LISTENER UNTUK SEMUA TOMBOL DELETE
+    document.body.addEventListener('click', async (e) => {
+        const deleteBtn = e.target.closest('.delete-btn');
+        if (!deleteBtn) return;
+
+        if (deleteBtn.classList.contains('delete-promo-btn')) {
+            const code = deleteBtn.dataset.code;
+            const confirm = await showCustomConfirm(`Yakin ingin menghapus kode promo <strong>${code}</strong> secara permanen?`);
+            if (confirm) {
+                try {
+                     const res = await fetch(API_PRODUCTS_URL, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ action: 'promoDelete', data: { code } })
+                    });
+                    const result = await res.json();
+                    if (!res.ok) throw new Error(result.message);
+                    
+                    showToast(result.message, 'success');
+                    loadPromoCodes();
+                } catch (err) {
+                    showToast(err.message, 'error');
+                }
+            }
+        }
+        else if (deleteBtn.classList.contains('delete-product-btn')) {
+            const parent = deleteBtn.closest('.delete-item');
+            const id = parseInt(parent.dataset.id);
+            const category = manageCategorySelect.value;
+            const confirm = await showCustomConfirm(`Yakin ingin menghapus produk <b>${parent.querySelector('span').textContent.split(' - ')[0]}</b>?`);
+            if (confirm) {
+                try {
+                    const res = await fetch(API_PRODUCTS_URL, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ action: 'deleteProduct', data: { id, category } })
+                    });
+                    const result = await res.json();
+                    if(!res.ok) throw new Error(result.message);
+                    parent.remove();
+                    showToast(result.message, 'success');
+                } catch (err) {
+                    showToast(err.message, 'error');
+                }
+            }
+        } else if (deleteBtn.classList.contains('delete-category-btn')) {
+            const category = deleteBtn.dataset.category;
+            const confirm = await showCustomConfirm(`Yakin menghapus kategori "<b>${category}</b>"?<br><br><b>PERINGATAN:</b> Semua produk di dalam kategori ini akan ikut terhapus secara permanen!`);
+            if (confirm) {
+                try {
+                    const res = await fetch(API_PRODUCTS_URL, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ action: 'deleteCategory', data: { categoryName: category } })
+                    });
+                    const result = await res.json();
+                    if(!res.ok) throw new Error(result.message);
+                    
+                    if (siteSettings.categoryMetadata && siteSettings.categoryMetadata[category]) {
+                        delete siteSettings.categoryMetadata[category];
+                        await saveAllSettings(siteSettings);
+                    }
+                    
+                    showToast(result.message, 'success');
+                    if (manageCategorySelect.value === category) {
+                        manageCategorySelect.value = '';
+                        manageCategorySelect.dispatchEvent(new Event('change'));
+                    }
+                    await loadCategoriesAndSettings();
+                } catch (err) {
+                    showToast(err.message, 'error');
+                }
+            }
+        } else if (deleteBtn.classList.contains('delete-apikey-btn')) {
+            const key = deleteBtn.dataset.key;
+            if (await showCustomConfirm(`Yakin menghapus API Key "<b>${key}</b>"?`)) {
+                try {
+                    const result = await fetchAdminApi('deleteApiKey', { key });
+                    showToast(result.message, 'success');
+                    loadApiKeys();
+                } catch (err) {
+                    showToast(err.message, 'error');
+                }
+            }
+        } else if (deleteBtn.classList.contains('delete-domain-btn')) {
+            const domain = deleteBtn.dataset.domain;
+            if (await showCustomConfirm(`Yakin menghapus Domain "<b>${domain}</b>"?`)) {
+                 try {
+                    const result = await fetchAdminApi('deleteRootDomain', { domain });
+                    showToast(result.message, 'success');
+                    loadRootDomains();
+                } catch (err) {
+                    showToast(err.message, 'error');
+                }
+            }
         }
     });
 });
