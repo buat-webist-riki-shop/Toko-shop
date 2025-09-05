@@ -1,6 +1,19 @@
 {
     "Panel": [
         {
+            "id": 69,
+            "nama": "Panel",
+            "harga": 1000,
+            "hargaAsli": 1000,
+            "deskripsiPanjang": "Akaka",
+            "createdAt": "2025-08-23T17:47:01.519Z",
+            "nomorWA": "6285891142486",
+            "images": [],
+            "menuContent": "",
+            "discountPrice": null,
+            "discountEndDate": null
+        },
+        {
             "id": 1,
             "nama": "Panel Ram 1GB",
             "harga": 3000,
@@ -119,6 +132,17 @@
             "harga": 15000,
             "hargaAsli": 15000,
             "deskripsiPanjang": "Syarat & Ketentuan : Server private & kualitas terbaik! || Script bot dijamin aman (anti drama/maling) | masa aktif panel 30 hari || Garansi 15 hari (1x replace) || Server anti delay/lemot! || Claim garansi wajib bawa bukti transaksi dan data panel yang lengkap",
+            "nomorWA": "",
+            "discountPrice": null,
+            "discountEndDate": null
+        },
+        {
+            "id": 66,
+            "nama": "Panel 15gb || yah",
+            "harga": 300000,
+            "hargaAsli": 300000,
+            "deskripsiPanjang": "Oke min",
+            "createdAt": "2025-08-21T13:47:35.208Z",
             "nomorWA": "",
             "discountPrice": null,
             "discountEndDate": null
@@ -250,106 +274,90 @@
         {
             "id": 59,
             "nama": "Script RikiTelebot",
-            "harga": 20000,
+            "harga": 25000,
             "hargaAsli": 25000,
             "deskripsiPanjang": "scrip ini cocok untuk open resller di telegram||ada fitur jaga grup telegram nya juga||dan ada fitur lain nya||bisa simpan banyak server panel",
-            "menuContent": "╭─⧁ *RikiTeleBot New* ⧁\n│ 👑 *Creator:* @rikishopreal\n│ 📡 *Vps Uptime:* -\n│ ⏱️ *Bot Uptime:* -\n│ 📆 *Hari:* -\n│ 🕰️ *Jam:* -\n╰──────────────────⧁\n\n╭─🧩 *Group Menu:*\n│ • /open\n│ • /close\n│ • /antilink\n│ • /antilink2\n│ • /hidetag\n│ • /tagall\n│ • /setppgc\n│ • /setdeksgc\n│ • /setnamagc\n│ • /promote\n│ • /demote\n│ • /ban\n╰──────────────────⧁\n\n╭─🧩 *Cpanel Menu:*\n│ • /addserverpanel\n│ • /delserverpanel\n│ • /listserverpanel\n│ • /addprem\n│ • /delprem\n│ • /listprem\n│ • /listpanel\n│ • /delpanel\n│ • /listadmin\n│ • /deladmin\n│ • /cadmin\n│ • /1gb \n│ • /2gb\n│ • /3gb\n│ • /4gb\n│ • /5gb \n│ • /6gb\n│ • /7gb\n│ • /8gb\n│ • /9gb \n│ • /10gb\n│ • /unli\n╰──────────────────⧁\n\nharap jangan spam klik agar\nbot tidak mengalami eror tq\n\n    const page2 = \n╭─🧩 *Tools Menu:*\n│ • /cekid\n│ • /tohd\n│ • /remini\n│ • /upscale\n│ • /removebg\n│ • /setthumb\n│ • /tourl\n│ • /tourl2\n╰──────────────────⧁\n\n╭─🧩 *Stalk Menu:*\n│ • /igstalk\n│ • /ttstalk\n│ • /ffstalk\n╰──────────────────⧁\n\n╭─🧩 *Search Menu:*\n│ • /pinreset\n│ • /ytsearch\n│ • /ttsearch\n│ • /npms\n│ • /playstore\n│ • /xxnxs\n╰──────────────────⧁\n\n╭─🧩 *Download Menu:*\n│ • /play\n│ • /tiktokplay\n│ • /tiktok\n│ • /ytmp3\n│ • /ytmp4\n│ • /videy\n╰──────────────────⧁\n\n╭─🧩 *Setting Bot Menu:*\n│ • /setppbot\n│ • /setnamabot\n│ • /setshortbio\n│ • /setlongbio\n╰──────────────────⧁\n\nharap jangan spam klik agar\nbot tidak mengalami eror tq",
+            "menuContent": "Menu Fitur Script RikiTelebot:\n...",
             "nomorWA": "",
-            "discountPrice": 20000,
-            "discountEndDate": "2025-09-06T00:18:00.000Z",
-            "category": "Script",
-            "images": []
+            "discountPrice": null,
+            "discountEndDate": null
         },
         {
             "id": 58,
             "nama": "Script Hikmal-v1",
-            "harga": 20000,
+            "harga": 25000,
             "hargaAsli": 25000,
             "deskripsiPanjang": "cocok untuk open bot push||cocok untuk open resller||cocok untuk jaga grup||scrip sudah support all w.a dan grup",
-            "menuContent": "Hii 👋 @⁨.⁩  \nSelamat Siang 🌇  \n  \n✨ Selamat datang di *Hikmal v1*!  \nAku siap bantu kamu! Kirim saja perintah,  \ndan aku akan langsung merespon 😊  \n\n 🧑‍💻 Dibuat oleh: *Riki Shop*  \n━━━━━━━━━━━━━━━━━━━━━━━\n╭── ❖ 𝗜𝗡𝗙𝗢 𝗕𝗢𝗧 ❖ ──╮  \n│ 📛 Botname: *Hikmal v1*\n│ 🔧 Mode: *Public*\n│ 💻 Versi: *1.0.0*\n│ ⏱️ Runtime: *00:11:01*\n│ 📅 Hari: *Tuesday*\n│ 📆 Tanggal: *02/09/2025*\n│ 👑 Creator: @6285771555374\n╰────────────────╯  \n\n╭── ❖ 𝗜𝗡𝗙𝗢 𝗨𝗦𝗘𝗥 ❖ ──╮  \n│ 📱 Nomor : @⁨.⁩\n│ 🔖 Status: *Owner 👑*\n╰─────────────────╯\n\n⚙️ *All MENU* ⚙️\n━━━━━━━━━━━━━━━━━━━  \n╭─⟪ MENU PUSH ⟫─╮  \n│➤.setjeda\n│➤.cekjeda\n│➤.pushkontak  \n│➤.pushkontak1  \n│➤.pushkontak2  \n│➤.pushkontak3  \n│➤.savekontak  \n│➤.listgc  \n│➤.jpm  \n│➤.jpm2  \n│➤.jpmtesti\n│➤.jpmch\n│➤.listch\n│➤.addidch\n│➤.delidch\n│➤.cekidch\n│➤.bljpm\n│➤.unbljpm\n╰─────────────╯  \n  \n╭─⟪ MENU PANEL ⟫─╮  \n│➤.addprem  \n│➤.delprem  \n│➤.listprem  \n│➤.addserverpanel  \n│➤.delserverpanel  \n│➤.listserverpanel  \n│➤.cadmin  \n│➤.delpanel  \n│➤.listpanel  \n│➤.listadmin  \n│➤.deladmin  \n│➤.1gb - 10gb - unli  \n╰──────────────╯\n\n╭─⟪ MENU STORE ⟫─╮\n│➤.all\n│➤.list\n│➤.addlist\n│➤.dellist\n│➤.updatelist\n│➤.addlistchat\n│➤.listchat\n│➤.dellistchat\n│➤.jaspot\n│➤.need\n│➤.proses\n│➤.done\n│➤.addsewa\n│➤.listsewa\n│➤.delsewa\n│➤.payment\n╰──────────────╯\n\n╭─⟪ MENU GROUP ⟫─╮\n│➤.on\n│➤.off\n│➤.add\n│➤.startabsen\n│➤.listabsen\n│➤.antilink\n│➤.antilinkch\n│➤.antisticker\n│➤.antispam\n│➤.antitokcik\n│➤.promote\n│➤.demote\n│➤.kick\n│➤.welcome\n│➤.hidetag\n│➤.tagall\n│➤.close\n│➤.open\n│➤.closetime\n│➤.opentime\n│➤.statusgc\n│➤.setppgc\n│➤.setnamagc\n│➤.setdeksgc\n│➤.resetlinkgc\n│➤.setppgcpanjang\n╰──────────────╯\n\n╭─⟪ MENU MAIN ⟫─╮\n│➤.self\n│➤.public\n│➤.tourl\n│➤.sticker\n│➤.emojitogif\n│➤.emojimix\n│➤.brat\n│➤.bratfur\n│➤.brat2\n│➤.bratblur\n│➤.bratvid\n│➤.tohd\n│➤.remini\n│➤.removebg\n│➤.upscale\n│➤.colorize\n│➤.pinreset\n│➤.chatch\n│➤.ai\n╰──────────────╯\n\n╭─⟪ MENU DWONLOAD ⟫─╮\n│➤.play\n│➤.tiktokplay\n│➤.tiktok\n│➤.tiktokv2\n│➤.capcut\n│➤.spotify\n│➤.instagram\n│➤.mediafire\n│➤.gdrive\n│➤.ytmp3\n│➤.ytmp4\n│➤.fbvid\n│➤.github\n│➤.snackvid\n│➤.videy\n│➤.xxnx\n╰──────────────╯\n\n╭─⟪ MENU BACKUP ⟫─╮\n│➤.backup\n│➤.autobackup\n│➤.setwaktu\n│➤.setnamabackup\n╰──────────────╯\n━━━━━━━━━━━━━━━━━━━  \n〽️ *Creator: Riki shop real* \n🗜 *ketik : tqto*",
+            "menuContent": "Menu Fitur Script Hikmal-v1:\n...",
             "nomorWA": "",
-            "discountPrice": 20000,
-            "discountEndDate": "2025-09-06T00:18:00.000Z",
-            "category": "Script",
-            "images": []
+            "discountPrice": null,
+            "discountEndDate": null
         },
         {
             "id": 25,
             "nama": "Script push no button",
-            "harga": 10000,
+            "harga": 15000,
             "hargaAsli": 15000,
             "deskripsiPanjang": "cocok untuk open bot push, dan cocok juga untuk pushkontak.",
             "menuContent": "Menu Fitur Script push no button:\n\nHai Kak _\n_\n\n┅═❏ *WELCOME TO SC RIKI SHOP* ❏═┅‎‎\n ▭▬▭▬▭▬▭▬▭▬▭▬▭▬\n ═ 𝐘𝐓 : 𝐑𝐈𝐊𝐈 𝐒𝐇𝐎𝐏 ═\n\n 友 𝐂𝐫𝐞𝐚𝐭𝐨𝐫 : _\n 友 𝐍𝐮𝐦𝐛𝐞𝐫 : _\n 友 𝐍𝐚𝐦𝐚 𝐒𝐜𝐫𝐢𝐩𝐭 : *push-rikibtz*\n 友 𝐕𝐞𝐫𝐬𝐢 𝐒𝐜𝐫𝐢𝐩𝐭 : *1.0*\n 友 𝐕𝐞𝐫𝐬𝐢𝐨𝐧 𝐁𝐚𝐢𝐥𝐞𝐲𝐬 : *6.7.7*\n 友 𝐇𝐚𝐫𝐢 : _\n ▭▬▭▬▭▬▭▬▭▬▭▬▭▬\n╭─「 *menu bot riki shop* 」 ͏͏͏\n͏│͏͏͏ \n│╭==⊱『 *push gb terbuka* 』\n│╰= .pushgb texs\n│\n│╭==⊱『 *push gbjd tertutup* 』\n││ *melihat idgc ketik .listgc*\n│╰= .pushgt id|jeda|texs\n│\n│╭==⊱『 *push gb jeda* 』\n│╰= .pushgbjd jeda|texs\n│\n│╭==⊱『 *menu jpm & bcgc* 』\n││.jpm\n││.jpm2\n││.jpmtesti\n││.jpmslide\n││.jpmslideht\n││.keterangan\n│╰✧\n│\n│╭==⊱『 *menu savekontak* 』\n││.savekontak\n││.savekontak2\n│╰✧\n│\n│╭==⊱『 *beralih mode* 』\n││.self\n││.public\n│╰✧\n│╭==⊱『 *random menu* 』\n││.pay\n││.sc\n││.owner\n││.sticker\n││.qc\n││.tiktok\n││.proses\n││.done\n│╰✧\n╰───✧\n ▭▬▭▬▭▬▭▬▭▬▭▬▭▬\n    ⌕ ❙❘❙❙❘❙❚❙❘❙❙❚❙❘❙❘❙❚❙❘❙❙❚❙❘❙❙❘❙❚❙❘ ⌕\n     『 *©RikiShop-BoTz* 』\n━━━━━━━━━━━━━━━━━━━━━━",
             "nomorWA": "",
-            "discountPrice": 10000,
-            "discountEndDate": "2025-09-06T00:18:00.000Z",
-            "category": "Script",
-            "images": []
+            "discountPrice": null,
+            "discountEndDate": null
         },
         {
             "id": 26,
             "nama": "Script Bot cpanel telegram",
-            "harga": 15000,
+            "harga": 25000,
             "hargaAsli": 25000,
             "deskripsiPanjang": "cocok untuk open reseller di telegram.",
             "menuContent": "Fitur Script Bot cpanel telegram:\n\nhai 👋 @_\n⬛ WELCOME TO SC RIKI SHOP ⬛\n\n➖➖ Information Bot ➖➖\n🔹 Botname: cpanel telegram\n🔹 Admin: @rikishopreal\n🔹 Version: 0.0.1\n🔹 Run via: panel\n🔹 Runtime: _\n\n➖➖ MENU ➖➖\n🎯 /addprem idtele\n🎯 /delprem idtele\n🎯 /addowner idtele\n🎯 /delowner idtele\n🎯 /cadmin nama,idtele\n🎯 /listprem\n🎯 /ramlist\n🎯 /panel\n🎯 /listsrv\n🎯 /listusr\n🎯 /delusr\n🎯 /delsrv\n🎯 /listadp\n🎯 /deladp\n🎯 /setaudio (Set Audio Baru)\n\n➖ AMBIL ID TELEGRAM ➖\n🆔 /cekid\n\npowered by @rikishopreal.",
             "nomorWA": "",
-            "discountPrice": 15000,
-            "discountEndDate": "2025-09-06T00:19:00.000Z",
-            "category": "Script",
-            "images": []
+            "discountPrice": null,
+            "discountEndDate": null
         },
         {
             "id": 27,
             "nama": "Script cpanel no button",
-            "harga": 10000,
+            "harga": 15000,
             "hargaAsli": 15000,
             "deskripsiPanjang": "cocok untuk open reseller, fitur lumayan banyak.",
             "menuContent": "Fitur Script cpanel no button:\n\nHai Kak @_\n_\n\n┅═❏ *WELCOME TO SC RIKI SHOP* ❏═┅‎‎\n ▭▬▭▬▭▬▭▬▭▬▭▬▭▬\n ═ 𝐘𝐓 : 𝐑𝐈𝐊𝐈 𝐒𝐇𝐎𝐏 ═\n\n 友 𝐂𝐫𝐞𝐚𝐭𝐨𝐫 : _\n 友 𝐍𝐮𝐦𝐛𝐞𝐫 : _\n 友 𝐍𝐚𝐦𝐚 𝐒𝐜𝐫𝐢𝐩𝐭 : *CPANEL-SIMPEL*\n 友 𝐕𝐞𝐫𝐬𝐢 𝐒𝐜𝐫𝐢𝐩𝐭 : *1.0*\n 友 𝐕𝐞𝐫𝐬𝐢𝐨𝐧 𝐁𝐚𝐢𝐥𝐞𝐲𝐬 : *6.7.7*\n 友 𝐇𝐚𝐫𝐢 : _\n ▭▬▭▬▭▬▭▬▭▬▭▬▭▬\n 友 .addseller : 62xxx/@tag\n 友 delseller : 62xxx/@tag\n ▭▬▭▬▭▬▭▬▭▬▭▬▭▬\n\n╭==⊱『 *cpanel nama* 』\n║. ┏⊱\n║═▧ .1gb nama\n║═▧ .2gb nama\n║═▧ .3gb nama\n║═▧ .4gb nama\n║═▧ .5gb nama\n║═▧ .6gb nama\n║═▧ .7gb nama\n║═▧ .8gb nama\n║═▧ .9gb nama\n║═▧ .10gb nama\n║═▧ .unli nama\n║═▧ .cadmin nama\n║. ┗⊱\n║\n║═==⊱『 *cpanel nama + nomor* 』\n║. ┏⊱\n║═▧ .c1gb nama,62xx\n║═▧ .c2gb nama,62xx\n║═▧ .c3gb nama,62xx\n║═▧ .c4gb nama,62xx\n║═▧ .c5gb nama,62xx\n║═▧ .c6gb nama,62xx\n║═▧ .c7gb nama,62xx\n║═▧ .c8gb nama,62xx\n║═▧ .c9gb nama,62xx\n║═▧ .c10gb nama,62xx\n║═▧ .cunli nama,62xx\n║═▧ .cadmin1 nama,62xx\n║. ┗⊱\n║\n║═==⊱『 *del & add menu* 』\n║. ┏⊱\n║═▧ .listseller \n║═▧ .listadmin\n║═▧ .listpanel\n║═▧ .delpanel\n║═▧ .deladmin\n║═▧ .payment \n║═▧ .owner\n║═▧ .self\n║═▧ .public\n║═▧ .linklog\n║═▧ .infoscfre\n║. ┗⊱\n╰===✧\n\n    ⌕ ❙❘❙❙❘❙❚❙❘❙❙❚❙❘❙❘❙❚❙❘❙❙❚❙❘❙❙❘❙❚❙❘ ⌕\n     『 *©RikiShop-BoTz* 』\n━━━━━━━━━━━━━━━━━━━━━━.",
             "nomorWA": "",
-            "discountPrice": 10000,
-            "discountEndDate": "2025-09-06T00:19:00.000Z",
-            "category": "Script",
-            "images": []
+            "discountPrice": null,
+            "discountEndDate": null
         },
         {
             "id": 28,
             "nama": "Script cpanel 2srv",
-            "harga": 10000,
+            "harga": 20000,
             "hargaAsli": 20000,
             "deskripsiPanjang": "cocok untuk open reseller dan tersedia  2 SRV, unutk menyimpan panel vripat dan reseller.",
             "menuContent": "Fitur Script cpanel 2srv:\n\n┅═❏ *WELCOME TO SC RIKI SHOP* ❏═┅‎‎\n\nᶻᶻ   ﹒ Information - Users!\n♡﹕#number﹕ _\n♡﹕#Status ﹕ _\n♡﹕#creator ﹕ Riki Shop Real\nᶻᶻ   ﹒ Information - Bot!\n♡﹕#botname﹕_\n♡﹕#Runtime Bot ﹕_\n♡﹕#Uptime Vps﹕ _\n♡﹕#Bot mode﹕  _\n▭▬▭▬▭▬▭▬▭▬▭▬▭▬▭\n\n[ MENH UTAMA ]\n• .cpanel-v1\n• .cpanel-v2\n• .payment\n\n[ User free ]\n• .tiktok\n• .tiktokmp3\n• .payment\n• .qc { texs }\n• .brat { texs }\n• .suit\n• .ttc\n• .delttc\n• .tohd\n• .tourl\n• .sticker\n• .toimg\n• .getpp\n• .rvo\n\n> Powered By Riki Shop Real\n> https://linktr.ee/rikishopreal.",
             "nomorWA": "",
-            "discountPrice": 10000,
-            "discountEndDate": "2025-09-06T00:20:00.000Z",
-            "category": "Script",
-            "images": []
+            "discountPrice": null,
+            "discountEndDate": null
         },
         {
             "id": 29,
             "nama": "Script new-push-rikishop",
-            "harga": 15000,
+            "harga": 20000,
             "hargaAsli": 20000,
             "deskripsiPanjang": "Script ini cocok untuk Pushkontak dan open bot Pushkontak fitur lumayan.",
             "menuContent": "Fitur Script new-push-rikishop:\n\n🌟 Hello, @$ _ 🌟\nselamat _\n\n═❏ *WELCOME TO SC RIKI SHOP* ❏═\n ▭▬▭▬▭▬▭▬▭▬▭▬▭▬\n ═ 𝗜𝗡𝗙𝗢𝗥𝗠𝗔𝗧𝗜𝗢𝗡 𝗕𝗢𝗧 ═\n 友 𝐂𝐫𝐞𝐚𝐭𝐨𝐫 : _\n 友 𝐍𝐮𝐦𝐛𝐞𝐫 : _\n 友 𝐍𝐚𝐦𝐚 𝐒𝐜𝐫𝐢𝐩𝐭 : _\n 友 𝐕𝐞𝐫𝐬𝐢 𝐒𝐜𝐫𝐢𝐩𝐭 : _\n 友 𝐕𝐞𝐫𝐬𝐢𝐨𝐧 𝐁𝐚𝐢𝐥𝐞𝐲𝐬 : _\n 友 𝐇𝐚𝐫𝐢 : _\n ▭▬▭▬▭▬▭▬▭▬▭▬▭▬\n╭─☠︎「 𝗠𝗘𝗡𝗨 𝗣𝗨𝗦𝗛 」☠︎\n│➥☠︎.pushkontak\n│➥☠︎.pushkontakjd\n│➥☠︎.pushkontak1\n│➥☠︎.pushkontak2\n│➥☠︎.pushkontak3\n│➥☠︎.savekontak\n│➥☠︎.listgc\n╰─⬣\n╭─☠︎「 𝗠𝗘𝗡𝗨 𝗝𝗣𝗠 」☠︎\n│➥☠︎.jpm\n│➥☠︎.jpm1\n│➥☠︎.jpmtesti\n│➥☠︎.jpmslide\n│➥☠︎.jpmslideht\n╰─⬣\n╭─☠︎「 𝗠𝗘𝗡𝗨 𝗝𝗕 」☠︎\n│➥☠︎.formatned\n│➥☠︎.formatjp\n│➥☠︎.feadmin\n│➥☠︎.allrec\n│➥☠︎.proses\n│➥☠︎.done\n╰─⬣\n╭─☠︎「 𝗠𝗘𝗡𝗨 𝗥𝗔𝗡𝗗𝗢𝗠 」☠︎\n│➥☠︎.qc\n│➥☠︎.tts\n│➥☠︎.self\n│➥☠︎.public\n│➥☠︎.scbot\n│➥☠︎.owner\n│➥☠︎.tourl\n│➥☠︎.tohd\n│➥☠︎.sticker\n│➥☠︎.payment \n│➥☠︎.tiktok\n│➥☠︎.tiktokmp3\n│➥☠︎.Instagram\n╰─⬣\n ▭▬▭▬▭▬▭▬▭▬▭▬▭▬\n     『 ©𝗥𝗶𝗸𝗶𝗦𝗵𝗼𝗽-𝗕𝗼𝘁𝘇 』\n━━━━━━━━━━━━━━━━━━━━━━.",
             "nomorWA": "",
-            "discountPrice": 15000,
-            "discountEndDate": "2025-09-06T00:20:00.000Z",
-            "category": "Script",
-            "images": []
+            "discountPrice": null,
+            "discountEndDate": null
         },
         {
             "id": 30,
             "nama": "Script push-versi-new",
-            "harga": 15000,
+            "harga": 25000,
             "hargaAsli": 25000,
             "deskripsiPanjang": "Script ini cocok untuk Pushkontak dan open bot Pushkontak fitur lumayan.",
             "menuContent": "Fitur Script push-versi-new:\n\n╭─✧【 _ BOT 】✧─╮\n│ 🌟 Hello, @_!\n╰───────────────────╯\n\n╭─✧ BOT INFO ✧─╮\n│ 🤖 Bot Name: _\n│ 👑 Creator: _\n│ 🔄 Version: new\n│ 🔍 Mode: _\n│ ⏳ Runtime: _\n│ 🖥 VPS Uptime: _\n│ 📆 Hari: _\n╰─────────────╯\n\n╭─✧ USER INFO ✧─╮\n│ 📱 Number: _\n│ 🏷 Status: _\n╰─────────────╯\n\n🌟 MENU BOT 🌟\n━━━━━━━━━━━━━━━\n⚙ *Push Menu* ⚙\n├ .pushkontak\n├ .pushkontakjd\n├ .pushkontak1\n├ .pushkontak2\n├ .pushkontak3\n├ .savekontak\n╰─────\n⚙ *Jpm Menu* ⚙\n├ .jpm <teks>\n├ .jpm2 <teks/img>\n├ .jpmtesti <teks/img>\n├ .jpmch <teks/img>\n├ .upch <teks>\n├ .upch2 <teks/img>\n╰─────\n⚙ *id Menu* ⚙\n├ .listgc\n├ .cekidch <idch>\n├ .addidch <idch>\n├ .delidch <idch>\n├ .listidch\n╰─────\n⚙ *download Menu* ⚙\n├ .play\n├ .tiktok\n├ .tiktokmp3\n├ .instagram\n├ .playtiktok\n├ .videy\n├ .xnxx\n├ .ytmp3\n├ .ytmp4\n╰─────\n⚙ *Store Menu* ⚙\n├ .addproduk\n├ .produk\n├ .delproduk\n├ .clearproduk\n├ .struk\n├ .proses\n├ .done\n├ .tambah\n├ .kurang\n├ .kali\n├ .bagi\n├ .payment\n├ .feadmin\n├ .formatjp\n├ .formatned\n├ .allrec\n╰─────\n⚙ *Random Menu* ⚙\n├ .tohd\n├ .sticker\n├ .reactch\n├ .tourl\n├ .tourl2\n├ .brat\n├ .qc\n├ .vo\n├ .rvo\n├ .tts\n├ .getpp\n├ .addsticker\n├ .toimg\n├ .boost\n├ .restat\n├ .self\n├ .public\n├ .devbot\n╰─────\n━━━━━━━━━━━━━━━\n🌟 POWERED BY _ REAL 🌟.",
             "nomorWA": "",
-            "discountPrice": 15000,
-            "discountEndDate": "2025-09-06T00:21:00.000Z",
-            "category": "Script",
-            "images": []
+            "discountPrice": null,
+            "discountEndDate": null
         },
         {
             "id": 31,
@@ -365,15 +373,36 @@
         {
             "id": 32,
             "nama": "Script NEW-STORE-X-GRUP-Rikibtz",
-            "harga": 10000,
+            "harga": 15000,
             "hargaAsli": 15000,
             "deskripsiPanjang": "cocok untuk jaga grup dan ada fitur addlist nya.",
             "menuContent": "Fitur Script NEW-STORE-X-GRUP-Rikibtz:\n\n*HALO KA _*\n  \n┅═❏ *WELCOME TO SC RIKI SHOP* ❏═┅‎‎\n ▭▬▭▬▭▬▭▬▭▬▭▬▭▬\n ═ 𝐘𝐓 : 𝐑𝐈𝐊𝐈 𝐒𝐇𝐎𝐏 ═\n\n 友 𝐂𝐫𝐞𝐚𝐭𝐨𝐫 : _\n 友 𝐍𝐮𝐦𝐛𝐞𝐫 : _\n 友 𝐍𝐚𝐦𝐚 𝐒𝐜𝐫𝐢𝐩𝐭 : *SC-STORE-X-GRUP*\n 友 𝐕𝐞𝐫𝐬𝐢 𝐒𝐜𝐫𝐢𝐩𝐭 : *5.0.0*\n 友 𝐕𝐞𝐫𝐬𝐢𝐨𝐧 𝐁𝐚𝐢𝐥𝐞𝐲𝐬 : *MODE PUBLIK*\n 友 𝐇𝐚𝐫𝐢 : _\n 友 𝐒𝐨𝐬𝐦𝐞𝐝 : _\n ▭▬▭▬▭▬▭▬▭▬▭▬▭▬\n▬▭▬▭[ *TESTIMONI* ]▬▭▬▭▬\n* https://whatsapp.com/channel/0029VadvvgF6rsQljgBc7D1t\n▬▭▬▭▬▭▬▭▬▭▬▭▬▭▬\n┏━━⊱ ▧ 「 *MENU GRUP* 」\n┣❏⭔welcome\n┣❏⭔goodbye \n┣❏⭔open\n┣❏⭔close\n┣❏⭔hidetag\n┣❏⭔kick\n┣❏⭔promote\n┣❏⭔demote\n┣❏⭔linkgc\n┣❏⭔jeda\n┣❏⭔public\n┣❏⭔self\n┗━━━━━━━━━━━━━━━━━━⊱\n┏━━⊱ ▧ 「 *MENU STORE* 」\n┣❏⭔addlist\n┣❏⭔dellist \n┣❏⭔list\n┣❏⭔rename\n┣❏⭔updatelist\n┣❏⭔tambah\n┣❏⭔kurang\n┣❏⭔bagi\n┣❏⭔kali\n┣❏⭔addsewa\n┣❏⭔delsewa\n┣❏⭔ceksewa\n┣❏⭔proses\n┣❏⭔done\n┣❏⭔stiker\n┣❏⭔addmem\n┣❏⭔ping\n┣❏⭔payment\n┗━━━━━━━━━━━━━━━━━━⊱\n┏━━⊱ ▧ 「 *MENU GRUP SETTING* 」\n┣❏⭔setpay\n┣❏⭔setdesk \n┣❏⭔setppgc\n┣❏⭔resetlinkgc\n┣❏⭔setbot\n┣❏⭔delsetbot\n┣❏⭔setname\n┣❏⭔changep\n┣❏⭔delsetp\n┣❏⭔setdone\n┣❏⭔delsetdone\n┣❏⭔setwelcome\n┣❏⭔delsetwelcome\n┣❏⭔setleft\n┣❏⭔delsetleft\n┗━━━━━━━━━━━━━━━━━━⊱\n┏━━⊱ ▧ 「 *MENU ANTI* 」\n┣❏⭔antiwame\n┣❏⭔antilink \n┣❏⭔antilinkgc\n┣❏⭔antipromosi1\n┣❏⭔antipromosi2\n┣❏⭔antipromosi3\n┣❏⭔antipromosi4\n┣❏⭔antipromosi5\n┣❏⭔antipromosi6\n┣❏⭔antipromosi7\n┣❏⭔antipromosi8\n┣❏⭔antipromosi9\n┗━━━━━━━━━━━━━━━━━━⊱\n▬▭▬▭▬▭▬▭▬▭▬▭▬▭▬    \n𝗟𝗜𝗦𝗧 𝗡𝗢𝗠𝗢𝗥 𝗔𝗡𝗧𝗜 𝗣𝗥𝗢𝗠𝗢𝗦𝗜\n1 = Jpm\n2 = Unchek\n3 = Suntik Sosmed\n4 = Set Andro / Rege\n5 = Bot Wa / Panel / Vps\n6 = Murid\n7 = Logo Jb\n8 = Bokep / Vcs / tokcik\n9 = Apk\n\n⌕ © *SC STORE X GRUP* ⌕.",
             "nomorWA": "",
-            "discountPrice": 10000,
-            "discountEndDate": "2025-09-06T00:21:00.000Z",
-            "category": "Script",
-            "images": []
+            "discountPrice": null,
+            "discountEndDate": null
+        },
+        {
+            "id": 67,
+            "nama": "Script pusj",
+            "harga": 13333,
+            "hargaAsli": 13333,
+            "deskripsiPanjang": "Iana",
+            "createdAt": "2025-08-21T13:49:38.544Z",
+            "menuContent": "Auto pusj",
+            "nomorWA": "",
+            "discountPrice": null,
+            "discountEndDate": null
+        },
+        {
+            "id": 68,
+            "nama": "Halo",
+            "harga": 3999,
+            "hargaAsli": 3999,
+            "deskripsiPanjang": "Ssjs",
+            "createdAt": "2025-08-21T14:36:32.649Z",
+            "nomorWA": "",
+            "discountPrice": null,
+            "discountEndDate": null
         }
     ],
     "Jasa": [
@@ -449,31 +478,6 @@
         }
     ],
     "murid": [
-        {
-            "id": 71,
-            "nama": "RESELLER SUBDOMAIN",
-            "harga": 10000,
-            "hargaAsli": 20000,
-            "deskripsiPanjang": "BISA BIKIN DOMAIN SEPUASNYA || PILIHAN DOMAIN ADA BANYAK  || BISA UNTUK INSTALL PANEL DAN COSTUM DOMAIN VERCEL || MUDAH DI PAHAMI DAN CRATE MUDAH  || MEMBUAT DOMAIN MENGGUNAKAN WEBISTE || TIDAK RIBET DAN MASA AKTIF JADI RESELLER SU UMUR HIDUP || BISA JUALAN SUBDOMAIN",
-            "createdAt": "2025-09-03T23:07:37.945Z",
-            "nomorWA": "",
-            "images": [],
-            "menuContent": "",
-            "category": "murid",
-            "discountPrice": 10000,
-            "discountEndDate": "2025-09-06T00:23:00.000Z"
-        },
-        {
-            "id": 70,
-            "nama": "RESELLER WEBISTE",
-            "harga": 10000,
-            "hargaAsli": 10000,
-            "deskripsiPanjang": "COCOK UNTUK PEMULA  || MASA AKTIF SEUMUR HIDUP || SUDAH FREE SCRIPT WEBISTE PAYMENT || BISA JUALAN WEBISTE PAYMENT || BIKIN WEBISTE MENGGUNAKAN DOMAIN MY.ID DAN BIZ.ID || DI AJARKAN CARA MEMBUAT WEBISTE NYA",
-            "createdAt": "2025-09-03T23:04:41.907Z",
-            "nomorWA": "",
-            "images": [],
-            "menuContent": ""
-        },
         {
             "id": 40,
             "nama": "Murid unbend",
@@ -659,49 +663,51 @@
     ],
     "Stock Akun": [
         {
-            "id": 72,
-            "nama": "STOCK AKUN #1",
-            "harga": 10000,
-            "hargaAsli": 10000,
-            "deskripsiPanjang": "LOG FB || A2F OFF || SPEK LIAT AJA FOTO || DATA ALL AMAN ||",
-            "createdAt": "2025-09-04T19:02:19.464Z",
-            "nomorWA": "",
+            "id": 60,
+            "nama": "Akun F-B Lawas",
+            "harga": 25000,
+            "hargaAsli": 25000,
+            "deskripsiPanjang": "Akun Facebook tua, cocok untuk beriklan. Tahan banting dan minim AME.",
             "images": [
-                "https://img1.pixhost.to/images/8463/637690730_by_rikishopreal.jpg",
-                "https://img1.pixhost.to/images/8463/637690733_by_rikishopreal.jpg",
-                "https://img1.pixhost.to/images/8463/637690740_by_rikishopreal.jpg",
-                "https://img1.pixhost.to/images/8463/637690732_by_rikishopreal.jpg",
-                "https://img1.pixhost.to/images/8463/637690728_by_rikishopreal.jpg",
-                "https://img1.pixhost.to/images/8463/637690754_by_rikishopreal.jpg",
-                "https://img1.pixhost.to/images/8463/637690738_by_rikishopreal.jpg",
-                "https://img1.pixhost.to/images/8463/637690742_by_rikishopreal.jpg",
-                "https://img1.pixhost.to/images/8463/637690731_by_rikishopreal.jpg",
-                "https://img1.pixhost.to/images/8463/637690735_by_rikishopreal.jpg",
-                "https://img1.pixhost.to/images/8463/637690744_by_rikishopreal.jpg",
-                "https://img1.pixhost.to/images/8463/637690739_by_rikishopreal.jpg"
+                "https://d.top4top.io/p_3519yr64s1.jpg",
+                "https://e.top4top.io/p_35195k0522.png",
+                "https://c.top4top.io/p_3519ljkjr0.jpg"
             ],
-            "menuContent": "",
-            "category": "Stock Akun",
+            "nomorWA": "",
+            "discountPrice": null,
+            "discountEndDate": null
+        },
+        {
+            "id": 61,
+            "nama": "Akun G-Mail 2018",
+            "harga": 15000,
+            "hargaAsli": 15000,
+            "deskripsiPanjang": "Akun Gmail dibuat tahun 2018. Terverifikasi nomor, aman untuk berbagai keperluan.",
+            "images": [
+                "https://c.top4top.io/p_3519ljkjr0.jpg",
+                "https://d.top4top.io/p_3519yr64s1.jpg"
+            ],
+            "nomorWA": "",
+            "discountPrice": null,
+            "discountEndDate": null
+        },
+        {
+            "id": 65,
+            "nama": "Akun roblok",
+            "harga": 1000000,
+            "hargaAsli": 1000000,
+            "deskripsiPanjang": "Bagus dong",
+            "images": [
+                "https://g.top4top.io/p_3520njyrl3.jpg",
+                "https://f.top4top.io/p_35205ehum2.jpg",
+                "https://e.top4top.io/p_3520od8be1.jpg",
+                "https://d.top4top.io/p_3520eqk5b0.jpg"
+            ],
+            "nomorWA": "",
             "discountPrice": null,
             "discountEndDate": null
         }
     ],
-    "Logo": [
-        {
-            "id": 73,
-            "nama": "Lohi",
-            "harga": 100000,
-            "hargaAsli": 100000,
-            "deskripsiPanjang": "Y",
-            "createdAt": "2025-09-04T23:42:46.981Z",
-            "nomorWA": "",
-            "images": [
-                "https://img1.pixhost.to/images/8467/637734999_by_rikishopreal.png",
-                "https://img1.pixhost.to/images/8467/637735000_by_rikishopreal.png",
-                "https://img1.pixhost.to/images/8467/637734998_by_rikishopreal.png"
-            ],
-            "menuContent": ""
-        }
-    ],
+    "Logo": [],
     "Suntik Sosmed": []
 }
