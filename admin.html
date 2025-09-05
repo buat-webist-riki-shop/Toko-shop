@@ -108,12 +108,31 @@
                 <div id="rootDomainListContainer">Memuat daftar domain...</div>
             </div>
         </div>
-
+        
         <div id="promo" class="admin-tab-content">
-            <form class="admin-form">
-                <h2><i class="fas fa-percent"></i> Kelola Kode Promo</h2>
-                <p>Fitur ini masih dalam pengembangan. Untuk saat ini, kelola kode promo dengan mengedit file <code>data/isi_json/promo.json</code> secara manual.</p>
+            <div class="admin-form">
+                <h2><i class="fas fa-plus-circle"></i> Buat Kode Promo Baru</h2>
+                <form id="addPromoForm">
+                    <label for="promo-code">Kode Promo (e.g., DISKONBARU):</label>
+                    <input type="text" id="promo-code" required>
+                    
+                    <label for="promo-percentage">Potongan Harga (%):</label>
+                    <input type="number" id="promo-percentage" required placeholder="Contoh: 15">
+                    
+                    <label for="promo-expires">Tanggal Kedaluwarsa:</label>
+                    <input type="datetime-local" id="promo-expires" required>
+
+                    <label for="promo-max-uses">Batas Penggunaan:</label>
+                    <input type="number" id="promo-max-uses" required placeholder="Contoh: 100">
+
+                    <button type="submit" id="add-promo-btn">Tambah Kode Promo</button>
                 </form>
+            </div>
+
+            <div class="admin-form" style="margin-top: 30px;">
+                <h2><i class="fas fa-tags"></i> Daftar Kode Promo Aktif</h2>
+                <div id="promo-list-container">Memuat daftar kode promo...</div>
+            </div>
         </div>
 
         <div id="settings" class="admin-tab-content">
