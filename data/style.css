@@ -410,11 +410,40 @@ h3 { font-size: 1.2em; color: var(--primary-color); margin-bottom: 15px; border-
     -webkit-text-stroke: 2px white;
 }
 
-
-/* Gaya untuk Lightbox (Zoom Gambar) */
 .lightbox { position: fixed; z-index: 9998; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.85); display: none; justify-content: center; align-items: center; animation: fadeInModal 0.3s; }
 .lightbox-content { display: block; max-width: 90%; max-height: 85%; animation: scaleUp 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
-.lightbox-close { position: absolute; top: 20px; right: 35px; color: #f1f1f1; font-size: 40px; font-weight: bold; cursor: pointer; }
+.lightbox-close { position: absolute; top: 20px; right: 35px; color: #f1f1f1; font-size: 40px; font-weight: bold; cursor: pointer; z-index: 10; }
+
+/* --- [MODIFIKASI] Tombol Aksi di dalam Lightbox --- */
+.lightbox-actions {
+    position: absolute;
+    bottom: 25px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10;
+}
+#lightboxSelectBtn {
+    background-color: var(--success-color);
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 25px;
+    font-size: 1em;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    transition: background-color 0.2s, transform 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+#lightboxSelectBtn:hover {
+    transform: scale(1.05);
+}
+#lightboxSelectBtn.selected {
+    background-color: var(--error-color);
+}
+
 
 /* Badge & Harga Diskon */
 .new-badge { background: var(--success-color); color: white; font-size: 10px; padding: 2px 6px; border-radius: 8px; margin-left: 5px; font-weight: bold; }
