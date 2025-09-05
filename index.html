@@ -207,15 +207,19 @@
         </div>
     </div>
 
-    <div id="promoModal" class="modal">
-        <div class="modal-content">
-            <span class="close-button" id="closePromoModal">&times;</span>
-            <h3>Masukkan Kode Promo</h3>
+    <div class="overlay" id="promoOverlay"></div>
+    <div class="bottom-sheet" id="promoBottomSheet">
+        <div class="bottom-sheet-header">
+            <div class="drag-handle"></div>
+            <h4>Masukkan Kode Promo</h4>
+            <button class="close-sheet-btn" id="closePromoSheetBtn">&times;</button>
+        </div>
+        <div class="bottom-sheet-content">
             <div class="promo-input-group">
-                <input type="text" id="promoModalInput" placeholder="Ketik kodemu di sini...">
-                <button id="promoModalApplyBtn">Terapkan</button>
+                <input type="text" id="promoInput" placeholder="Ketik kodemu di sini...">
+                <button id="promoApplyBtn">Terapkan</button>
             </div>
-            <p id="promoModalFeedback"></p>
+            <p id="promoFeedback"></p>
         </div>
     </div>
 
