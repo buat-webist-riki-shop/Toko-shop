@@ -276,13 +276,15 @@
         {
             "id": 25,
             "nama": "Script push no button",
-            "harga": 15000,
+            "harga": 10000,
             "hargaAsli": 15000,
             "deskripsiPanjang": "cocok untuk open bot push, dan cocok juga untuk pushkontak.",
             "menuContent": "Menu Fitur Script push no button:\n\nHai Kak _\n_\n\n┅═❏ *WELCOME TO SC RIKI SHOP* ❏═┅‎‎\n ▭▬▭▬▭▬▭▬▭▬▭▬▭▬\n ═ 𝐘𝐓 : 𝐑𝐈𝐊𝐈 𝐒𝐇𝐎𝐏 ═\n\n 友 𝐂𝐫𝐞𝐚𝐭𝐨𝐫 : _\n 友 𝐍𝐮𝐦𝐛𝐞𝐫 : _\n 友 𝐍𝐚𝐦𝐚 𝐒𝐜𝐫𝐢𝐩𝐭 : *push-rikibtz*\n 友 𝐕𝐞𝐫𝐬𝐢 𝐒𝐜𝐫𝐢𝐩𝐭 : *1.0*\n 友 𝐕𝐞𝐫𝐬𝐢𝐨𝐧 𝐁𝐚𝐢𝐥𝐞𝐲𝐬 : *6.7.7*\n 友 𝐇𝐚𝐫𝐢 : _\n ▭▬▭▬▭▬▭▬▭▬▭▬▭▬\n╭─「 *menu bot riki shop* 」 ͏͏͏\n͏│͏͏͏ \n│╭==⊱『 *push gb terbuka* 』\n│╰= .pushgb texs\n│\n│╭==⊱『 *push gbjd tertutup* 』\n││ *melihat idgc ketik .listgc*\n│╰= .pushgt id|jeda|texs\n│\n│╭==⊱『 *push gb jeda* 』\n│╰= .pushgbjd jeda|texs\n│\n│╭==⊱『 *menu jpm & bcgc* 』\n││.jpm\n││.jpm2\n││.jpmtesti\n││.jpmslide\n││.jpmslideht\n││.keterangan\n│╰✧\n│\n│╭==⊱『 *menu savekontak* 』\n││.savekontak\n││.savekontak2\n│╰✧\n│\n│╭==⊱『 *beralih mode* 』\n││.self\n││.public\n│╰✧\n│╭==⊱『 *random menu* 』\n││.pay\n││.sc\n││.owner\n││.sticker\n││.qc\n││.tiktok\n││.proses\n││.done\n│╰✧\n╰───✧\n ▭▬▭▬▭▬▭▬▭▬▭▬▭▬\n    ⌕ ❙❘❙❙❘❙❚❙❘❙❙❚❙❘❙❘❙❚❙❘❙❙❚❙❘❙❙❘❙❚❙❘ ⌕\n     『 *©RikiShop-BoTz* 』\n━━━━━━━━━━━━━━━━━━━━━━",
             "nomorWA": "",
-            "discountPrice": null,
-            "discountEndDate": null
+            "discountPrice": 10000,
+            "discountEndDate": "2025-09-06T00:18:00.000Z",
+            "category": "Script",
+            "images": []
         },
         {
             "id": 26,
