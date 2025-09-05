@@ -614,23 +614,7 @@
             "discountEndDate": null
         }
     ],
-    "Stock Akun": [
-        {
-            "id": 60,
-            "nama": "Akun F-B Lawas",
-            "harga": 25000,
-            "hargaAsli": 25000,
-            "deskripsiPanjang": "Akun Facebook tua, cocok untuk beriklan. Tahan banting dan minim AME.",
-            "images": [
-                "https://d.top4top.io/p_3519yr64s1.jpg",
-                "https://e.top4top.io/p_35195k0522.png",
-                "https://c.top4top.io/p_3519ljkjr0.jpg"
-            ],
-            "nomorWA": "",
-            "discountPrice": null,
-            "discountEndDate": null
-        }
-    ],
+    "Stock Akun": [],
     "Logo": [],
     "Suntik Sosmed": []
 }
