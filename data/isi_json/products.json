@@ -250,13 +250,13 @@
         {
             "id": 59,
             "nama": "Script RikiTelebot",
-            "harga": 25000,
+            "harga": 20000,
             "hargaAsli": 25000,
             "deskripsiPanjang": "scrip ini cocok untuk open resller di telegram||ada fitur jaga grup telegram nya juga||dan ada fitur lain nya||bisa simpan banyak server panel",
             "menuContent": "╭─⧁ *RikiTeleBot New* ⧁\n│ 👑 *Creator:* @rikishopreal\n│ 📡 *Vps Uptime:* -\n│ ⏱️ *Bot Uptime:* -\n│ 📆 *Hari:* -\n│ 🕰️ *Jam:* -\n╰──────────────────⧁\n\n╭─🧩 *Group Menu:*\n│ • /open\n│ • /close\n│ • /antilink\n│ • /antilink2\n│ • /hidetag\n│ • /tagall\n│ • /setppgc\n│ • /setdeksgc\n│ • /setnamagc\n│ • /promote\n│ • /demote\n│ • /ban\n╰──────────────────⧁\n\n╭─🧩 *Cpanel Menu:*\n│ • /addserverpanel\n│ • /delserverpanel\n│ • /listserverpanel\n│ • /addprem\n│ • /delprem\n│ • /listprem\n│ • /listpanel\n│ • /delpanel\n│ • /listadmin\n│ • /deladmin\n│ • /cadmin\n│ • /1gb \n│ • /2gb\n│ • /3gb\n│ • /4gb\n│ • /5gb \n│ • /6gb\n│ • /7gb\n│ • /8gb\n│ • /9gb \n│ • /10gb\n│ • /unli\n╰──────────────────⧁\n\nharap jangan spam klik agar\nbot tidak mengalami eror tq\n\n    const page2 = \n╭─🧩 *Tools Menu:*\n│ • /cekid\n│ • /tohd\n│ • /remini\n│ • /upscale\n│ • /removebg\n│ • /setthumb\n│ • /tourl\n│ • /tourl2\n╰──────────────────⧁\n\n╭─🧩 *Stalk Menu:*\n│ • /igstalk\n│ • /ttstalk\n│ • /ffstalk\n╰──────────────────⧁\n\n╭─🧩 *Search Menu:*\n│ • /pinreset\n│ • /ytsearch\n│ • /ttsearch\n│ • /npms\n│ • /playstore\n│ • /xxnxs\n╰──────────────────⧁\n\n╭─🧩 *Download Menu:*\n│ • /play\n│ • /tiktokplay\n│ • /tiktok\n│ • /ytmp3\n│ • /ytmp4\n│ • /videy\n╰──────────────────⧁\n\n╭─🧩 *Setting Bot Menu:*\n│ • /setppbot\n│ • /setnamabot\n│ • /setshortbio\n│ • /setlongbio\n╰──────────────────⧁\n\nharap jangan spam klik agar\nbot tidak mengalami eror tq",
             "nomorWA": "",
-            "discountPrice": null,
-            "discountEndDate": null,
+            "discountPrice": 20000,
+            "discountEndDate": "2025-09-06T00:18:00.000Z",
             "category": "Script",
             "images": []
         },
