@@ -117,7 +117,15 @@ h3 { font-size: 1.2em; color: var(--primary-color); margin-bottom: 15px; border-
 .service-item { background-color: var(--white-color); padding: 18px 12px; border-radius: 12px; text-align: center; box-shadow: 0 2px 8px var(--shadow-color); transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease; cursor: pointer; text-decoration: none; color: inherit; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 120px; border: 1px solid var(--border-color); }
 .service-item:hover { transform: translateY(-3px); box-shadow: 0 4px 15px var(--shadow-color); background-color: var(--primary-color); color: var(--white-color); }
 .service-item:hover img { filter: brightness(0) invert(1); }
-.service-item img { width: 45px; height: 45px; object-fit: contain; margin-bottom: 10px; transition: filter 0.2s ease; }
+.service-item img {
+    width: 45px;
+    height: 45px;
+    object-fit: cover; 
+    border-radius: 8px;
+    margin-bottom: 10px;
+    transition: filter 0.2s ease;
+    background-color: var(--secondary-color);
+}
 .service-item span { display: block; font-size: 0.95em; color: var(--light-text-color); font-weight: 500; transition: color 0.2s ease; }
 .service-item:hover span { color: var(--white-color); }
 
@@ -170,8 +178,8 @@ h3 { font-size: 1.2em; color: var(--primary-color); margin-bottom: 15px; border-
     display: flex;
     flex-direction: column;
     position: relative;
-    max-height: 90vh;      /* ▼▼▼ TAMBAHKAN INI ▼▼▼ */
-    overflow-y: auto;      /* ▼▼▼ DAN INI ▼▼▼ */
+    max-height: 90vh;
+    overflow-y: auto;
 }
 .modal-header { display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; border-bottom: 1px solid var(--border-color); flex-shrink: 0; }
 .modal-header h3 { margin: 0; padding: 0; border: none; font-size: 1.2em; color: var(--primary-color); }
@@ -207,21 +215,8 @@ h3 { font-size: 1.2em; color: var(--primary-color); margin-bottom: 15px; border-
 .music-player-body p { font-size: 0.9em; color: var(--light-text-color); margin-bottom: 0; }
 .music-player-body input { width: 100%; padding: 10px 14px; border: 1px solid var(--border-color); border-radius: 8px; font-size: 0.95em; background-color: var(--secondary-color); color: var(--text-color); }
 .music-player-body button { padding: 12px; background-color: var(--primary-color); color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; }
-/* Tambahan untuk menengahkan Video YouTube */
-.media-player-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: #000;
-    border-radius: 8px;
-    overflow: hidden;
-    min-height: 200px;
-}
-
-#youtube-player-embed {
-    width: 100%;
-    aspect-ratio: 16 / 9;
-}
+.media-player-container { display: flex; justify-content: center; align-items: center; background-color: #000; border-radius: 8px; overflow: hidden; min-height: 200px; }
+#youtube-player-embed { width: 100%; aspect-ratio: 16 / 9; }
 
 /* Produk & Keranjang */
 .product-list { padding: 0 15px; background-color: var(--white-color); border-radius: 12px; box-shadow: 0 2px 8px var(--shadow-color); border: 1px solid var(--border-color); }
@@ -255,8 +250,6 @@ h3 { font-size: 1.2em; color: var(--primary-color); margin-bottom: 15px; border-
 .cart-item-card .stock-info { font-size: 0.9em; color: var(--primary-color); font-weight: 500; background-color: var(--secondary-color); padding: 4px 8px; border-radius: 8px; }
 .cart-summary { margin-top: 20px; padding: 18px 15px; font-size: 1.2em; font-weight: 600; display: flex; justify-content: space-between; align-items: center; background-color: var(--white-color); border-radius: 12px; box-shadow: 0 -2px 8px var(--shadow-color); border: 1px solid var(--border-color); }
 .checkout-button { display: block; width: 100%; margin: 25px auto 0; padding: 14px; background-color: var(--success-color); color: white; border: none; border-radius: 8px; font-size: 1.2em; font-weight: 600; cursor: pointer; box-shadow: 0 4px 8px rgba(0,0,0,0.15); }
-
-/* ... (kode CSS lainnya tetap sama) ... */
 
 #toast-notification {
     position: fixed;
@@ -346,8 +339,6 @@ h3 { font-size: 1.2em; color: var(--primary-color); margin-bottom: 15px; border-
 .image-slider-container { position: relative; width: 100%; margin-bottom: 20px; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 12px var(--shadow-color); border: 1px solid var(--border-color); }
 .image-slider-wrapper { overflow: hidden; }
 .image-slider { display: flex; transition: transform 0.5s ease-in-out; }
-
-/* --- [MODIFIKASI] Wrapper untuk setiap slide --- */
 .image-slide-wrapper {
     min-width: 100%;
     aspect-ratio: 16 / 10;
@@ -363,8 +354,6 @@ h3 { font-size: 1.2em; color: var(--primary-color); margin-bottom: 15px; border-
 .slider-nav { position: absolute; top: 50%; transform: translateY(-50%); background-color: rgba(0, 0, 0, 0.4); color: white; border: none; padding: 10px 15px; cursor: pointer; font-size: 1.5em; z-index: 10; }
 .slider-nav.prev { left: 0; border-radius: 0 8px 8px 0; }
 .slider-nav.next { right: 0; border-radius: 8px 0 0 8px; }
-
-/* --- [MODIFIKASI] Badge nomor untuk gambar --- */
 .image-number-badge {
     position: absolute;
     top: 8px;
@@ -378,94 +367,25 @@ h3 { font-size: 1.2em; color: var(--primary-color); margin-bottom: 15px; border-
     z-index: 5;
 }
 
-/* --- [MODIFIKASI] Fitur Pilih Logo --- */
-.logo-selectable {
-    position: relative;
-    transition: transform 0.2s ease;
-}
-.logo-overlay {
-    position: absolute;
-    top: 0; left: 0; right: 0; bottom: 0;
-    background-color: rgba(0, 0, 0, 0.5);
-    opacity: 1;
-    transition: opacity 0.2s ease;
-}
-.logo-checkmark {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%) scale(0.5);
-    font-size: 4em;
-    color: white;
-    opacity: 0;
-    transition: all 0.2s ease;
-}
-.image-slide-wrapper.selected .logo-overlay {
-    opacity: 0;
-}
-.image-slide-wrapper.selected .logo-checkmark {
-    opacity: 1;
-    transform: translate(-50%, -50%) scale(1);
-    color: var(--success-color);
-    -webkit-text-stroke: 2px white;
-}
-
 .lightbox { position: fixed; z-index: 9998; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.85); display: none; justify-content: center; align-items: center; animation: fadeInModal 0.3s; }
 .lightbox-content { display: block; max-width: 90%; max-height: 85%; animation: scaleUp 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
 .lightbox-close { position: absolute; top: 20px; right: 35px; color: #f1f1f1; font-size: 40px; font-weight: bold; cursor: pointer; z-index: 10; }
-
-/* --- [MODIFIKASI] Tombol Aksi di dalam Lightbox --- */
-.lightbox-actions {
-    position: absolute;
-    bottom: 25px;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 10;
-}
-#lightboxSelectBtn {
-    background-color: var(--success-color);
-    color: white;
-    border: none;
-    padding: 12px 24px;
-    border-radius: 25px;
-    font-size: 1em;
-    font-weight: 600;
-    cursor: pointer;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-    transition: background-color 0.2s, transform 0.2s;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-#lightboxSelectBtn:hover {
-    transform: scale(1.05);
-}
-#lightboxSelectBtn.selected {
-    background-color: var(--error-color);
-}
-
-
-/* Badge & Harga Diskon */
+.lightbox-actions { position: absolute; bottom: 25px; left: 50%; transform: translateX(-50%); z-index: 10; }
+#lightboxSelectBtn { background-color: var(--success-color); color: white; border: none; padding: 12px 24px; border-radius: 25px; font-size: 1em; font-weight: 600; cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.3); transition: background-color 0.2s, transform 0.2s; display: flex; align-items: center; gap: 8px; }
+#lightboxSelectBtn:hover { transform: scale(1.05); }
+#lightboxSelectBtn.selected { background-color: var(--error-color); }
 .new-badge { background: var(--success-color); color: white; font-size: 10px; padding: 2px 6px; border-radius: 8px; margin-left: 5px; font-weight: bold; }
-.original-price { font-size: 0.8em; color: var(--light-text-color); margin-right: 5px; }
-.discounted-price { font-size: 1em; font-weight: 600; color: var(--error-color); }
 
-/* --- Fitur Pilih Logo --- */
-.logo-selectable {
-    position: relative;
-    transition: transform 0.2s ease;
-    cursor: pointer;
-}
-.logo-overlay {
+.logo-selectable .logo-overlay {
     position: absolute;
     top: 0; left: 0; right: 0; bottom: 0;
-    background-color: rgba(0, 122, 255, 0.6); /* Warna biru primer dengan transparansi */
+    background-color: rgba(0, 122, 255, 0.6);
     opacity: 0;
     transition: opacity 0.3s ease;
     border: 3px solid transparent;
-    border-radius: inherit; /* Mengikuti radius parent */
+    border-radius: inherit;
 }
-.logo-checkmark {
+.logo-selectable .logo-checkmark {
     position: absolute;
     top: 50%;
     left: 50%;
@@ -477,21 +397,18 @@ h3 { font-size: 1.2em; color: var(--primary-color); margin-bottom: 15px; border-
     text-shadow: 0 2px 4px rgba(0,0,0,0.5);
 }
 .image-slide-wrapper.selected .logo-overlay {
-    opacity: 1; /* Tampilkan overlay biru */
-    border-color: var(--white-color); /* Beri border putih */
+    opacity: 1;
+    border-color: var(--white-color);
 }
 .image-slide-wrapper.selected .logo-checkmark {
     opacity: 1;
     transform: translate(-50%, -50%) scale(1);
 }
-
-/* --- Fitur Kode Promo di Keranjang --- */
 .promo-code-section {
     margin-top: 20px;
     padding: 15px;
-    background-color: var(--white-color);
+    background-color: var(--secondary-color);
     border-radius: 12px;
-    box-shadow: 0 2px 8px var(--shadow-color);
     border: 1px solid var(--border-color);
 }
 .promo-code-section h4 {
@@ -502,16 +419,20 @@ h3 { font-size: 1.2em; color: var(--primary-color); margin-bottom: 15px; border-
 .promo-input-group {
     display: flex;
     gap: 10px;
+    flex-wrap: wrap; 
 }
 .promo-input-group input {
-    flex-grow: 1;
+    flex-grow: 1; 
+    flex-basis: 150px; 
     padding: 12px;
     border: 1px solid var(--border-color);
     border-radius: 8px;
     font-size: 0.95em;
-    background-color: var(--secondary-color);
+    background-color: var(--white-color);
 }
 .promo-input-group button {
+    flex-grow: 1; 
+    flex-basis: 80px; 
     padding: 12px 18px;
     background-color: var(--primary-color);
     color: white;
@@ -521,15 +442,14 @@ h3 { font-size: 1.2em; color: var(--primary-color); margin-bottom: 15px; border-
     font-weight: 600;
     white-space: nowrap;
 }
-#promo-feedback {
+#product-promo-feedback, #cart-promo-feedback {
     font-size: 0.85em;
     margin-top: 8px;
     font-weight: 500;
 }
-#promo-feedback.success { color: var(--success-color); }
-#promo-feedback.error { color: var(--error-color); }
+#product-promo-feedback.success, #cart-promo-feedback.success { color: var(--success-color); }
+#product-promo-feedback.error, #cart-promo-feedback.error { color: var(--error-color); }
 
-/* --- Tampilan Harga setelah Diskon --- */
 .cart-summary .original-total {
     font-size: 0.8em;
     color: var(--light-text-color);

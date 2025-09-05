@@ -44,7 +44,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const apikeyWhatsappNumberInput = document.getElementById('apikey-whatsapp-number');
     const apiKeyPriceSettingsContainer = document.getElementById('api-key-price-settings-container');
     const addNewPriceTierBtn = document.getElementById('add-new-price-tier-btn');
-    
     const newCategoryNameInput = document.getElementById('new-category-name');
     const newCategoryIconInput = document.getElementById('new-category-icon');
     const addCategoryBtn = document.getElementById('add-category-btn');
@@ -60,7 +59,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const addDomainBtn = document.getElementById('add-domain-btn');
     const permanentKeyCheckbox = document.getElementById('permanent-key');
     const durationSection = document.getElementById('duration-section');
-    
     const showAddApiKeyModalBtn = document.getElementById('show-add-apikey-modal-btn');
     const showAddDomainModalBtn = document.getElementById('show-add-domain-modal-btn');
     const addApiKeyModal = document.getElementById('addApiKeyModal');
@@ -68,6 +66,15 @@ document.addEventListener('DOMContentLoaded', () => {
     const apiKeySuccessModal = document.getElementById('apiKeySuccessModal');
     const apiKeyDetailsTextarea = document.getElementById('apiKeyDetails');
     const copyApiKeyDetailsBtn = document.getElementById('copyApiKeyDetailsBtn');
+
+    // Variabel Form Promo
+    const addPromoForm = document.getElementById('addPromoForm');
+    const promoCodeInput = document.getElementById('promo-code');
+    const promoPercentageInput = document.getElementById('promo-percentage');
+    const promoExpiresInput = document.getElementById('promo-expires');
+    const promoMaxUsesInput = document.getElementById('promo-max-uses');
+    const addPromoBtn = document.getElementById('add-promo-btn');
+    const promoListContainer = document.getElementById('promo-list-container');
 
     // Alamat API
     const API_PRODUCTS_URL = '/api/products';
@@ -310,6 +317,9 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             if (button.dataset.tab === 'settings') {
                 await loadCategoriesAndSettings();
+            }
+            if (button.dataset.tab === 'promo') {
+                loadPromoCodes();
             }
         });
     });
@@ -701,7 +711,6 @@ document.addEventListener('DOMContentLoaded', () => {
         return prices;
     }
 
-    // --- [MODIFIKASI] Logika simpan pengaturan (termasuk ikon kategori) ---
     async function saveAllSettings(updatedSettings) {
         saveSettingsButton.disabled = true;
         saveSettingsButton.textContent = 'Menyimpan...';
@@ -714,7 +723,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (result.message !== 'Pengaturan berhasil disimpan!') throw new Error(result.message);
             showToast('Pengaturan berhasil disimpan!', 'success');
-            siteSettings = updatedSettings; // Update cache lokal
+            siteSettings = updatedSettings;
         } catch (err) {
             showToast(err.message, 'error');
         } finally {
@@ -748,7 +757,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         
         const settingsData = {
-            ...siteSettings, // Pertahankan data lama
+            ...siteSettings,
             globalPhoneNumber: globalNumber,
             categoryPhoneNumbers: categoryNumbers,
             apiKeyPurchaseNumber: apiKeyNumber,
@@ -781,7 +790,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
     
-    // --- [MODIFIKASI] Logika tambah kategori (2 langkah) ---
     addCategoryBtn.addEventListener('click', async () => {
         const categoryName = newCategoryNameInput.value.trim();
         if (!categoryName) return showToast('Nama kategori tidak boleh kosong.', 'error');
@@ -790,7 +798,6 @@ document.addEventListener('DOMContentLoaded', () => {
         addCategoryBtn.textContent = "Menambah...";
 
         try {
-            // Langkah 1: Buat kategori di products.json
             const resultProd = await fetch(API_PRODUCTS_URL, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -800,7 +807,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 return res.json();
             });
 
-            // Langkah 2: Jika berhasil dan ada ikon, simpan ikon di settings.json
             if (newCategoryIconInput.files.length > 0) {
                 const uploadedUrls = await uploadImages(newCategoryIconInput.files, addCategoryBtn);
                 if (uploadedUrls.length > 0) {
@@ -809,7 +815,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         siteSettings.categoryMetadata = {};
                     }
                     siteSettings.categoryMetadata[categoryName] = { icon: iconUrl };
-                    await saveAllSettings(siteSettings); // Panggil fungsi simpan
+                    await saveAllSettings(siteSettings);
                 }
             }
 
@@ -868,7 +874,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     }).then(res => res.json());
                     if (result.message !== 'Kategori berhasil dihapus.') throw new Error(result.message);
                     
-                    // Juga hapus metadata ikon dari settings jika ada
                     if (siteSettings.categoryMetadata && siteSettings.categoryMetadata[category]) {
                         delete siteSettings.categoryMetadata[category];
                         await saveAllSettings(siteSettings);
@@ -902,6 +907,25 @@ document.addEventListener('DOMContentLoaded', () => {
                     const result = await fetchAdminApi('deleteRootDomain', { domain });
                     showToast(result.message, 'success');
                     loadRootDomains();
+                } catch (err) {
+                    showToast(err.message, 'error');
+                }
+            }
+        } else if (deleteBtn.classList.contains('delete-promo-btn')) {
+             const code = deleteBtn.dataset.code;
+            const confirm = await showCustomConfirm(`Yakin ingin menghapus kode promo <strong>${code}</strong> secara permanen?`);
+            if (confirm) {
+                try {
+                     const result = await fetch(API_PRODUCTS_URL, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ action: 'promoDelete', data: { code } })
+                    }).then(res => res.json());
+
+                    if (!res.ok) throw new Error(result.message);
+                    
+                    showToast(result.message, 'success');
+                    loadPromoCodes();
                 } catch (err) {
                     showToast(err.message, 'error');
                 }
