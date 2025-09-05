@@ -341,13 +341,15 @@
         {
             "id": 30,
             "nama": "Script push-versi-new",
-            "harga": 25000,
+            "harga": 15000,
             "hargaAsli": 25000,
             "deskripsiPanjang": "Script ini cocok untuk Pushkontak dan open bot Pushkontak fitur lumayan.",
             "menuContent": "Fitur Script push-versi-new:\n\n╭─✧【 _ BOT 】✧─╮\n│ 🌟 Hello, @_!\n╰───────────────────╯\n\n╭─✧ BOT INFO ✧─╮\n│ 🤖 Bot Name: _\n│ 👑 Creator: _\n│ 🔄 Version: new\n│ 🔍 Mode: _\n│ ⏳ Runtime: _\n│ 🖥 VPS Uptime: _\n│ 📆 Hari: _\n╰─────────────╯\n\n╭─✧ USER INFO ✧─╮\n│ 📱 Number: _\n│ 🏷 Status: _\n╰─────────────╯\n\n🌟 MENU BOT 🌟\n━━━━━━━━━━━━━━━\n⚙ *Push Menu* ⚙\n├ .pushkontak\n├ .pushkontakjd\n├ .pushkontak1\n├ .pushkontak2\n├ .pushkontak3\n├ .savekontak\n╰─────\n⚙ *Jpm Menu* ⚙\n├ .jpm <teks>\n├ .jpm2 <teks/img>\n├ .jpmtesti <teks/img>\n├ .jpmch <teks/img>\n├ .upch <teks>\n├ .upch2 <teks/img>\n╰─────\n⚙ *id Menu* ⚙\n├ .listgc\n├ .cekidch <idch>\n├ .addidch <idch>\n├ .delidch <idch>\n├ .listidch\n╰─────\n⚙ *download Menu* ⚙\n├ .play\n├ .tiktok\n├ .tiktokmp3\n├ .instagram\n├ .playtiktok\n├ .videy\n├ .xnxx\n├ .ytmp3\n├ .ytmp4\n╰─────\n⚙ *Store Menu* ⚙\n├ .addproduk\n├ .produk\n├ .delproduk\n├ .clearproduk\n├ .struk\n├ .proses\n├ .done\n├ .tambah\n├ .kurang\n├ .kali\n├ .bagi\n├ .payment\n├ .feadmin\n├ .formatjp\n├ .formatned\n├ .allrec\n╰─────\n⚙ *Random Menu* ⚙\n├ .tohd\n├ .sticker\n├ .reactch\n├ .tourl\n├ .tourl2\n├ .brat\n├ .qc\n├ .vo\n├ .rvo\n├ .tts\n├ .getpp\n├ .addsticker\n├ .toimg\n├ .boost\n├ .restat\n├ .self\n├ .public\n├ .devbot\n╰─────\n━━━━━━━━━━━━━━━\n🌟 POWERED BY _ REAL 🌟.",
             "nomorWA": "",
-            "discountPrice": null,
-            "discountEndDate": null
+            "discountPrice": 15000,
+            "discountEndDate": "2025-09-06T00:21:00.000Z",
+            "category": "Script",
+            "images": []
         },
         {
             "id": 31,
