@@ -37,12 +37,8 @@ const bannerCarousel = document.getElementById('bannerCarousel');
 const bannerPagination = document.getElementById('bannerPagination');
 const visitorCountDisplay = document.getElementById('visitorCountDisplay');
 const visitorCountSpan = visitorCountDisplay ? visitorCountDisplay.querySelector('.count') : null;
-let currentBannerIndex = 0;
-let bannerInterval;
-
 const countdownTimerDiv = document.getElementById('countdownTimer');
 let countdownInterval = null;
-
 const stockImageSliderContainer = document.getElementById('stockImageSliderContainer');
 const stockImageSlider = document.getElementById('stockImageSlider');
 const sliderPrevBtn = document.getElementById('sliderPrevBtn');
@@ -52,7 +48,6 @@ const lightboxImage = document.getElementById('lightboxImage');
 const lightboxClose = document.querySelector('.lightbox-close');
 let currentStockImageIndex = 0;
 let totalStockImages = 0;
-
 const aboutUsModal = document.getElementById('aboutUsModal');
 const openAboutUsModalBtn = document.getElementById('openAboutUsModal');
 const closeAboutUsModalBtn = document.getElementById('closeAboutUsModal');
@@ -60,7 +55,6 @@ const genericScriptMenuModal = document.getElementById('genericScriptMenuModal')
 const closeGenericScriptMenuModalBtn = document.getElementById('closeGenericScriptMenuModal');
 const genericScriptMenuTitle = document.getElementById('genericScriptMenuTitle');
 const genericScriptMenuContent = document.getElementById('genericScriptMenuContent');
-
 const chatAiModal = document.getElementById('chatAiModal');
 const openChatAiModalBtn = document.getElementById('openChatAiModal');
 const closeChatAiModalBtn = document.getElementById('closeChatAiModal');
@@ -68,14 +62,12 @@ const chatAiMessagesPage = document.getElementById('chatAiMessagesPage');
 const chatAiInputPage = document.getElementById('chatAiInputPage');
 const sendChatAiBtnPage = document.getElementById('sendChatAiBtnPage');
 const chatAiLoadingPage = document.getElementById('chatAiLoadingPage');
-
 const multifunctionFab = document.getElementById('multifunctionFab');
 const themeSwitchBtn = document.getElementById('themeSwitchBtn');
 const openMusicPopupBtn = document.getElementById('openMusicPopupBtn');
 const linktreeBtn = document.getElementById('linktreeBtn');
 const muteAudioBtn = document.getElementById('muteAudioBtn');
 let isFabFirstClick = true;
-
 const musicPlayerOverlay = document.getElementById('musicPlayerOverlay');
 const musicPlayerPopup = document.getElementById('musicPlayerPopup');
 const closeMusicPlayer = document.getElementById('closeMusicPlayer');
@@ -143,24 +135,19 @@ async function setupFirebaseVisitorCounter() {
             if (initialAuthToken) { await signInWithCustomToken(auth, initialAuthToken); }
             else { await signInAnonymously(auth); }
         }
-
         const visitorDocRef = doc(db, "artifacts", appId, "public/data/site_stats/visitors");
-
         onSnapshot(visitorDocRef, (doc) => {
             const oldCount = visitorCountSpan.textContent;
             let newCountText = '0';
             if (doc.exists() && typeof doc.data().count === 'number' && !isNaN(doc.data().count)) {
                 newCountText = doc.data().count.toString();
             }
-
             visitorCountSpan.textContent = newCountText;
-
             if (oldCount !== '-' && oldCount !== newCountText) {
                 visitorCountDisplay.classList.add('updated');
                 setTimeout(() => visitorCountDisplay.classList.remove('updated'), 500);
             }
         });
-
         await runTransaction(db, async (transaction) => {
             const visitorDoc = await transaction.get(visitorDocRef);
             let currentCount = 0;
@@ -170,7 +157,6 @@ async function setupFirebaseVisitorCounter() {
             const newCount = currentCount + 1;
             transaction.set(visitorDocRef, { count: newCount }, { merge: true });
         });
-
     } catch (error) {
         console.error("Error pada Firebase Visitor Counter:", error);
         visitorCountSpan.textContent = 'Error';
@@ -200,7 +186,9 @@ function updateDateTime() {
     const now = new Date();
     const formattedDate = now.toLocaleDateString('id-ID', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
     const formattedTime = now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false });
-    currentDateTimeSpan.innerHTML = `<span class="date">${formattedDate}</span><br><span class="time">${formattedTime}</span>`;
+    if (currentDateTimeSpan) {
+        currentDateTimeSpan.innerHTML = `<span class="date">${formattedDate}</span><br><span class="time">${formattedTime}</span>`;
+    }
 }
 
 function showToastNotification(message, iconClass = 'fa-check-circle') {
@@ -228,7 +216,7 @@ function setupBannerCarousel() {
         bannerCarousel.style.transform = `translateX(-${index * 100}%)`;
         const dots = bannerPagination.querySelectorAll("span");
         dots.forEach(dot => dot.classList.remove("active"));
-        dots[index].classList.add("active");
+        if (dots[index]) dots[index].classList.add("active");
     }
     function nextBanner() {
         let nextIndex = (currentBannerIndex + 1) % bannerItems.length;
@@ -252,9 +240,9 @@ function renderServiceGrid() {
         'Suntik Sosmed': 'image/suntik.png',
         'Logo': 'https://img.icons8.com/fluency/48/color-palette.png'
     };
-
     for (const categoryName in products) {
-        const iconUrl = categoryMetadata[categoryName]?.icon || fallbackIcons[categoryName] || 'https://via.placeholder.com/45';
+        const placeholderUrl = 'https://via.placeholder.com/45/EFEFEF/AFAFAF?text=ICON';
+        const iconUrl = categoryMetadata[categoryName]?.icon || fallbackIcons[categoryName] || placeholderUrl;
         const item = document.createElement('a');
         item.href = '#';
         item.className = 'service-item';
@@ -274,9 +262,7 @@ function loadServiceProducts(serviceType) {
     serviceDetailPageTitle.textContent = serviceType;
     productListDiv.innerHTML = '';
     productDetailViewDiv.style.display = 'none';
-
     const productData = products[serviceType] || [];
-
     if (productData.length > 0) {
         productData.forEach(product => {
             const productItem = document.createElement('div');
@@ -299,19 +285,15 @@ function loadServiceProducts(serviceType) {
 function showProductDetail(product, serviceType) {
     productListDiv.style.display = 'none';
     productDetailViewDiv.style.display = 'block';
-
     currentProductOnDetailPage = product;
     productPagePromo = null;
     productPromoCodeInput.value = '';
     productPromoFeedback.textContent = '';
     productPromoFeedback.className = '';
-
     detailProductName.textContent = product.nama;
     detailProductActions.innerHTML = '';
     productPromoSection.style.display = 'block';
-
     updateProductPriceDisplay();
-
     if ((serviceType === 'Stock Akun' || serviceType === 'Logo') && product.images && product.images.length > 0) {
         stockImageSliderContainer.style.display = 'block';
         detailProductDescriptionContent.innerHTML = product.deskripsiPanjang ? product.deskripsiPanjang.replace(/\|\|/g, '<br>') : 'Tidak ada deskripsi.';
@@ -343,18 +325,15 @@ function showProductDetail(product, serviceType) {
 
 function updateProductPriceDisplay() {
     if (!currentProductOnDetailPage) return;
-
     let product = currentProductOnDetailPage;
     let originalPrice = product.hargaAsli || product.harga;
     let finalPrice = originalPrice;
     let priceHtml = formatRupiah(originalPrice);
-
     if (productPagePromo) {
         const discountAmount = originalPrice * (productPagePromo.percentage / 100);
         finalPrice = originalPrice - discountAmount;
         priceHtml = `<span class="original-price"><del>${formatRupiah(originalPrice)}</del></span> <span class="discounted-price">${formatRupiah(finalPrice)}</span>`;
     }
-
     detailProductPrice.innerHTML = priceHtml;
     generateProductActionButtons(finalPrice);
 }
@@ -363,7 +342,6 @@ function generateProductActionButtons(currentPrice) {
     let product = currentProductOnDetailPage;
     let serviceType = findCategoryOfProduct(product.id);
     detailProductActions.innerHTML = '';
-
     const addToCartBtn = document.createElement('button');
     addToCartBtn.className = 'add-to-cart';
     addToCartBtn.textContent = 'Tambah ke Keranjang';
@@ -384,7 +362,6 @@ function generateProductActionButtons(currentPrice) {
         addToCart(itemData);
     });
     detailProductActions.appendChild(addToCartBtn);
-
     const buyNowLink = document.createElement('a');
     buyNowLink.className = 'buy-now';
     buyNowLink.textContent = 'Beli Sekarang';
@@ -393,7 +370,6 @@ function generateProductActionButtons(currentPrice) {
         e.preventDefault();
         let waMessage;
         const targetPhoneNumber = getPhoneNumberForProduct(product, serviceType);
-
         if (serviceType === 'Logo') {
             const selectedImages = document.querySelectorAll('#stockImageSlider .image-slide-wrapper.selected');
             if (selectedImages.length === 0) {
@@ -406,7 +382,6 @@ function generateProductActionButtons(currentPrice) {
         } else {
             waMessage = `Halo Kak, saya tertarik memesan produk:\n\nProduk: *${product.nama}*\nHarga: *${formatRupiah(currentPrice)}*\n\nMohon info selanjutnya. Terima kasih! 🙏`;
         }
-
         window.open(`https://wa.me/${targetPhoneNumber}?text=${encodeURIComponent(waMessage)}`, "_blank");
     });
     detailProductActions.appendChild(buyNowLink);
@@ -435,7 +410,6 @@ function closeLightbox() {
 function addToCart(itemData) {
     const existingItem = cart.find(item => item.id === itemData.id);
     const nonStackable = ['Stock Akun', 'Logo'];
-
     if (nonStackable.includes(itemData.serviceType)) {
         if (existingItem) {
             showToastNotification(`Produk tipe ini hanya bisa dibeli 1 kali.`, 'fa-exclamation-circle');
@@ -451,7 +425,6 @@ function addToCart(itemData) {
             cart.push({ ...itemData, quantity: 1 });
         }
     }
-
     localStorage.setItem('rikishop_cart_v2', JSON.stringify(cart));
     updateCartCount();
     showToastNotification(`<b>${itemData.name}</b> ditambahkan ke keranjang.`);
@@ -463,7 +436,6 @@ function renderCart() {
     cartPromoFeedback.textContent = '';
     cartPromoFeedback.className = '';
     cartPagePromo = null;
-
     if (cart.length === 0) {
         cartEmptyMessage.style.display = 'block';
         cartPromoSection.style.display = 'none';
@@ -489,7 +461,6 @@ function renderCart() {
 
 function updateCartTotal() {
     let originalSubtotal = cart.reduce((sum, item) => sum + (item.originalPrice * item.quantity), 0);
-
     if (cartPagePromo) {
         const discountAmount = originalSubtotal * (cartPagePromo.percentage / 100);
         const finalTotal = originalSubtotal - discountAmount;
@@ -607,7 +578,6 @@ function createYouTubePlayer(videoId) {
 
 // --- Event Listeners ---
 document.addEventListener('DOMContentLoaded', initializeApp);
-
 applyProductPromoBtn.addEventListener('click', async () => {
     const code = productPromoCodeInput.value.trim();
     if (!code) {
@@ -628,7 +598,6 @@ applyProductPromoBtn.addEventListener('click', async () => {
         updateProductPriceDisplay();
     }
 });
-
 applyCartPromoBtn.addEventListener('click', async () => {
     const code = cartPromoCodeInput.value.trim();
     if (!code) { return; }
@@ -645,34 +614,26 @@ applyCartPromoBtn.addEventListener('click', async () => {
         renderCart();
     }
 });
-
 checkoutButton.addEventListener('click', () => {
     if (cart.length === 0) return;
     let itemsText = '';
     let subtotalFromOriginal = 0;
-
     cart.forEach((item, i) => {
         itemsText += `*${i + 1}. ${item.name}*\n   (${formatRupiah(item.price)}) x ${item.quantity}\n`;
         subtotalFromOriginal += item.originalPrice * item.quantity;
     });
-
     let promoText = '';
     let finalTotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-
     if (cartPagePromo) {
         const discountAmount = subtotalFromOriginal * (cartPagePromo.percentage / 100);
         finalTotal = subtotalFromOriginal - discountAmount;
         promoText = `Kode Promo (*${cartPagePromo.code.toUpperCase()}*): -${formatRupiah(discountAmount)}\n--------------------\n`;
     }
-
     let message = `Halo Kak, saya ingin mengonfirmasi pesanan dari keranjang:\n\n--- PESANAN ---\n${itemsText}--------------------\n*Subtotal: ${formatRupiah(subtotalFromOriginal)}*\n${promoText}*Total Akhir: ${formatRupiah(finalTotal)}*\n\nMohon konfirmasinya. Terima kasih! 🙏`;
-
     const checkoutNumber = siteSettings.globalPhoneNumber || WA_ADMIN_NUMBER;
     window.open(`https://wa.me/${checkoutNumber}?text=${encodeURIComponent(message)}`, '_blank');
 });
-
 openCartBtn.addEventListener('click', () => { showPage('cart-page'); renderCart(); });
-
 backArrows.forEach(arrow => {
     arrow.addEventListener('click', () => {
         const backToPageId = arrow.dataset.backTo;
@@ -684,14 +645,12 @@ backArrows.forEach(arrow => {
         }
     });
 });
-
 sliderNextBtn.addEventListener('click', showNextImage);
 sliderPrevBtn.addEventListener('click', showPrevImage);
 lightboxClose.addEventListener('click', closeLightbox);
 imageLightbox.addEventListener('click', (e) => {
     if (e.target === imageLightbox) closeLightbox();
 });
-
 openMenuBtn.addEventListener('click', () => { offcanvasMenu.classList.add('active'); overlay.classList.add('active'); });
 closeMenuBtn.addEventListener('click', () => { offcanvasMenu.classList.remove('active'); overlay.classList.remove('active'); });
 overlay.addEventListener('click', () => { offcanvasMenu.classList.remove('active'); overlay.classList.remove('active'); });
@@ -702,17 +661,14 @@ openChatAiModalBtn.addEventListener('click', (e) => { e.preventDefault(); chatAi
 closeChatAiModalBtn.addEventListener('click', () => chatAiModal.style.display = 'none');
 sendChatAiBtnPage.addEventListener('click', handleSendChatMessagePage);
 chatAiInputPage.addEventListener('keypress', (e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSendChatMessagePage(); } });
-
 multifunctionFab.addEventListener('click', (e) => { if (e.target.classList.contains('main-fab-icon')) { multifunctionFab.classList.toggle('active'); if (isFabFirstClick) { playBackgroundMusic(); isFabFirstClick = false; } } });
 themeSwitchBtn.addEventListener('click', (e) => { e.stopPropagation(); document.body.classList.toggle('dark-mode'); const icon = themeSwitchBtn.querySelector('i'); icon.className = document.body.classList.contains('dark-mode') ? 'fas fa-moon' : 'fas fa-sun'; });
 linktreeBtn.addEventListener('click', (e) => { e.stopPropagation(); window.open(SOSMED_LINK, '_blank'); });
 muteAudioBtn.addEventListener('click', (e) => { e.stopPropagation(); const icon = muteAudioBtn.querySelector('i'); if (youtubePlayer && typeof youtubePlayer.isMuted === 'function') { if (youtubePlayer.isMuted()) { youtubePlayer.unMute(); customMusicMuted = false; icon.className = 'fas fa-volume-up'; showToastNotification("Suara diaktifkan", "fa-volume-up"); } else { youtubePlayer.mute(); customMusicMuted = true; icon.className = 'fas fa-volume-mute'; showToastNotification("Suara dimatikan", "fa-volume-mute"); } } else { backgroundAudio.muted = !backgroundAudio.muted; icon.className = backgroundAudio.muted ? 'fas fa-volume-mute' : 'fas fa-volume-up'; } });
-
 openMusicPopupBtn.addEventListener('click', (e) => { e.stopPropagation(); musicPlayerPopup.classList.add('active'); musicPlayerOverlay.classList.add('active'); });
 closeMusicPlayer.addEventListener('click', () => { musicPlayerPopup.classList.remove('active'); musicPlayerOverlay.classList.remove('active'); });
 musicPlayerOverlay.addEventListener('click', () => { musicPlayerPopup.classList.remove('active'); musicPlayerOverlay.classList.remove('active'); });
 loadMediaBtn.addEventListener('click', () => { const mediaLink = mediaLinkInput.value.trim(); if (!mediaLink) return showToastNotification("Silakan masukkan link.", "fa-exclamation-circle"); backgroundAudio.pause(); backgroundAudio.src = ''; if (youtubePlayer && typeof youtubePlayer.destroy === 'function') youtubePlayer.destroy(); mediaPlayerContainer.innerHTML = ''; customMusicMuted = false; try { let videoId = null; if (mediaLink.includes('youtu.be') || mediaLink.includes('youtube.com')) { const url = new URL(mediaLink); videoId = url.hostname === 'youtu.be' ? url.pathname.substring(1) : url.searchParams.get('v'); } if (videoId) { createYouTubePlayer(videoId); showToastNotification("Memuat video...", "fa-play-circle"); muteAudioBtn.querySelector('i').className = 'fas fa-volume-up'; } else { showToastNotification("Link YouTube tidak valid.", "fa-times-circle"); } } catch (error) { showToastNotification("Format link tidak dikenal.", "fa-times-circle"); } });
-
 
 // --- Inisialisasi Aplikasi ---
 async function initializeApp() {
@@ -735,7 +691,6 @@ async function initializeApp() {
     updateDateTime();
     setInterval(updateDateTime, 1000);
     updateCartCount();
-
     welcomeScreen.style.display = 'flex';
     let progress = 0;
     let progressBar = document.getElementById("progressBar");
@@ -758,7 +713,6 @@ async function initializeApp() {
         }
     }, 80);
 }
-
 document.addEventListener('firebaseReady', () => {
     initializeApp();
     setupFirebaseVisitorCounter();

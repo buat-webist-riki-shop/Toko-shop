@@ -10,7 +10,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const themeSwitchBtnPanel = document.getElementById('themeSwitchBtnPanel');
     const body = document.body;
     
-    // Variabel Produk
     const categorySelect = document.getElementById('category');
     const nameInput = document.getElementById('product-name');
     const priceInput = document.getElementById('product-price');
@@ -29,7 +28,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const applyBulkPriceBtn = document.getElementById('apply-bulk-price-btn');
     const resetPricesBtn = document.getElementById('reset-prices-btn');
 
-    // Variabel Modal
     const modals = document.querySelectorAll('.modal');
     const customConfirmModal = document.getElementById('customConfirmModal');
     const confirmMessage = document.getElementById('confirmMessage');
@@ -37,7 +35,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const confirmCancelBtn = document.getElementById('confirmCancelBtn');
     let resolveConfirmPromise;
     
-    // Variabel Pengaturan
     const saveSettingsButton = document.getElementById('save-settings-button');
     const globalWhatsappNumberInput = document.getElementById('global-whatsapp-number');
     const categoryWhatsappNumbersContainer = document.getElementById('category-whatsapp-numbers-container');
@@ -49,10 +46,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const addCategoryBtn = document.getElementById('add-category-btn');
     const manageCategoriesList = document.getElementById('manage-categories-list');
 
-    // Variabel Modal Edit
     const editWhatsappNumberInput = document.getElementById('edit-whatsapp-number');
 
-    // Variabel Manajer Domain
     const apiKeyListContainer = document.getElementById('apiKeyListContainer');
     const createApiKeyBtn = document.getElementById('create-apikey-btn');
     const rootDomainListContainer = document.getElementById('rootDomainListContainer');
@@ -67,7 +62,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const apiKeyDetailsTextarea = document.getElementById('apiKeyDetails');
     const copyApiKeyDetailsBtn = document.getElementById('copyApiKeyDetailsBtn');
 
-    // Variabel Form Promo
     const addPromoForm = document.getElementById('addPromoForm');
     const promoCodeInput = document.getElementById('promo-code');
     const promoPercentageInput = document.getElementById('promo-percentage');
@@ -76,7 +70,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const addPromoBtn = document.getElementById('add-promo-btn');
     const promoListContainer = document.getElementById('promo-list-container');
 
-    // Alamat API
     const API_PRODUCTS_URL = '/api/products';
     const API_CLOUDFLARE_URL = '/api/cloudflare';
     const API_BASE_URL = '/api'; 
@@ -88,11 +81,9 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!fileList || fileList.length === 0) {
             return [];
         }
-
         const uploadPromises = Array.from(fileList).map(file => {
             const formData = new FormData();
             formData.append('image', file);
-            
             return fetch('/api/tourl', {
                 method: 'POST',
                 body: formData,
@@ -103,7 +94,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 return response.json();
             }).then(result => result.link);
         });
-
         const originalButtonText = buttonElement ? buttonElement.textContent : '';
         try {
             const urls = await Promise.all(uploadPromises.map(async (promise, index) => {
@@ -118,8 +108,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-
-    // --- FUNGSI DASAR (Tema, Toast, Konfirmasi, Modal, Validasi) ---
     const savedTheme = localStorage.getItem('admin-theme') || 'light-mode';
     body.className = savedTheme;
     function updateThemeButton() {
@@ -130,7 +118,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
     updateThemeButton();
-
     function toggleTheme() {
         body.classList.toggle('light-mode');
         body.classList.toggle('dark-mode');
@@ -241,9 +228,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             });
 
-            const settingsRes = await fetch(`${API_BASE_URL}/getSettings?v=${Date.now()}`);
-            if (!settingsRes.ok) throw new Error('Gagal memuat pengaturan.');
-            siteSettings = await settingsRes.json();
+            const settingsRes = await fetch(`data/isi_json/settings.json?v=${Date.now()}`);
+            if (!settingsRes.ok) {
+                console.warn('File settings.json tidak ditemukan, akan menggunakan data default.');
+                siteSettings = {}; 
+            } else {
+                siteSettings = await settingsRes.json();
+            }
             
             globalWhatsappNumberInput.value = siteSettings.globalPhoneNumber || '';
             apikeyWhatsappNumberInput.value = siteSettings.apiKeyPurchaseNumber || '';
@@ -338,7 +329,7 @@ document.addEventListener('DOMContentLoaded', () => {
         try {
             const imageUrls = await uploadImages(photosInput.files, addButton);
             const waNumber = productWhatsappNumberInput.value.trim();
-            if (!validatePhoneNumber(waNumber)) {
+            if (waNumber && !validatePhoneNumber(waNumber)) {
                 throw new Error("Format Nomor WA salah. Harus diawali kode negara (contoh: 628...)");
             }
             const productData = {
@@ -356,15 +347,13 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             addButton.textContent = 'Menyimpan Produk...';
-            const result = await fetch(API_PRODUCTS_URL, {
+            const res = await fetch(API_PRODUCTS_URL, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ action: 'addProduct', data: productData })
-            }).then(res => res.json());
-
-            if (result.message !== 'Produk berhasil ditambahkan!') {
-                throw new Error(result.message);
-            }
+            });
+            const result = await res.json();
+            if(!res.ok) throw new Error(result.message);
 
             showToast(`Produk "${productData.nama}" berhasil ditambahkan.`, 'success');
             document.getElementById('addProductForm').reset();
@@ -519,7 +508,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         saveEditBtn.addEventListener('click', async () => {
             const newWaNumber = editWhatsappNumberInput.value.trim();
-            if (!validatePhoneNumber(newWaNumber)) {
+            if (newWaNumber && !validatePhoneNumber(newWaNumber)) {
                 return showToast("Format Nomor WA salah. Harus diawali kode negara (contoh: 628...)", 'error');
             }
             const hargaAsli = parseInt(editPriceInput.value, 10);
@@ -548,12 +537,13 @@ document.addEventListener('DOMContentLoaded', () => {
             saveEditBtn.textContent = 'Menyimpan...';
             saveEditBtn.disabled = true;
             try {
-                const result = await fetch(API_PRODUCTS_URL, {
+                const res = await fetch(API_PRODUCTS_URL, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ action: 'updateProduct', data: productData })
-                }).then(res => res.json());
-                if (result.message !== 'Produk berhasil diperbarui!') throw new Error(result.message);
+                });
+                const result = await res.json();
+                if (!res.ok) throw new Error(result.message);
                 showToast('Produk berhasil diperbarui.', 'success');
                 closeModal(editModal);
                 manageCategorySelect.dispatchEvent(new Event('change'));
@@ -589,12 +579,13 @@ document.addEventListener('DOMContentLoaded', () => {
             if (!category || newOrder.length === 0) return;
             saveOrderButton.disabled = true;
             try {
-                const result = await fetch(API_PRODUCTS_URL, {
+                const res = await fetch(API_PRODUCTS_URL, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ action: 'reorderProducts', data: { category, order: newOrder } })
-                }).then(res => res.json());
-                if (result.message !== 'Urutan berhasil disimpan.') throw new Error(result.message);
+                });
+                const result = await res.json();
+                if (!res.ok) throw new Error(result.message);
                 showToast('Urutan berhasil disimpan.', 'success');
             } catch (err) {
                 showToast(err.message, 'error');
@@ -610,12 +601,13 @@ document.addEventListener('DOMContentLoaded', () => {
             if (!(await showCustomConfirm(`Yakin mengubah harga SEMUA produk di "<b>${category}</b>" menjadi <b>${formatRupiah(newBulkPrice)}</b>?`))) return;
             applyBulkPriceBtn.disabled = true;
             try {
-                const result = await fetch(API_PRODUCTS_URL, { 
+                const res = await fetch(API_PRODUCTS_URL, { 
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ action: 'updateProductsInCategory', data: { category, newPrice: newBulkPrice } })
-                }).then(res => res.json());
-                if (result.message.indexOf('berhasil diubah') === -1) throw new Error(result.message);
+                });
+                const result = await res.json();
+                if (!res.ok) throw new Error(result.message);
                 showToast(result.message, 'success');
                 bulkPriceInput.value = ''; 
                 manageCategorySelect.dispatchEvent(new Event('change')); 
@@ -632,12 +624,13 @@ document.addEventListener('DOMContentLoaded', () => {
             if (!(await showCustomConfirm(`Yakin mengembalikan harga SEMUA produk di "<b>${category}</b>" ke harga awal?`))) return;
             resetPricesBtn.disabled = true;
             try {
-                const result = await fetch(API_PRODUCTS_URL, {
+                const res = await fetch(API_PRODUCTS_URL, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ action: 'resetCategoryPrices', data: { category } })
-                }).then(res => res.json());
-                if (result.message.indexOf('berhasil dikembalikan') === -1) throw new Error(result.message);
+                });
+                const result = await res.json();
+                if (!res.ok) throw new Error(result.message);
                 showToast(result.message, 'success');
                 manageCategorySelect.dispatchEvent(new Event('change'));
             } catch (err) {
@@ -715,13 +708,13 @@ document.addEventListener('DOMContentLoaded', () => {
         saveSettingsButton.disabled = true;
         saveSettingsButton.textContent = 'Menyimpan...';
         try {
-            const result = await fetch(`${API_BASE_URL}/updateSettings`, {
+            const res = await fetch('/api/settings', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json', 'Admin-Password': sessionStorage.getItem('adminPassword') },
                 body: JSON.stringify(updatedSettings)
-            }).then(res => res.json());
-
-            if (result.message !== 'Pengaturan berhasil disimpan!') throw new Error(result.message);
+            });
+            const result = await res.json();
+            if(!res.ok) throw new Error(result.message);
             showToast('Pengaturan berhasil disimpan!', 'success');
             siteSettings = updatedSettings;
         } catch (err) {
@@ -737,7 +730,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const apiKeyNumber = apikeyWhatsappNumberInput.value.trim();
 
         if (!validatePhoneNumber(globalNumber) || !globalNumber) return showToast("Nomor WA Global wajib diisi dengan format kode negara (contoh: 628...)", 'error');
-        if (!validatePhoneNumber(apiKeyNumber) || !apiKeyNumber) return showToast("Nomor WA Beli API Key wajib diisi.", 'error');
+        if (apiKeyNumber && !validatePhoneNumber(apiKeyNumber)) return showToast("Format Nomor WA API Key salah.", 'error');
 
         const categoryNumbers = {};
         let isCategoryValid = true;
@@ -798,14 +791,13 @@ document.addEventListener('DOMContentLoaded', () => {
         addCategoryBtn.textContent = "Menambah...";
 
         try {
-            const resultProd = await fetch(API_PRODUCTS_URL, {
+            const resProd = await fetch(API_PRODUCTS_URL, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ action: 'addCategory', data: { categoryName } })
-            }).then(res => {
-                if (!res.ok) return res.json().then(err => Promise.reject(err));
-                return res.json();
             });
+            const resultProd = await resProd.json();
+            if(!resProd.ok) throw new Error(resultProd.message);
 
             if (newCategoryIconInput.files.length > 0) {
                 const uploadedUrls = await uploadImages(newCategoryIconInput.files, addCategoryBtn);
@@ -850,12 +842,13 @@ document.addEventListener('DOMContentLoaded', () => {
             const confirm = await showCustomConfirm(`Yakin ingin menghapus produk <b>${parent.querySelector('span').textContent.split(' - ')[0]}</b>?`);
             if (confirm) {
                 try {
-                    const result = await fetch(API_PRODUCTS_URL, {
+                    const res = await fetch(API_PRODUCTS_URL, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({ action: 'deleteProduct', data: { id, category } })
-                    }).then(res => res.json());
-                    if (result.message !== 'Produk berhasil dihapus.') throw new Error(result.message);
+                    });
+                    const result = await res.json();
+                    if(!res.ok) throw new Error(result.message);
                     parent.remove();
                     showToast(result.message, 'success');
                 } catch (err) {
@@ -867,12 +860,13 @@ document.addEventListener('DOMContentLoaded', () => {
             const confirm = await showCustomConfirm(`Yakin menghapus kategori "<b>${category}</b>"?<br><br><b>PERINGATAN:</b> Semua produk di dalam kategori ini akan ikut terhapus secara permanen!`);
             if (confirm) {
                 try {
-                    const result = await fetch(API_PRODUCTS_URL, {
+                    const res = await fetch(API_PRODUCTS_URL, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({ action: 'deleteCategory', data: { categoryName: category } })
-                    }).then(res => res.json());
-                    if (result.message !== 'Kategori berhasil dihapus.') throw new Error(result.message);
+                    });
+                    const result = await res.json();
+                    if(!res.ok) throw new Error(result.message);
                     
                     if (siteSettings.categoryMetadata && siteSettings.categoryMetadata[category]) {
                         delete siteSettings.categoryMetadata[category];
@@ -916,12 +910,12 @@ document.addEventListener('DOMContentLoaded', () => {
             const confirm = await showCustomConfirm(`Yakin ingin menghapus kode promo <strong>${code}</strong> secara permanen?`);
             if (confirm) {
                 try {
-                     const result = await fetch(API_PRODUCTS_URL, {
+                     const res = await fetch(API_PRODUCTS_URL, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({ action: 'promoDelete', data: { code } })
-                    }).then(res => res.json());
-
+                    });
+                    const result = await res.json();
                     if (!res.ok) throw new Error(result.message);
                     
                     showToast(result.message, 'success');
