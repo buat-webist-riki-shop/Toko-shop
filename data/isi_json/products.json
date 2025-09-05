@@ -289,13 +289,15 @@
         {
             "id": 26,
             "nama": "Script Bot cpanel telegram",
-            "harga": 25000,
+            "harga": 15000,
             "hargaAsli": 25000,
             "deskripsiPanjang": "cocok untuk open reseller di telegram.",
             "menuContent": "Fitur Script Bot cpanel telegram:\n\nhai 👋 @_\n⬛ WELCOME TO SC RIKI SHOP ⬛\n\n➖➖ Information Bot ➖➖\n🔹 Botname: cpanel telegram\n🔹 Admin: @rikishopreal\n🔹 Version: 0.0.1\n🔹 Run via: panel\n🔹 Runtime: _\n\n➖➖ MENU ➖➖\n🎯 /addprem idtele\n🎯 /delprem idtele\n🎯 /addowner idtele\n🎯 /delowner idtele\n🎯 /cadmin nama,idtele\n🎯 /listprem\n🎯 /ramlist\n🎯 /panel\n🎯 /listsrv\n🎯 /listusr\n🎯 /delusr\n🎯 /delsrv\n🎯 /listadp\n🎯 /deladp\n🎯 /setaudio (Set Audio Baru)\n\n➖ AMBIL ID TELEGRAM ➖\n🆔 /cekid\n\npowered by @rikishopreal.",
             "nomorWA": "",
-            "discountPrice": null,
-            "discountEndDate": null
+            "discountPrice": 15000,
+            "discountEndDate": "2025-09-06T00:19:00.000Z",
+            "category": "Script",
+            "images": []
         },
         {
             "id": 27,
