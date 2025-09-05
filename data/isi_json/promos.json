@@ -1,10 +1,14 @@
 {
-    "RIKI": {
-        "type": "percentage",
-        "value": 50,
-        "expiresAt": "2025-09-04T21:16:00.000Z",
+    "DISKONBARU": {
+        "percentage": 15,
+        "expires": "2025-12-31T23:59:59Z",
+        "maxUses": 100,
+        "uses": 0
+    },
+    "HEMAT10": {
+        "percentage": 10,
+        "expires": "2025-09-30T23:59:59Z",
         "maxUses": 1,
-        "totalUses": 0,
-        "createdAt": "2025-09-04T21:15:47.901Z"
+        "uses": 1
     }
 }
