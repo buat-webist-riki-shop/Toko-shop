@@ -25,5 +25,10 @@
             "discountPrice": null,
             "discountEndDate": null
         }
-    ]
+    ],
+    "categoryMetadata": {
+        "Logo bku": {
+            "icon": "https://img1.pixhost.to/images/8481/637849719_by_rikishopreal.jpg"
+        }
+    }
 }
