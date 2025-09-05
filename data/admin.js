@@ -10,6 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const themeSwitchBtnPanel = document.getElementById('themeSwitchBtnPanel');
     const body = document.body;
     
+    // Variabel Produk
     const categorySelect = document.getElementById('category');
     const nameInput = document.getElementById('product-name');
     const priceInput = document.getElementById('product-price');
@@ -28,6 +29,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const applyBulkPriceBtn = document.getElementById('apply-bulk-price-btn');
     const resetPricesBtn = document.getElementById('reset-prices-btn');
 
+    // Variabel Modal
     const modals = document.querySelectorAll('.modal');
     const customConfirmModal = document.getElementById('customConfirmModal');
     const confirmMessage = document.getElementById('confirmMessage');
@@ -35,6 +37,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const confirmCancelBtn = document.getElementById('confirmCancelBtn');
     let resolveConfirmPromise;
     
+    // Variabel Pengaturan
     const saveSettingsButton = document.getElementById('save-settings-button');
     const globalWhatsappNumberInput = document.getElementById('global-whatsapp-number');
     const categoryWhatsappNumbersContainer = document.getElementById('category-whatsapp-numbers-container');
@@ -46,8 +49,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const addCategoryBtn = document.getElementById('add-category-btn');
     const manageCategoriesList = document.getElementById('manage-categories-list');
 
+    // Variabel Modal Edit
     const editWhatsappNumberInput = document.getElementById('edit-whatsapp-number');
 
+    // Variabel Manajer Domain
     const apiKeyListContainer = document.getElementById('apiKeyListContainer');
     const createApiKeyBtn = document.getElementById('create-apikey-btn');
     const rootDomainListContainer = document.getElementById('rootDomainListContainer');
@@ -62,6 +67,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const apiKeyDetailsTextarea = document.getElementById('apiKeyDetails');
     const copyApiKeyDetailsBtn = document.getElementById('copyApiKeyDetailsBtn');
 
+    // Variabel Form Promo
     const addPromoForm = document.getElementById('addPromoForm');
     const promoCodeInput = document.getElementById('promo-code');
     const promoPercentageInput = document.getElementById('promo-percentage');
@@ -70,6 +76,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const addPromoBtn = document.getElementById('add-promo-btn');
     const promoListContainer = document.getElementById('promo-list-container');
 
+    // Alamat API
     const API_PRODUCTS_URL = '/api/products';
     const API_CLOUDFLARE_URL = '/api/cloudflare';
     const API_BASE_URL = '/api'; 
@@ -81,9 +88,11 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!fileList || fileList.length === 0) {
             return [];
         }
+
         const uploadPromises = Array.from(fileList).map(file => {
             const formData = new FormData();
             formData.append('image', file);
+            
             return fetch('/api/tourl', {
                 method: 'POST',
                 body: formData,
@@ -94,6 +103,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 return response.json();
             }).then(result => result.link);
         });
+
         const originalButtonText = buttonElement ? buttonElement.textContent : '';
         try {
             const urls = await Promise.all(uploadPromises.map(async (promise, index) => {
@@ -108,6 +118,8 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+
+    // --- FUNGSI DASAR (Tema, Toast, Konfirmasi, Modal, Validasi) ---
     const savedTheme = localStorage.getItem('admin-theme') || 'light-mode';
     body.className = savedTheme;
     function updateThemeButton() {
@@ -118,6 +130,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
     updateThemeButton();
+
     function toggleTheme() {
         body.classList.toggle('light-mode');
         body.classList.toggle('dark-mode');
@@ -315,6 +328,87 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
+    async function loadPromoCodes() {
+        promoListContainer.innerHTML = 'Memuat...';
+        try {
+            const res = await fetch(API_PRODUCTS_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ action: 'promoGetAll' })
+            });
+            if (!res.ok) throw new Error('Gagal memuat data promo.');
+            const promos = await res.json();
+            
+            promoListContainer.innerHTML = '';
+            if (Object.keys(promos).length === 0) {
+                promoListContainer.innerHTML = '<p>Belum ada kode promo yang dibuat.</p>';
+                return;
+            }
+
+            for (const code in promos) {
+                const promo = promos[code];
+                const expiresDate = new Date(promo.expires);
+                const isExpired = expiresDate < new Date();
+                const usageText = promo.maxUses === 0 ? `${promo.uses} / ∞ (Tanpa Batas)` : `${promo.uses} / ${promo.maxUses}`;
+
+                const item = document.createElement('div');
+                item.className = 'delete-item';
+                item.innerHTML = `
+                    <div class="item-header">
+                        <span>
+                            <strong>${promo.code}</strong> - ${promo.percentage}% 
+                            <small style="display:block; color: ${isExpired ? 'var(--error-color)' : 'inherit'}">
+                                ${isExpired ? 'Telah Kedaluwarsa' : 'Berlaku hingga ' + expiresDate.toLocaleString('id-ID')}
+                            </small>
+                            <small style="display:block;">Penggunaan: ${usageText}</small>
+                        </span>
+                        <div class="item-actions">
+                            <button type="button" class="delete-btn delete-promo-btn" data-code="${promo.code}"><i class="fas fa-trash-alt"></i> Hapus</button>
+                        </div>
+                    </div>
+                `;
+                promoListContainer.appendChild(item);
+            }
+        } catch (err) {
+            promoListContainer.innerHTML = `<p style="color:red;">${err.message}</p>`;
+        }
+    }
+
+    addPromoBtn.addEventListener('click', async (e) => {
+        e.preventDefault();
+        const promoData = {
+            code: promoCodeInput.value.trim().toUpperCase(),
+            percentage: parseInt(promoPercentageInput.value, 10),
+            expires: new Date(promoExpiresInput.value).toISOString(),
+            maxUses: parseInt(promoMaxUsesInput.value, 10)
+        };
+
+        if (!promoData.code || isNaN(promoData.percentage) || !promoExpiresInput.value || isNaN(promoData.maxUses) || promoData.maxUses < 0) {
+            return showToast('Semua kolom wajib diisi dengan benar.', 'error');
+        }
+
+        addPromoBtn.disabled = true;
+        addPromoBtn.textContent = 'Menambahkan...';
+        try {
+            const res = await fetch(API_PRODUCTS_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ action: 'promoAdd', data: promoData })
+            });
+            const result = await res.json();
+            if (!res.ok) throw new Error(result.message);
+
+            showToast(result.message, 'success');
+            addPromoForm.reset();
+            loadPromoCodes();
+        } catch (err) {
+            showToast(err.message, 'error');
+        } finally {
+            addPromoBtn.disabled = false;
+            addPromoBtn.textContent = 'Tambah Kode Promo';
+        }
+    });
+
     categorySelect.addEventListener('change', () => {
         const category = categorySelect.value;
         const photoCategories = ['Stock Akun', 'Logo'];
@@ -325,7 +419,6 @@ document.addEventListener('DOMContentLoaded', () => {
     addButton.addEventListener('click', async (e) => { 
         e.preventDefault();
         addButton.disabled = true;
-
         try {
             const imageUrls = await uploadImages(photosInput.files, addButton);
             const waNumber = productWhatsappNumberInput.value.trim();
@@ -704,27 +797,6 @@ document.addEventListener('DOMContentLoaded', () => {
         return prices;
     }
 
-    async function saveAllSettings(updatedSettings) {
-        saveSettingsButton.disabled = true;
-        saveSettingsButton.textContent = 'Menyimpan...';
-        try {
-            const res = await fetch('/api/settings', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json', 'Admin-Password': sessionStorage.getItem('adminPassword') },
-                body: JSON.stringify(updatedSettings)
-            });
-            const result = await res.json();
-            if(!res.ok) throw new Error(result.message);
-            showToast('Pengaturan berhasil disimpan!', 'success');
-            siteSettings = updatedSettings;
-        } catch (err) {
-            showToast(err.message, 'error');
-        } finally {
-            saveSettingsButton.disabled = false;
-            saveSettingsButton.textContent = 'Simpan Semua Pengaturan';
-        }
-    }
-
     saveSettingsButton.addEventListener('click', async () => {
         const globalNumber = globalWhatsappNumberInput.value.trim();
         const apiKeyNumber = apikeyWhatsappNumberInput.value.trim();
@@ -783,150 +855,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
     
-    addCategoryBtn.addEventListener('click', async () => {
-        const categoryName = newCategoryNameInput.value.trim();
-        if (!categoryName) return showToast('Nama kategori tidak boleh kosong.', 'error');
-
-        addCategoryBtn.disabled = true;
-        addCategoryBtn.textContent = "Menambah...";
-
-        try {
-            const resProd = await fetch(API_PRODUCTS_URL, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ action: 'addCategory', data: { categoryName } })
-            });
-            const resultProd = await resProd.json();
-            if(!resProd.ok) throw new Error(resultProd.message);
-
-            if (newCategoryIconInput.files.length > 0) {
-                const uploadedUrls = await uploadImages(newCategoryIconInput.files, addCategoryBtn);
-                if (uploadedUrls.length > 0) {
-                    const iconUrl = uploadedUrls[0];
-                    if (!siteSettings.categoryMetadata) {
-                        siteSettings.categoryMetadata = {};
-                    }
-                    siteSettings.categoryMetadata[categoryName] = { icon: iconUrl };
-                    await saveAllSettings(siteSettings);
-                }
-            }
-
-            showToast(resultProd.message, 'success');
-            newCategoryNameInput.value = '';
-            newCategoryIconInput.value = '';
-            await loadCategoriesAndSettings();
-
-        } catch (err) {
-            showToast(err.message || 'Gagal menambah kategori.', 'error');
-        } finally {
-            addCategoryBtn.disabled = false;
-            addCategoryBtn.textContent = "Tambah Kategori";
-        }
-    });
-
-    if (sessionStorage.getItem('isAdminAuthenticated')) {
-        loginScreen.style.display = 'none';
-        productFormScreen.style.display = 'block';
-        loadCategoriesAndSettings();
-        document.querySelector('.tab-button[data-tab="addProduct"]').click();
-    }
-    
-    document.body.addEventListener('click', async (e) => {
-        const deleteBtn = e.target.closest('.delete-btn');
-        if (!deleteBtn) return;
-
-        if (deleteBtn.classList.contains('delete-product-btn')) {
-            const parent = deleteBtn.closest('.delete-item');
-            const id = parseInt(parent.dataset.id);
-            const category = manageCategorySelect.value;
-            const confirm = await showCustomConfirm(`Yakin ingin menghapus produk <b>${parent.querySelector('span').textContent.split(' - ')[0]}</b>?`);
-            if (confirm) {
-                try {
-                    const res = await fetch(API_PRODUCTS_URL, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ action: 'deleteProduct', data: { id, category } })
-                    });
-                    const result = await res.json();
-                    if(!res.ok) throw new Error(result.message);
-                    parent.remove();
-                    showToast(result.message, 'success');
-                } catch (err) {
-                    showToast(err.message, 'error');
-                }
-            }
-        } else if (deleteBtn.classList.contains('delete-category-btn')) {
-            const category = deleteBtn.dataset.category;
-            const confirm = await showCustomConfirm(`Yakin menghapus kategori "<b>${category}</b>"?<br><br><b>PERINGATAN:</b> Semua produk di dalam kategori ini akan ikut terhapus secara permanen!`);
-            if (confirm) {
-                try {
-                    const res = await fetch(API_PRODUCTS_URL, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ action: 'deleteCategory', data: { categoryName: category } })
-                    });
-                    const result = await res.json();
-                    if(!res.ok) throw new Error(result.message);
-                    
-                    if (siteSettings.categoryMetadata && siteSettings.categoryMetadata[category]) {
-                        delete siteSettings.categoryMetadata[category];
-                        await saveAllSettings(siteSettings);
-                    }
-                    
-                    showToast(result.message, 'success');
-                    if (manageCategorySelect.value === category) {
-                        manageCategorySelect.value = '';
-                        manageCategorySelect.dispatchEvent(new Event('change'));
-                    }
-                    await loadCategoriesAndSettings();
-                } catch (err) {
-                    showToast(err.message, 'error');
-                }
-            }
-        } else if (deleteBtn.classList.contains('delete-apikey-btn')) {
-            const key = deleteBtn.dataset.key;
-            if (await showCustomConfirm(`Yakin menghapus API Key "<b>${key}</b>"?`)) {
-                try {
-                    const result = await fetchAdminApi('deleteApiKey', { key });
-                    showToast(result.message, 'success');
-                    loadApiKeys();
-                } catch (err) {
-                    showToast(err.message, 'error');
-                }
-            }
-        } else if (deleteBtn.classList.contains('delete-domain-btn')) {
-            const domain = deleteBtn.dataset.domain;
-            if (await showCustomConfirm(`Yakin menghapus Domain "<b>${domain}</b>"?`)) {
-                 try {
-                    const result = await fetchAdminApi('deleteRootDomain', { domain });
-                    showToast(result.message, 'success');
-                    loadRootDomains();
-                } catch (err) {
-                    showToast(err.message, 'error');
-                }
-            }
-        } else if (deleteBtn.classList.contains('delete-promo-btn')) {
-             const code = deleteBtn.dataset.code;
-            const confirm = await showCustomConfirm(`Yakin ingin menghapus kode promo <strong>${code}</strong> secara permanen?`);
-            if (confirm) {
-                try {
-                     const res = await fetch(API_PRODUCTS_URL, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ action: 'promoDelete', data: { code } })
-                    });
-                    const result = await res.json();
-                    if (!res.ok) throw new Error(result.message);
-                    
-                    showToast(result.message, 'success');
-                    loadPromoCodes();
-                } catch (err) {
-                    showToast(err.message, 'error');
-                }
-            }
-        }
-    });
-
     permanentKeyCheckbox.addEventListener('change', (e) => {
         durationSection.style.display = e.target.checked ? 'none' : 'block';
     });
