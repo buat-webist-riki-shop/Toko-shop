@@ -315,13 +315,15 @@
         {
             "id": 28,
             "nama": "Script cpanel 2srv",
-            "harga": 20000,
+            "harga": 10000,
             "hargaAsli": 20000,
             "deskripsiPanjang": "cocok untuk open reseller dan tersedia  2 SRV, unutk menyimpan panel vripat dan reseller.",
             "menuContent": "Fitur Script cpanel 2srv:\n\n┅═❏ *WELCOME TO SC RIKI SHOP* ❏═┅‎‎\n\nᶻᶻ   ﹒ Information - Users!\n♡﹕#number﹕ _\n♡﹕#Status ﹕ _\n♡﹕#creator ﹕ Riki Shop Real\nᶻᶻ   ﹒ Information - Bot!\n♡﹕#botname﹕_\n♡﹕#Runtime Bot ﹕_\n♡﹕#Uptime Vps﹕ _\n♡﹕#Bot mode﹕  _\n▭▬▭▬▭▬▭▬▭▬▭▬▭▬▭\n\n[ MENH UTAMA ]\n• .cpanel-v1\n• .cpanel-v2\n• .payment\n\n[ User free ]\n• .tiktok\n• .tiktokmp3\n• .payment\n• .qc { texs }\n• .brat { texs }\n• .suit\n• .ttc\n• .delttc\n• .tohd\n• .tourl\n• .sticker\n• .toimg\n• .getpp\n• .rvo\n\n> Powered By Riki Shop Real\n> https://linktr.ee/rikishopreal.",
             "nomorWA": "",
-            "discountPrice": null,
-            "discountEndDate": null
+            "discountPrice": 10000,
+            "discountEndDate": "2025-09-06T00:20:00.000Z",
+            "category": "Script",
+            "images": []
         },
         {
             "id": 29,
