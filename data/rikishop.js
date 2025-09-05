@@ -10,6 +10,7 @@ const SOSMED_LINK = "https://rikishopreal.vercel.app";
 const TESTIMONI_LINK = "https://rikishopreal.vercel.app/testimoni";
 const SALURAN_WA_LINK = "https://whatsapp.com/channel/0029VaP4QyV3WHTgYm4pS23Z";
 
+// --- Elemen DOM ---
 const welcomeScreen = document.getElementById('welcomeScreen');
 const mainContainer = document.getElementById('mainContainer');
 const offcanvasMenu = document.getElementById('offcanvasMenu');
@@ -78,13 +79,15 @@ let toastTimeout;
 let customMusicMuted = false;
 let bannerInterval;
 
-const promoModal = document.getElementById('promoModal');
-const closePromoModal = document.getElementById('closePromoModal');
+// --- Elemen & Variabel untuk Promo (Bottom Sheet) ---
+const promoBottomSheet = document.getElementById('promoBottomSheet');
+const promoOverlay = document.getElementById('promoOverlay');
+const closePromoSheetBtn = document.getElementById('closePromoSheetBtn');
 const showProductPromoPopupBtn = document.getElementById('showProductPromoPopupBtn');
 const showCartPromoPopupBtn = document.getElementById('showCartPromoPopupBtn');
-const promoModalInput = document.getElementById('promoModalInput');
-const promoModalApplyBtn = document.getElementById('promoModalApplyBtn');
-const promoModalFeedback = document.getElementById('promoModalFeedback');
+const promoInput = document.getElementById('promoInput');
+const promoApplyBtn = document.getElementById('promoApplyBtn');
+const promoFeedback = document.getElementById('promoFeedback');
 const cartPromoContainer = document.getElementById('cartPromoContainer');
 
 let promoContext = '';
@@ -281,9 +284,9 @@ function showProductDetail(product, serviceType) {
     productDetailViewDiv.style.display = 'block';
     currentProductOnDetailPage = product;
     productPagePromo = null;
-    promoModalInput.value = '';
-    promoModalFeedback.textContent = '';
-    promoModalFeedback.className = '';
+    promoInput.value = '';
+    promoFeedback.textContent = '';
+    promoFeedback.className = '';
     detailProductName.textContent = product.nama;
     detailProductActions.innerHTML = '';
     updateProductPriceDisplay();
@@ -568,81 +571,81 @@ function createYouTubePlayer(videoId) {
 
 function openPromoPopup(context) {
     promoContext = context;
-    promoModalInput.value = '';
-    promoModalFeedback.textContent = '';
-    promoModalFeedback.className = '';
-    promoModal.style.display = 'flex';
+    promoInput.value = '';
+    promoFeedback.textContent = '';
+    promoFeedback.className = '';
+    promoOverlay.classList.add('active');
+    promoBottomSheet.classList.add('active');
 }
 
-// --- Event Listeners ---
+function closePromoPopup() {
+    promoOverlay.classList.remove('active');
+    promoBottomSheet.classList.remove('active');
+}
+
 document.addEventListener('DOMContentLoaded', initializeApp);
-
-showProductPromoPopupBtn.addEventListener('click', () => openPromoPopup('product'));
-showCartPromoPopupBtn.addEventListener('click', () => openPromoPopup('cart'));
-closePromoModal.addEventListener('click', () => promoModal.style.display = 'none');
-promoModal.addEventListener('click', (e) => {
-    if (e.target === promoModal) {
-        promoModal.style.display = 'none';
-    }
-});
-
-promoModalApplyBtn.addEventListener('click', async () => {
-    const code = promoModalInput.value.trim();
-    if (!code) {
-        promoModalFeedback.textContent = 'Masukkan kode.';
-        promoModalFeedback.className = 'error';
-        return;
-    }
-    try {
-        const result = await validatePromoCode(code);
-        promoModalFeedback.textContent = result.message;
-        promoModalFeedback.className = 'success';
-        
-        if (promoContext === 'product') {
-            productPagePromo = result;
-            updateProductPriceDisplay();
-        } else if (promoContext === 'cart') {
-            cartPagePromo = result;
-            updateCartTotal();
+if (showProductPromoPopupBtn) showProductPromoPopupBtn.addEventListener('click', () => openPromoPopup('product'));
+if (showCartPromoPopupBtn) showCartPromoPopupBtn.addEventListener('click', () => openPromoPopup('cart'));
+if (closePromoSheetBtn) closePromoSheetBtn.addEventListener('click', closePromoPopup);
+if (promoOverlay) promoOverlay.addEventListener('click', closePromoPopup);
+if (promoApplyBtn) {
+    promoApplyBtn.addEventListener('click', async () => {
+        const code = promoInput.value.trim();
+        if (!code) {
+            promoFeedback.textContent = 'Masukkan kode.';
+            promoFeedback.className = 'error';
+            return;
         }
-        
-        setTimeout(() => {
-            promoModal.style.display = 'none';
-        }, 1000);
+        try {
+            const result = await validatePromoCode(code);
+            promoFeedback.textContent = result.message;
+            promoFeedback.className = 'success';
+            
+            if (promoContext === 'product') {
+                productPagePromo = result;
+                updateProductPriceDisplay();
+            } else if (promoContext === 'cart') {
+                cartPagePromo = result;
+                updateCartTotal();
+            }
+            
+            setTimeout(closePromoPopup, 1200);
 
-    } catch (error) {
-        promoModalFeedback.textContent = error.message;
-        promoModalFeedback.className = 'error';
-        if (promoContext === 'product') {
-            productPagePromo = null;
-            updateProductPriceDisplay();
-        } else if (promoContext === 'cart') {
-            cartPagePromo = null;
-            updateCartTotal();
+        } catch (error) {
+            promoFeedback.textContent = error.message;
+            promoFeedback.className = 'error';
+            if (promoContext === 'product') {
+                productPagePromo = null;
+                updateProductPriceDisplay();
+            } else if (promoContext === 'cart') {
+                cartPagePromo = null;
+                updateCartTotal();
+            }
         }
-    }
-});
-
-checkoutButton.addEventListener('click', () => {
-    if (cart.length === 0) return;
-    let itemsText = '';
-    let subtotalFromOriginal = 0;
-    cart.forEach((item, i) => {
-        itemsText += `*${i + 1}. ${item.name}*\n   (${formatRupiah(item.price)}) x ${item.quantity}\n`;
-        subtotalFromOriginal += item.originalPrice * item.quantity;
     });
-    let promoText = '';
-    let finalTotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-    if (cartPagePromo) {
-        const discountAmount = subtotalFromOriginal * (cartPagePromo.percentage / 100);
-        finalTotal = subtotalFromOriginal - discountAmount;
-        promoText = `Kode Promo (*${cartPagePromo.code.toUpperCase()}*): -${formatRupiah(discountAmount)}\n--------------------\n`;
-    }
-    let message = `Halo Kak, saya ingin mengonfirmasi pesanan dari keranjang:\n\n--- PESANAN ---\n${itemsText}--------------------\n*Subtotal: ${formatRupiah(subtotalFromOriginal)}*\n${promoText}*Total Akhir: ${formatRupiah(finalTotal)}*\n\nMohon konfirmasinya. Terima kasih! 🙏`;
-    const checkoutNumber = siteSettings.globalPhoneNumber || WA_ADMIN_NUMBER;
-    window.open(`https://wa.me/${checkoutNumber}?text=${encodeURIComponent(message)}`, '_blank');
-});
-openCartBtn.addEventListener('click', () => { showPage('cart-page'); renderCart(); });
+}
+if (checkoutButton) {
+    checkoutButton.addEventListener('click', () => {
+        if (cart.length === 0) return;
+        let itemsText = '';
+        let subtotalFromOriginal = 0;
+        cart.forEach((item, i) => {
+            itemsText += `*${i + 1}. ${item.name}*\n   (${formatRupiah(item.price)}) x ${item.quantity}\n`;
+            subtotalFromOriginal += item.originalPrice * item.quantity;
+        });
+        let promoText = '';
+        let finalTotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+        if (cartPagePromo) {
+            const discountAmount = subtotalFromOriginal * (cartPagePromo.percentage / 100);
+            finalTotal = subtotalFromOriginal - discountAmount;
+            promoText = `Kode Promo (*${cartPagePromo.code.toUpperCase()}*): -${formatRupiah(discountAmount)}\n--------------------\n`;
+        }
+        let message = `Halo Kak, saya ingin mengonfirmasi pesanan dari keranjang:\n\n--- PESANAN ---\n${itemsText}--------------------\n*Subtotal: ${formatRupiah(subtotalFromOriginal)}*\n${promoText}*Total Akhir: ${formatRupiah(finalTotal)}*\n\nMohon konfirmasinya. Terima kasih! 🙏`;
+        const checkoutNumber = siteSettings.globalPhoneNumber || WA_ADMIN_NUMBER;
+        window.open(`https://wa.me/${checkoutNumber}?text=${encodeURIComponent(message)}`, '_blank');
+    });
+}
+if (openCartBtn) openCartBtn.addEventListener('click', () => { showPage('cart-page'); renderCart(); });
 backArrows.forEach(arrow => {
     arrow.addEventListener('click', () => {
         const backToPageId = arrow.dataset.backTo;
@@ -654,30 +657,30 @@ backArrows.forEach(arrow => {
         }
     });
 });
-sliderNextBtn.addEventListener('click', showNextImage);
-sliderPrevBtn.addEventListener('click', showPrevImage);
-lightboxClose.addEventListener('click', closeLightbox);
-imageLightbox.addEventListener('click', (e) => {
+if (sliderNextBtn) sliderNextBtn.addEventListener('click', showNextImage);
+if (sliderPrevBtn) sliderPrevBtn.addEventListener('click', showPrevImage);
+if (lightboxClose) lightboxClose.addEventListener('click', closeLightbox);
+if (imageLightbox) imageLightbox.addEventListener('click', (e) => {
     if (e.target === imageLightbox) closeLightbox();
 });
-openMenuBtn.addEventListener('click', () => { offcanvasMenu.classList.add('active'); overlay.classList.add('active'); });
-closeMenuBtn.addEventListener('click', () => { offcanvasMenu.classList.remove('active'); overlay.classList.remove('active'); });
-overlay.addEventListener('click', () => { offcanvasMenu.classList.remove('active'); overlay.classList.remove('active'); });
+if (openMenuBtn) openMenuBtn.addEventListener('click', () => { offcanvasMenu.classList.add('active'); overlay.classList.add('active'); });
+if (closeMenuBtn) closeMenuBtn.addEventListener('click', () => { offcanvasMenu.classList.remove('active'); overlay.classList.remove('active'); });
+if (overlay) overlay.addEventListener('click', () => { offcanvasMenu.classList.remove('active'); overlay.classList.remove('active'); });
 document.querySelectorAll('#offcanvasMenu a').forEach(link => { const pageTarget = link.dataset.page; if (pageTarget) { link.addEventListener('click', (e) => { e.preventDefault(); showPage(pageTarget); offcanvasMenu.classList.remove('active'); overlay.classList.remove('active'); }); } });
-openAboutUsModalBtn.addEventListener('click', (e) => { e.preventDefault(); aboutUsModal.style.display = 'flex'; offcanvasMenu.classList.remove('active'); overlay.classList.remove('active'); });
-closeAboutUsModalBtn.addEventListener('click', () => aboutUsModal.style.display = 'none');
-openChatAiModalBtn.addEventListener('click', (e) => { e.preventDefault(); chatAiModal.style.display = 'flex'; offcanvasMenu.classList.remove('active'); overlay.classList.remove('active'); });
-closeChatAiModalBtn.addEventListener('click', () => chatAiModal.style.display = 'none');
-sendChatAiBtnPage.addEventListener('click', handleSendChatMessagePage);
-chatAiInputPage.addEventListener('keypress', (e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSendChatMessagePage(); } });
-multifunctionFab.addEventListener('click', (e) => { if (e.target.classList.contains('main-fab-icon')) { multifunctionFab.classList.toggle('active'); if (isFabFirstClick) { playBackgroundMusic(); isFabFirstClick = false; } } });
-themeSwitchBtn.addEventListener('click', (e) => { e.stopPropagation(); document.body.classList.toggle('dark-mode'); const icon = themeSwitchBtn.querySelector('i'); icon.className = document.body.classList.contains('dark-mode') ? 'fas fa-moon' : 'fas fa-sun'; });
-linktreeBtn.addEventListener('click', (e) => { e.stopPropagation(); window.open(SOSMED_LINK, '_blank'); });
-muteAudioBtn.addEventListener('click', (e) => { e.stopPropagation(); const icon = muteAudioBtn.querySelector('i'); if (youtubePlayer && typeof youtubePlayer.isMuted === 'function') { if (youtubePlayer.isMuted()) { youtubePlayer.unMute(); customMusicMuted = false; icon.className = 'fas fa-volume-up'; showToastNotification("Suara diaktifkan", "fa-volume-up"); } else { youtubePlayer.mute(); customMusicMuted = true; icon.className = 'fas fa-volume-mute'; showToastNotification("Suara dimatikan", "fa-volume-mute"); } } else { backgroundAudio.muted = !backgroundAudio.muted; icon.className = backgroundAudio.muted ? 'fas fa-volume-mute' : 'fas fa-volume-up'; } });
-openMusicPopupBtn.addEventListener('click', (e) => { e.stopPropagation(); musicPlayerPopup.classList.add('active'); musicPlayerOverlay.classList.add('active'); });
-closeMusicPlayer.addEventListener('click', () => { musicPlayerPopup.classList.remove('active'); musicPlayerOverlay.classList.remove('active'); });
-musicPlayerOverlay.addEventListener('click', () => { musicPlayerPopup.classList.remove('active'); musicPlayerOverlay.classList.remove('active'); });
-loadMediaBtn.addEventListener('click', () => { const mediaLink = mediaLinkInput.value.trim(); if (!mediaLink) return showToastNotification("Silakan masukkan link.", "fa-exclamation-circle"); backgroundAudio.pause(); backgroundAudio.src = ''; if (youtubePlayer && typeof youtubePlayer.destroy === 'function') youtubePlayer.destroy(); mediaPlayerContainer.innerHTML = ''; customMusicMuted = false; try { let videoId = null; if (mediaLink.includes('youtu.be') || mediaLink.includes('youtube.com')) { const url = new URL(mediaLink); videoId = url.hostname === 'youtu.be' ? url.pathname.substring(1) : url.searchParams.get('v'); } if (videoId) { createYouTubePlayer(videoId); showToastNotification("Memuat video...", "fa-play-circle"); muteAudioBtn.querySelector('i').className = 'fas fa-volume-up'; } else { showToastNotification("Link YouTube tidak valid.", "fa-times-circle"); } } catch (error) { showToastNotification("Format link tidak dikenal.", "fa-times-circle"); } });
+if (openAboutUsModalBtn) openAboutUsModalBtn.addEventListener('click', (e) => { e.preventDefault(); aboutUsModal.style.display = 'flex'; offcanvasMenu.classList.remove('active'); overlay.classList.remove('active'); });
+if (closeAboutUsModalBtn) closeAboutUsModalBtn.addEventListener('click', () => aboutUsModal.style.display = 'none');
+if (openChatAiModalBtn) openChatAiModalBtn.addEventListener('click', (e) => { e.preventDefault(); chatAiModal.style.display = 'flex'; offcanvasMenu.classList.remove('active'); overlay.classList.remove('active'); });
+if (closeChatAiModalBtn) closeChatAiModalBtn.addEventListener('click', () => chatAiModal.style.display = 'none');
+if (sendChatAiBtnPage) sendChatAiBtnPage.addEventListener('click', handleSendChatMessagePage);
+if (chatAiInputPage) chatAiInputPage.addEventListener('keypress', (e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSendChatMessagePage(); } });
+if (multifunctionFab) multifunctionFab.addEventListener('click', (e) => { if (e.target.classList.contains('main-fab-icon')) { multifunctionFab.classList.toggle('active'); if (isFabFirstClick) { playBackgroundMusic(); isFabFirstClick = false; } } });
+if (themeSwitchBtn) themeSwitchBtn.addEventListener('click', (e) => { e.stopPropagation(); document.body.classList.toggle('dark-mode'); const icon = themeSwitchBtn.querySelector('i'); icon.className = document.body.classList.contains('dark-mode') ? 'fas fa-moon' : 'fas fa-sun'; });
+if (linktreeBtn) linktreeBtn.addEventListener('click', (e) => { e.stopPropagation(); window.open(SOSMED_LINK, '_blank'); });
+if (muteAudioBtn) muteAudioBtn.addEventListener('click', (e) => { e.stopPropagation(); const icon = muteAudioBtn.querySelector('i'); if (youtubePlayer && typeof youtubePlayer.isMuted === 'function') { if (youtubePlayer.isMuted()) { youtubePlayer.unMute(); customMusicMuted = false; icon.className = 'fas fa-volume-up'; showToastNotification("Suara diaktifkan", "fa-volume-up"); } else { youtubePlayer.mute(); customMusicMuted = true; icon.className = 'fas fa-volume-mute'; showToastNotification("Suara dimatikan", "fa-volume-mute"); } } else { backgroundAudio.muted = !backgroundAudio.muted; icon.className = backgroundAudio.muted ? 'fas fa-volume-mute' : 'fas fa-volume-up'; } });
+if (openMusicPopupBtn) openMusicPopupBtn.addEventListener('click', (e) => { e.stopPropagation(); musicPlayerPopup.classList.add('active'); musicPlayerOverlay.classList.add('active'); });
+if (closeMusicPlayer) closeMusicPlayer.addEventListener('click', () => { musicPlayerPopup.classList.remove('active'); musicPlayerOverlay.classList.remove('active'); });
+if (musicPlayerOverlay) musicPlayerOverlay.addEventListener('click', () => { musicPlayerPopup.classList.remove('active'); musicPlayerOverlay.classList.remove('active'); });
+if (loadMediaBtn) loadMediaBtn.addEventListener('click', () => { const mediaLink = mediaLinkInput.value.trim(); if (!mediaLink) return showToastNotification("Silakan masukkan link.", "fa-exclamation-circle"); backgroundAudio.pause(); backgroundAudio.src = ''; if (youtubePlayer && typeof youtubePlayer.destroy === 'function') youtubePlayer.destroy(); mediaPlayerContainer.innerHTML = ''; customMusicMuted = false; try { let videoId = null; if (mediaLink.includes('youtu.be') || mediaLink.includes('youtube.com')) { const url = new URL(mediaLink); videoId = url.hostname === 'youtu.be' ? url.pathname.substring(1) : url.searchParams.get('v'); } if (videoId) { createYouTubePlayer(videoId); showToastNotification("Memuat video...", "fa-play-circle"); muteAudioBtn.querySelector('i').className = 'fas fa-volume-up'; } else { showToastNotification("Link YouTube tidak valid.", "fa-times-circle"); } } catch (error) { showToastNotification("Format link tidak dikenal.", "fa-times-circle"); } });
 
 async function initializeApp() {
     mainContainer.style.display = 'none';

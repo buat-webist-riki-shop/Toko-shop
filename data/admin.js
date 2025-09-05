@@ -89,11 +89,9 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!fileList || fileList.length === 0) {
             return [];
         }
-
         const uploadPromises = Array.from(fileList).map(file => {
             const formData = new FormData();
             formData.append('image', file);
-            
             return fetch('/api/tourl', {
                 method: 'POST',
                 body: formData,
@@ -104,7 +102,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 return response.json();
             }).then(result => result.link);
         });
-
         const originalButtonText = buttonElement ? buttonElement.textContent : '';
         try {
             const urls = await Promise.all(uploadPromises.map(async (promise, index) => {
@@ -123,13 +120,10 @@ document.addEventListener('DOMContentLoaded', () => {
     body.className = savedTheme;
     function updateThemeButton() {
         const iconClass = body.classList.contains('dark-mode') ? 'fa-sun' : 'fa-moon';
-        themeSwitchBtnLogin.querySelector('i').className = `fas ${iconClass}`;
-        if (themeSwitchBtnPanel) {
-            themeSwitchBtnPanel.querySelector('i').className = `fas ${iconClass}`;
-        }
+        if (themeSwitchBtnLogin) themeSwitchBtnLogin.querySelector('i').className = `fas ${iconClass}`;
+        if (themeSwitchBtnPanel) themeSwitchBtnPanel.querySelector('i').className = `fas ${iconClass}`;
     }
     updateThemeButton();
-
     function toggleTheme() {
         body.classList.toggle('light-mode');
         body.classList.toggle('dark-mode');
@@ -148,10 +142,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function showToast(message, type = 'info', duration = 3000) {
-        if (toastContainer.firstChild) {
-            clearTimeout(activeToastTimeout);
-            toastContainer.innerHTML = '';
-        }
+        if (activeToastTimeout) clearTimeout(activeToastTimeout);
+        toastContainer.innerHTML = '';
         const toast = document.createElement('div');
         toast.className = `toast ${type}`;
         let iconClass = 'fas fa-info-circle';
@@ -165,12 +157,12 @@ document.addEventListener('DOMContentLoaded', () => {
         }, duration);
     }
     
-    function openModal(modal) { if(modal) modal.style.display = 'flex'; }
-    function closeModal(modal) { if(modal) modal.style.display = 'none'; }
+    function openModal(modal) { if(modal) modal.classList.add('is-visible'); }
+    function closeModal(modal) { if(modal) modal.classList.remove('is-visible'); }
 
     modals.forEach(modal => {
         modal.addEventListener('click', e => {
-            if (e.target === modal || e.target.classList.contains('close-button')) {
+            if (e.target.matches('.modal, .close-button')) {
                 closeModal(modal);
             }
         });
@@ -234,7 +226,6 @@ document.addEventListener('DOMContentLoaded', () => {
             categoryDropdowns.forEach(dropdown => {
                 const currentValue = dropdown.value;
                 dropdown.innerHTML = (dropdown.id === 'manage-category') ? '<option value="">-- Pilih Kategori --</option>' : '';
-
                 allCategories.forEach(cat => {
                     const option = document.createElement('option');
                     option.value = cat;
@@ -247,15 +238,10 @@ document.addEventListener('DOMContentLoaded', () => {
             });
 
             const settingsRes = await fetch(`data/isi_json/settings.json?v=${Date.now()}`);
-            if (!settingsRes.ok) {
-                console.warn('File settings.json tidak ditemukan, akan menggunakan data default.');
-                siteSettings = {}; 
-            } else {
-                siteSettings = await settingsRes.json();
-            }
+            siteSettings = settingsRes.ok ? await settingsRes.json() : {};
             
-            if (globalWhatsappNumberInput) globalWhatsappNumberInput.value = siteSettings.globalPhoneNumber || '';
-            if (apikeyWhatsappNumberInput) apikeyWhatsappNumberInput.value = siteSettings.apiKeyPurchaseNumber || '';
+            if(globalWhatsappNumberInput) globalWhatsappNumberInput.value = siteSettings.globalPhoneNumber || '';
+            if(apikeyWhatsappNumberInput) apikeyWhatsappNumberInput.value = siteSettings.apiKeyPurchaseNumber || '';
 
             if (categoryWhatsappNumbersContainer) {
                 categoryWhatsappNumbersContainer.innerHTML = '<h3><i class="fas fa-list-alt"></i> Nomor WA per Kategori (Opsional)</h3>';
@@ -263,16 +249,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 allCategories.forEach(cat => {
                     const div = document.createElement('div');
                     div.className = 'category-wa-input';
-                    div.innerHTML = `
-                        <label for="wa-${cat}">${cat}:</label>
-                        <input type="text" id="wa-${cat}" data-category="${cat}" value="${categoriesInSettings[cat] || ''}" placeholder="Kosongkan untuk pakai nomor global">`;
+                    div.innerHTML = `<label for="wa-${cat}">${cat}:</label><input type="text" id="wa-${cat}" data-category="${cat}" value="${categoriesInSettings[cat] || ''}" placeholder="Kosongkan untuk pakai nomor global">`;
                     categoryWhatsappNumbersContainer.appendChild(div);
                 });
             }
-            
             if (apiKeyPriceSettingsContainer) renderApiKeyPriceSettings(siteSettings.apiKeyPrices || []);
             if (manageCategoriesList) renderManageCategoryList();
-
         } catch (err) {
             showToast(err.message, 'error');
         }
@@ -332,19 +314,10 @@ document.addEventListener('DOMContentLoaded', () => {
             tabContents.forEach(content => content.classList.remove('active'));
             document.getElementById(button.dataset.tab).classList.add('active');
             
-            if (button.dataset.tab === 'manageProducts' && manageCategorySelect.value) {
-                manageCategorySelect.dispatchEvent(new Event('change'));
-            }
-            if (button.dataset.tab === 'domainManager') { 
-                loadApiKeys(); 
-                loadRootDomains(); 
-            }
-            if (button.dataset.tab === 'settings') {
-                await loadCategoriesAndSettings();
-            }
-            if (button.dataset.tab === 'promo') {
-                loadPromoCodes();
-            }
+            if (button.dataset.tab === 'manageProducts' && manageCategorySelect.value) manageCategorySelect.dispatchEvent(new Event('change'));
+            if (button.dataset.tab === 'domainManager') { loadApiKeys(); loadRootDomains(); }
+            if (button.dataset.tab === 'settings') await loadCategoriesAndSettings();
+            if (button.dataset.tab === 'promo') loadPromoCodes();
         });
     });
 
@@ -439,10 +412,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const res = await fetch(API_PRODUCTS_URL, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json'},
-                body: JSON.stringify({
-                    action: 'updateSettings',
-                    data: updatedSettings
-                })
+                body: JSON.stringify({ action: 'updateSettings', data: updatedSettings })
             });
             const result = await res.json();
             if(!res.ok) throw new Error(result.message);
@@ -681,9 +651,9 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
 
-        if (closeEditModalBtn) closeEditModalBtn.addEventListener('click', () => closeModal(editModal));
+        if(closeEditModalBtn) closeEditModalBtn.addEventListener('click', () => closeModal(editModal));
         
-        if (addPhotoBtn) {
+        if(addPhotoBtn) {
             addPhotoBtn.addEventListener('click', async (e) => {
                  const button = e.currentTarget;
                  button.disabled = true;
@@ -705,7 +675,7 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         }
 
-        if (saveEditBtn) {
+        if(saveEditBtn) {
             saveEditBtn.addEventListener('click', async () => {
                 const newWaNumber = editWhatsappNumberInput.value.trim();
                 if (newWaNumber && !validatePhoneNumber(newWaNumber)) {
@@ -1212,7 +1182,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Inisialisasi halaman saat pertama kali dimuat
     if (localStorage.getItem('isAdminAuthenticated')) {
         loginScreen.style.display = 'none';
         productFormScreen.style.display = 'block';
