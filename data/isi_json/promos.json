@@ -10,5 +10,12 @@
         "expires": "2025-09-30T23:59:59Z",
         "maxUses": 1,
         "uses": 1
+    },
+    "TA": {
+        "code": "TA",
+        "percentage": 12,
+        "expires": "2025-09-05T12:26:00.000Z",
+        "maxUses": 0,
+        "uses": 0
     }
 }
