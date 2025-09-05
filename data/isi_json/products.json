@@ -328,13 +328,15 @@
         {
             "id": 29,
             "nama": "Script new-push-rikishop",
-            "harga": 20000,
+            "harga": 15000,
             "hargaAsli": 20000,
             "deskripsiPanjang": "Script ini cocok untuk Pushkontak dan open bot Pushkontak fitur lumayan.",
             "menuContent": "Fitur Script new-push-rikishop:\n\n🌟 Hello, @$ _ 🌟\nselamat _\n\n═❏ *WELCOME TO SC RIKI SHOP* ❏═\n ▭▬▭▬▭▬▭▬▭▬▭▬▭▬\n ═ 𝗜𝗡𝗙𝗢𝗥𝗠𝗔𝗧𝗜𝗢𝗡 𝗕𝗢𝗧 ═\n 友 𝐂𝐫𝐞𝐚𝐭𝐨𝐫 : _\n 友 𝐍𝐮𝐦𝐛𝐞𝐫 : _\n 友 𝐍𝐚𝐦𝐚 𝐒𝐜𝐫𝐢𝐩𝐭 : _\n 友 𝐕𝐞𝐫𝐬𝐢 𝐒𝐜𝐫𝐢𝐩𝐭 : _\n 友 𝐕𝐞𝐫𝐬𝐢𝐨𝐧 𝐁𝐚𝐢𝐥𝐞𝐲𝐬 : _\n 友 𝐇𝐚𝐫𝐢 : _\n ▭▬▭▬▭▬▭▬▭▬▭▬▭▬\n╭─☠︎「 𝗠𝗘𝗡𝗨 𝗣𝗨𝗦𝗛 」☠︎\n│➥☠︎.pushkontak\n│➥☠︎.pushkontakjd\n│➥☠︎.pushkontak1\n│➥☠︎.pushkontak2\n│➥☠︎.pushkontak3\n│➥☠︎.savekontak\n│➥☠︎.listgc\n╰─⬣\n╭─☠︎「 𝗠𝗘𝗡𝗨 𝗝𝗣𝗠 」☠︎\n│➥☠︎.jpm\n│➥☠︎.jpm1\n│➥☠︎.jpmtesti\n│➥☠︎.jpmslide\n│➥☠︎.jpmslideht\n╰─⬣\n╭─☠︎「 𝗠𝗘𝗡𝗨 𝗝𝗕 」☠︎\n│➥☠︎.formatned\n│➥☠︎.formatjp\n│➥☠︎.feadmin\n│➥☠︎.allrec\n│➥☠︎.proses\n│➥☠︎.done\n╰─⬣\n╭─☠︎「 𝗠𝗘𝗡𝗨 𝗥𝗔𝗡𝗗𝗢𝗠 」☠︎\n│➥☠︎.qc\n│➥☠︎.tts\n│➥☠︎.self\n│➥☠︎.public\n│➥☠︎.scbot\n│➥☠︎.owner\n│➥☠︎.tourl\n│➥☠︎.tohd\n│➥☠︎.sticker\n│➥☠︎.payment \n│➥☠︎.tiktok\n│➥☠︎.tiktokmp3\n│➥☠︎.Instagram\n╰─⬣\n ▭▬▭▬▭▬▭▬▭▬▭▬▭▬\n     『 ©𝗥𝗶𝗸𝗶𝗦𝗵𝗼𝗽-𝗕𝗼𝘁𝘇 』\n━━━━━━━━━━━━━━━━━━━━━━.",
             "nomorWA": "",
-            "discountPrice": null,
-            "discountEndDate": null
+            "discountPrice": 15000,
+            "discountEndDate": "2025-09-06T00:20:00.000Z",
+            "category": "Script",
+            "images": []
         },
         {
             "id": 30,
