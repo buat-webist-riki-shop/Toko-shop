@@ -629,20 +629,6 @@
             "nomorWA": "",
             "discountPrice": null,
             "discountEndDate": null
-        },
-        {
-            "id": 61,
-            "nama": "Akun G-Mail 2018",
-            "harga": 15000,
-            "hargaAsli": 15000,
-            "deskripsiPanjang": "Akun Gmail dibuat tahun 2018. Terverifikasi nomor, aman untuk berbagai keperluan.",
-            "images": [
-                "https://c.top4top.io/p_3519ljkjr0.jpg",
-                "https://d.top4top.io/p_3519yr64s1.jpg"
-            ],
-            "nomorWA": "",
-            "discountPrice": null,
-            "discountEndDate": null
         }
     ],
     "Logo": [],
