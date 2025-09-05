@@ -24,15 +24,12 @@ async function getGithubFile(octokit, owner, repo, path) {
 
 // Fungsi helper untuk update file di GitHub
 async function updateGithubFile(octokit, owner, repo, path, sha, json, message) {
+    const content = Buffer.from(JSON.stringify(json, null, 4)).toString('base64');
     await octokit.repos.createOrUpdateFileContents({
-        owner,
-        repo,
-        path,
-        sha,
-        message,
-        content: Buffer.from(JSON.stringify(json, null, 4)).toString('base64'),
+        owner, repo, path, sha, message, content,
     });
 }
+
 
 export default async function handler(request, response) {
     if (request.method !== 'POST') {
@@ -66,13 +63,34 @@ export default async function handler(request, response) {
                         percentage: promoData.percentage 
                     });
                 }
-                // Anda bisa menambahkan 'promoAdd', 'promoDelete' di sini untuk admin panel
+                case 'promoGetAll': {
+                    return response.status(200).json(promosJson);
+                }
+                case 'promoAdd': {
+                    const { code, percentage, expires, maxUses } = data;
+                    const upperCaseCode = code.toUpperCase();
+                    if (promosJson[upperCaseCode]) {
+                        return response.status(409).json({ message: `Kode promo "${upperCaseCode}" sudah ada.` });
+                    }
+                    promosJson[upperCaseCode] = { code: upperCaseCode, percentage, expires, maxUses, uses: 0 };
+                    await updateGithubFile(octokit, REPO_OWNER, REPO_NAME, PROMO_FILE_PATH, sha, promosJson, `feat: Menambah kode promo ${upperCaseCode}`);
+                    return response.status(200).json({ message: 'Kode promo berhasil ditambahkan!' });
+                }
+                case 'promoDelete': {
+                    const { code } = data;
+                    if (!promosJson[code]) {
+                        return response.status(404).json({ message: `Kode promo "${code}" tidak ditemukan.` });
+                    }
+                    delete promosJson[code];
+                    await updateGithubFile(octokit, REPO_OWNER, REPO_NAME, PROMO_FILE_PATH, sha, promosJson, `feat: Menghapus kode promo ${code}`);
+                    return response.status(200).json({ message: 'Kode promo berhasil dihapus.' });
+                }
                 default:
                     return response.status(400).json({ message: 'Aksi promo tidak valid.' });
             }
         }
 
-        // --- LOGIKA PRODUK (YANG SUDAH ADA) ---
+        // --- LOGIKA PRODUK ---
         const { sha, json: productsJson } = await getGithubFile(octokit, REPO_OWNER, REPO_NAME, PRODUCTS_FILE_PATH);
 
         switch (action) {
