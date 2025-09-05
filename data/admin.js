@@ -10,6 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const themeSwitchBtnPanel = document.getElementById('themeSwitchBtnPanel');
     const body = document.body;
     
+    // Variabel Produk
     const categorySelect = document.getElementById('category');
     const nameInput = document.getElementById('product-name');
     const priceInput = document.getElementById('product-price');
@@ -28,6 +29,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const applyBulkPriceBtn = document.getElementById('apply-bulk-price-btn');
     const resetPricesBtn = document.getElementById('reset-prices-btn');
 
+    // Variabel Modal
     const modals = document.querySelectorAll('.modal');
     const customConfirmModal = document.getElementById('customConfirmModal');
     const confirmMessage = document.getElementById('confirmMessage');
@@ -35,6 +37,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const confirmCancelBtn = document.getElementById('confirmCancelBtn');
     let resolveConfirmPromise;
     
+    // Variabel Pengaturan
     const saveSettingsButton = document.getElementById('save-settings-button');
     const globalWhatsappNumberInput = document.getElementById('global-whatsapp-number');
     const categoryWhatsappNumbersContainer = document.getElementById('category-whatsapp-numbers-container');
@@ -46,8 +49,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const addCategoryBtn = document.getElementById('add-category-btn');
     const manageCategoriesList = document.getElementById('manage-categories-list');
 
+    // Variabel Modal Edit
     const editWhatsappNumberInput = document.getElementById('edit-whatsapp-number');
 
+    // Variabel Manajer Domain
     const apiKeyListContainer = document.getElementById('apiKeyListContainer');
     const createApiKeyBtn = document.getElementById('create-apikey-btn');
     const rootDomainListContainer = document.getElementById('rootDomainListContainer');
@@ -61,7 +66,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const apiKeySuccessModal = document.getElementById('apiKeySuccessModal');
     const apiKeyDetailsTextarea = document.getElementById('apiKeyDetails');
     const copyApiKeyDetailsBtn = document.getElementById('copyApiKeyDetailsBtn');
+    const logoutBtn = document.getElementById('logoutBtn');
 
+    // Variabel Form Promo
     const addPromoForm = document.getElementById('addPromoForm');
     const promoCodeInput = document.getElementById('promo-code');
     const promoPercentageInput = document.getElementById('promo-percentage');
@@ -70,6 +77,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const addPromoBtn = document.getElementById('add-promo-btn');
     const promoListContainer = document.getElementById('promo-list-container');
 
+    // Alamat API
     const API_PRODUCTS_URL = '/api/products';
     const API_CLOUDFLARE_URL = '/api/cloudflare';
     const API_BASE_URL = '/api'; 
@@ -81,9 +89,11 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!fileList || fileList.length === 0) {
             return [];
         }
+
         const uploadPromises = Array.from(fileList).map(file => {
             const formData = new FormData();
             formData.append('image', file);
+            
             return fetch('/api/tourl', {
                 method: 'POST',
                 body: formData,
@@ -94,6 +104,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 return response.json();
             }).then(result => result.link);
         });
+
         const originalButtonText = buttonElement ? buttonElement.textContent : '';
         try {
             const urls = await Promise.all(uploadPromises.map(async (promise, index) => {
@@ -118,6 +129,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
     updateThemeButton();
+
     function toggleTheme() {
         body.classList.toggle('light-mode');
         body.classList.toggle('dark-mode');
@@ -272,8 +284,8 @@ document.addEventListener('DOMContentLoaded', () => {
             const result = await res.json();
             if (!res.ok) throw new Error(result.message);
             
-            sessionStorage.setItem('isAdminAuthenticated', 'true');
-            sessionStorage.setItem('adminPassword', password);
+            localStorage.setItem('isAdminAuthenticated', 'true');
+            localStorage.setItem('adminPassword', password);
             
             loginScreen.style.display = 'none';
             productFormScreen.style.display = 'block';
@@ -287,6 +299,17 @@ document.addEventListener('DOMContentLoaded', () => {
             loginButton.disabled = false;
         }
     };
+    
+    logoutBtn.addEventListener('click', () => {
+        showCustomConfirm("Anda yakin ingin keluar?").then(isConfirmed => {
+            if (isConfirmed) {
+                localStorage.removeItem('isAdminAuthenticated');
+                localStorage.removeItem('adminPassword');
+                location.reload();
+            }
+        });
+    });
+
     loginButton.addEventListener('click', handleLogin);
     passwordInput.addEventListener('keypress', e => { if (e.key === 'Enter') handleLogin(); });
 
@@ -435,6 +458,9 @@ document.addEventListener('DOMContentLoaded', () => {
             });
             const resultProd = await resProd.json();
             if(!resProd.ok) throw new Error(resultProd.message);
+
+            // Selalu panggil load settings terbaru sebelum mengubahnya
+            await loadCategoriesAndSettings();
 
             if (newCategoryIconInput.files.length > 0) {
                 const uploadedUrls = await uploadImages(newCategoryIconInput.files, addCategoryBtn);
@@ -1049,7 +1075,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // KODE YANG SEBELUMNYA HILANG - EVENT LISTENER UNTUK SEMUA TOMBOL DELETE
     document.body.addEventListener('click', async (e) => {
         const deleteBtn = e.target.closest('.delete-btn');
         if (!deleteBtn) return;

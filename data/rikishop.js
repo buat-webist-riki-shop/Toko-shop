@@ -3,14 +3,13 @@ let isYouTubeApiReady = false;
 function onYouTubeIframeAPIReady() { isYouTubeApiReady = true; }
 (function() { const tag = document.createElement('script'); tag.src = "https://www.youtube.com/iframe_api"; const firstScriptTag = document.getElementsByTagName('script')[0]; firstScriptTag.parentNode.insertBefore(tag, firstScriptTag); })();
 
-const WA_ADMIN_NUMBER = "6285771555374"; // Fallback jika settings.json gagal dimuat
+const WA_ADMIN_NUMBER = "6285771555374";
 const WA_SELLER_NUMBER = "6285771555374";
 const CREATOR_USERNAME = "Riki Shop Real";
 const SOSMED_LINK = "https://rikishopreal.vercel.app";
 const TESTIMONI_LINK = "https://rikishopreal.vercel.app/testimoni";
 const SALURAN_WA_LINK = "https://whatsapp.com/channel/0029VaP4QyV3WHTgYm4pS23Z";
 
-// --- Elemen DOM ---
 const welcomeScreen = document.getElementById('welcomeScreen');
 const mainContainer = document.getElementById('mainContainer');
 const offcanvasMenu = document.getElementById('offcanvasMenu');
@@ -77,18 +76,18 @@ const mediaPlayerContainer = document.getElementById('mediaPlayerContainer');
 const backgroundAudio = document.getElementById('background-audio');
 let toastTimeout;
 let customMusicMuted = false;
+let bannerInterval;
 
-// --- Elemen & Variabel untuk Promo ---
-const productPromoSection = document.getElementById('productPromoSection');
-const productPromoCodeInput = document.getElementById('productPromoCodeInput');
-const applyProductPromoBtn = document.getElementById('applyProductPromoBtn');
-const productPromoFeedback = document.getElementById('product-promo-feedback');
-const cartPromoSection = document.getElementById('cartPromoSection');
-const cartPromoCodeInput = document.getElementById('cartPromoCodeInput');
-const applyCartPromoBtn = document.getElementById('applyCartPromoBtn');
-const cartPromoFeedback = document.getElementById('cart-promo-feedback');
+const promoModal = document.getElementById('promoModal');
+const closePromoModal = document.getElementById('closePromoModal');
+const showProductPromoPopupBtn = document.getElementById('showProductPromoPopupBtn');
+const showCartPromoPopupBtn = document.getElementById('showCartPromoPopupBtn');
+const promoModalInput = document.getElementById('promoModalInput');
+const promoModalApplyBtn = document.getElementById('promoModalApplyBtn');
+const promoModalFeedback = document.getElementById('promoModalFeedback');
+const cartPromoContainer = document.getElementById('cartPromoContainer');
 
-// --- Variabel Global ---
+let promoContext = '';
 let currentProductOnDetailPage = null;
 let productPagePromo = null;
 let cartPagePromo = null;
@@ -98,7 +97,6 @@ let cart = JSON.parse(localStorage.getItem('rikishop_cart_v2')) || [];
 let currentPage = 'home-page';
 const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-rikishop';
 
-// --- Fungsi Helper API Promo ---
 async function validatePromoCode(code) {
     try {
         const response = await fetch('/api/products', {
@@ -120,7 +118,6 @@ async function validatePromoCode(code) {
     }
 }
 
-// --- Firebase Visitor Counter ---
 async function setupFirebaseVisitorCounter() {
     if (!visitorCountSpan) return;
     visitorCountSpan.textContent = '-';
@@ -163,7 +160,6 @@ async function setupFirebaseVisitorCounter() {
     }
 }
 
-// --- Fungsi-Fungsi Tampilan & Navigasi ---
 function showPage(pageId) {
     document.querySelectorAll('.page-content').forEach(page => page.classList.remove('active'));
     document.getElementById(pageId).classList.add('active');
@@ -199,7 +195,6 @@ function showToastNotification(message, iconClass = 'fa-check-circle') {
     toastTimeout = setTimeout(() => toast.classList.remove('show'), 3000);
 }
 
-// --- Logika Render Halaman Utama ---
 function setupBannerCarousel() {
     const bannerItems = bannerCarousel.querySelectorAll(".banner-item");
     if (bannerItems.length === 0) return;
@@ -257,7 +252,6 @@ function renderServiceGrid() {
     }
 }
 
-// --- Logika Produk ---
 function loadServiceProducts(serviceType) {
     serviceDetailPageTitle.textContent = serviceType;
     productListDiv.innerHTML = '';
@@ -287,12 +281,11 @@ function showProductDetail(product, serviceType) {
     productDetailViewDiv.style.display = 'block';
     currentProductOnDetailPage = product;
     productPagePromo = null;
-    productPromoCodeInput.value = '';
-    productPromoFeedback.textContent = '';
-    productPromoFeedback.className = '';
+    promoModalInput.value = '';
+    promoModalFeedback.textContent = '';
+    promoModalFeedback.className = '';
     detailProductName.textContent = product.nama;
     detailProductActions.innerHTML = '';
-    productPromoSection.style.display = 'block';
     updateProductPriceDisplay();
     if ((serviceType === 'Stock Akun' || serviceType === 'Logo') && product.images && product.images.length > 0) {
         stockImageSliderContainer.style.display = 'block';
@@ -406,7 +399,6 @@ function closeLightbox() {
     imageLightbox.style.display = 'none';
 }
 
-// --- Logika Keranjang & Promo ---
 function addToCart(itemData) {
     const existingItem = cart.find(item => item.id === itemData.id);
     const nonStackable = ['Stock Akun', 'Logo'];
@@ -432,25 +424,22 @@ function addToCart(itemData) {
 
 function renderCart() {
     cartItemsList.innerHTML = '';
-    cartPromoCodeInput.value = '';
-    cartPromoFeedback.textContent = '';
-    cartPromoFeedback.className = '';
     cartPagePromo = null;
     if (cart.length === 0) {
         cartEmptyMessage.style.display = 'block';
-        cartPromoSection.style.display = 'none';
+        cartPromoContainer.style.display = 'none';
         document.querySelector('.cart-summary').style.display = 'none';
         checkoutButton.style.display = 'none';
     } else {
         cartEmptyMessage.style.display = 'none';
-        cartPromoSection.style.display = 'block';
+        cartPromoContainer.style.display = 'block';
         document.querySelector('.cart-summary').style.display = 'flex';
         checkoutButton.style.display = 'block';
         cart.forEach(item => {
             const cartItemCard = document.createElement('div');
             cartItemCard.className = 'cart-item-card';
-            let itemActionsHTML = (item.serviceType === 'Stock Akun' || item.serviceType === 'Logo')
-                ? `<div class="item-actions"><span class="stock-info">Hanya 1 Stok</span><button type="button" class="remove-item-btn" onclick="removeFromCart(${item.id})"><i class="fas fa-trash-alt"></i> Hapus</button></div>`
+            let itemActionsHTML = (['Stock Akun', 'Logo'].includes(item.serviceType)) 
+                ? `<div class="item-actions"><span class="stock-info">Hanya 1 Stok</span><button type="button" class="remove-item-btn" onclick="removeFromCart(${item.id})"><i class="fas fa-trash-alt"></i> Hapus</button></div>` 
                 : `<div class="item-actions"><div class="quantity-controls"><button type="button" class="quantity-btn" onclick="decreaseQuantity(${item.id})">-</button><span class="item-quantity">${item.quantity}</span><button type="button" class="quantity-btn" onclick="increaseQuantity(${item.id})">+</button></div><button type="button" class="remove-item-btn" onclick="removeFromCart(${item.id})"><i class="fas fa-trash-alt"></i> Hapus</button></div>`;
             cartItemCard.innerHTML = `<div class="item-image"><i class="fas fa-box-open"></i></div><div class="item-details"><div class="item-name">${item.name}</div><div class="item-price">${formatRupiah(item.price)}</div></div>${itemActionsHTML}`;
             cartItemsList.appendChild(cartItemCard);
@@ -513,7 +502,6 @@ function findCategoryOfProduct(productId) {
     return null;
 }
 
-// --- Logika Asisten AI ---
 function getAiResponse(input) {
     const lowerInput = input.toLowerCase();
     const responses = {
@@ -535,6 +523,7 @@ function getAiResponse(input) {
     }
     return `Maaf, saya kurang mengerti. Coba tanyakan tentang: Keamanan, Produk, Harga, atau Kontak admin.`;
 }
+
 async function handleSendChatMessagePage() {
     const userInput = chatAiInputPage.value.trim();
     if (userInput === '') return;
@@ -547,6 +536,7 @@ async function handleSendChatMessagePage() {
         chatAiLoadingPage.style.display = 'none';
     }, 800 + Math.random() * 400);
 }
+
 function appendMessageToChatPage(text, className) {
     const messageDiv = document.createElement('div');
     messageDiv.className = `message ${className}`;
@@ -555,12 +545,12 @@ function appendMessageToChatPage(text, className) {
     chatAiMessagesPage.scrollTop = chatAiMessagesPage.scrollHeight;
 }
 
-// --- Logika Pemutar Musik ---
 function playBackgroundMusic() {
     if (backgroundAudio.src && !backgroundAudio.muted && backgroundAudio.paused) {
         backgroundAudio.play().catch(e => console.log("Autoplay dicegah oleh browser."));
     }
 }
+
 function createYouTubePlayer(videoId) {
     const checkApiReady = setInterval(() => {
         if (isYouTubeApiReady) {
@@ -576,44 +566,63 @@ function createYouTubePlayer(videoId) {
     }, 100);
 }
 
+function openPromoPopup(context) {
+    promoContext = context;
+    promoModalInput.value = '';
+    promoModalFeedback.textContent = '';
+    promoModalFeedback.className = '';
+    promoModal.style.display = 'flex';
+}
+
 // --- Event Listeners ---
 document.addEventListener('DOMContentLoaded', initializeApp);
-applyProductPromoBtn.addEventListener('click', async () => {
-    const code = productPromoCodeInput.value.trim();
+
+showProductPromoPopupBtn.addEventListener('click', () => openPromoPopup('product'));
+showCartPromoPopupBtn.addEventListener('click', () => openPromoPopup('cart'));
+closePromoModal.addEventListener('click', () => promoModal.style.display = 'none');
+promoModal.addEventListener('click', (e) => {
+    if (e.target === promoModal) {
+        promoModal.style.display = 'none';
+    }
+});
+
+promoModalApplyBtn.addEventListener('click', async () => {
+    const code = promoModalInput.value.trim();
     if (!code) {
-        productPromoFeedback.textContent = 'Masukkan kode.';
-        productPromoFeedback.className = 'error';
+        promoModalFeedback.textContent = 'Masukkan kode.';
+        promoModalFeedback.className = 'error';
         return;
     }
     try {
         const result = await validatePromoCode(code);
-        productPromoFeedback.textContent = result.message;
-        productPromoFeedback.className = 'success';
-        productPagePromo = result;
-        updateProductPriceDisplay();
+        promoModalFeedback.textContent = result.message;
+        promoModalFeedback.className = 'success';
+        
+        if (promoContext === 'product') {
+            productPagePromo = result;
+            updateProductPriceDisplay();
+        } else if (promoContext === 'cart') {
+            cartPagePromo = result;
+            updateCartTotal();
+        }
+        
+        setTimeout(() => {
+            promoModal.style.display = 'none';
+        }, 1000);
+
     } catch (error) {
-        productPromoFeedback.textContent = error.message;
-        productPromoFeedback.className = 'error';
-        productPagePromo = null;
-        updateProductPriceDisplay();
+        promoModalFeedback.textContent = error.message;
+        promoModalFeedback.className = 'error';
+        if (promoContext === 'product') {
+            productPagePromo = null;
+            updateProductPriceDisplay();
+        } else if (promoContext === 'cart') {
+            cartPagePromo = null;
+            updateCartTotal();
+        }
     }
 });
-applyCartPromoBtn.addEventListener('click', async () => {
-    const code = cartPromoCodeInput.value.trim();
-    if (!code) { return; }
-    try {
-        const result = await validatePromoCode(code);
-        cartPromoFeedback.textContent = result.message;
-        cartPromoFeedback.className = 'success';
-        cartPagePromo = result;
-        updateCartTotal();
-    } catch (error) {
-        cartPromoFeedback.textContent = error.message;
-        cartPromoFeedback.className = 'error';
-        cartPagePromo = null;
-        renderCart();
-    }
-});
+
 checkoutButton.addEventListener('click', () => {
     if (cart.length === 0) return;
     let itemsText = '';
@@ -670,7 +679,6 @@ closeMusicPlayer.addEventListener('click', () => { musicPlayerPopup.classList.re
 musicPlayerOverlay.addEventListener('click', () => { musicPlayerPopup.classList.remove('active'); musicPlayerOverlay.classList.remove('active'); });
 loadMediaBtn.addEventListener('click', () => { const mediaLink = mediaLinkInput.value.trim(); if (!mediaLink) return showToastNotification("Silakan masukkan link.", "fa-exclamation-circle"); backgroundAudio.pause(); backgroundAudio.src = ''; if (youtubePlayer && typeof youtubePlayer.destroy === 'function') youtubePlayer.destroy(); mediaPlayerContainer.innerHTML = ''; customMusicMuted = false; try { let videoId = null; if (mediaLink.includes('youtu.be') || mediaLink.includes('youtube.com')) { const url = new URL(mediaLink); videoId = url.hostname === 'youtu.be' ? url.pathname.substring(1) : url.searchParams.get('v'); } if (videoId) { createYouTubePlayer(videoId); showToastNotification("Memuat video...", "fa-play-circle"); muteAudioBtn.querySelector('i').className = 'fas fa-volume-up'; } else { showToastNotification("Link YouTube tidak valid.", "fa-times-circle"); } } catch (error) { showToastNotification("Format link tidak dikenal.", "fa-times-circle"); } });
 
-// --- Inisialisasi Aplikasi ---
 async function initializeApp() {
     mainContainer.style.display = 'none';
     try {
