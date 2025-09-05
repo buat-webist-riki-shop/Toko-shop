@@ -452,13 +452,16 @@
         {
             "id": 71,
             "nama": "RESELLER SUBDOMAIN",
-            "harga": 20000,
+            "harga": 10000,
             "hargaAsli": 20000,
             "deskripsiPanjang": "BISA BIKIN DOMAIN SEPUASNYA || PILIHAN DOMAIN ADA BANYAK  || BISA UNTUK INSTALL PANEL DAN COSTUM DOMAIN VERCEL || MUDAH DI PAHAMI DAN CRATE MUDAH  || MEMBUAT DOMAIN MENGGUNAKAN WEBISTE || TIDAK RIBET DAN MASA AKTIF JADI RESELLER SU UMUR HIDUP || BISA JUALAN SUBDOMAIN",
             "createdAt": "2025-09-03T23:07:37.945Z",
             "nomorWA": "",
             "images": [],
-            "menuContent": ""
+            "menuContent": "",
+            "category": "murid",
+            "discountPrice": 10000,
+            "discountEndDate": "2025-09-06T00:23:00.000Z"
         },
         {
             "id": 70,
