@@ -164,14 +164,11 @@
                     </div>
                     <div id="detailProductDescriptionContent"></div>
                     <div class="price-display" id="detailProductPrice"></div>
+                    
+                    <button id="showProductPromoPopupBtn" class="promo-popup-trigger">
+                        <i class="fas fa-tag"></i> Punya Kode Promo?
+                    </button>
 
-                    <div class="promo-code-section" id="productPromoSection" style="margin-top: 15px; display: none;">
-                        <div class="promo-input-group">
-                            <input type="text" id="productPromoCodeInput" placeholder="Masukkan kode promo">
-                            <button id="applyProductPromoBtn">Terapkan</button>
-                        </div>
-                        <p id="product-promo-feedback"></p>
-                    </div>
                     <div class="actions" id="detailProductActions"></div>
                 </div>
             </div>
@@ -185,15 +182,12 @@
                 <p>Keranjang Anda masih kosong.</p>
             </div>
             
-            <div class="promo-code-section" id="cartPromoSection" style="display: none;">
-                <h4>Punya Kode Promo?</h4>
-                <div class="promo-input-group">
-                    <input type="text" id="cartPromoCodeInput" placeholder="Masukkan kode di sini">
-                    <button id="applyCartPromoBtn">Terapkan</button>
-                </div>
-                <p id="cart-promo-feedback"></p>
+            <div id="cartPromoContainer" style="display: none; padding: 0 15px; margin-top: 15px;">
+                 <button id="showCartPromoPopupBtn" class="promo-popup-trigger">
+                    <i class="fas fa-tag"></i> Gunakan Kode Promo
+                </button>
             </div>
-
+            
             <div class="cart-summary">
                 <span>Total:</span>
                 <span id="cartTotal">Rp 0</span>
@@ -204,18 +198,31 @@
         <div class="page-content" id="chat-seller-page">
              <h2><i class="fas fa-arrow-left back-arrow" data-back-to="home-page"></i> Chat Seller</h2>
             <p style="text-align: center; padding: 20px;">Klik tombol di bawah untuk chat langsung dengan seller.</p>
-            <div style="text-align: center;"><button class="checkout-button" onclick="window.open('https://wa.me/' + WA_SELLER_NUMBER + '?text=Halo%20Seller...', '_blank');">Chat WhatsApp Seller</button></div>
+            <div style="text-align: center;"><button class="checkout-button" onclick="window.open('https://wa.me/6285771555374', '_blank');">Chat WhatsApp Seller</button></div>
         </div>
         <div class="page-content" id="hubungi-kami-page">
             <h2><i class="fas fa-arrow-left back-arrow" data-back-to="home-page"></i> Hubungi Kami</h2>
             <p style="text-align: center; padding: 20px;">Informasi kontak kami.</p>
-            <div style="text-align: center; margin-bottom: 30px;"><button class="checkout-button" onclick="window.open('https://wa.me/' + WA_ADMIN_NUMBER + '?text=Halo%20admin...', '_blank');">Hubungi Admin via WhatsApp</button></div>
+            <div style="text-align: center; margin-bottom: 30px;"><button class="checkout-button" onclick="window.open('https://wa.me/6285771555374', '_blank');">Hubungi Admin via WhatsApp</button></div>
+        </div>
+    </div>
+
+    <div id="promoModal" class="modal">
+        <div class="modal-content">
+            <span class="close-button" id="closePromoModal">&times;</span>
+            <h3>Masukkan Kode Promo</h3>
+            <div class="promo-input-group">
+                <input type="text" id="promoModalInput" placeholder="Ketik kodemu di sini...">
+                <button id="promoModalApplyBtn">Terapkan</button>
+            </div>
+            <p id="promoModalFeedback"></p>
         </div>
     </div>
 
 <audio id="background-audio" src="music.mp3" loop></audio>
 
 <script type="module">
+    // Script Firebase tidak berubah
     const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {};
     const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
     if (Object.keys(firebaseConfig).length > 0) {
@@ -238,12 +245,5 @@
     }
 </script>
 <script src="data/rikishop.js"></script>
-<script>
-    // Optional: Jika Anda menggunakan Eruda untuk debug
-    // var erudaScript = document.createElement('script');
-    // erudaScript.src = "https://cdn.jsdelivr.net/npm/eruda";
-    // document.body.appendChild(erudaScript);
-    // erudaScript.onload = function () { eruda.init(); }
-</script>
 </body>
 </html>
