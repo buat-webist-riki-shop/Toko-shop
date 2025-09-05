@@ -4,9 +4,9 @@ const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
 const REPO_OWNER = process.env.REPO_OWNER;
 const REPO_NAME = process.env.REPO_NAME;
 const PRODUCTS_FILE_PATH = 'data/isi_json/products.json';
-const PROMO_FILE_PATH = 'data/isi_json/promo.json';
+const PROMO_FILE_PATH = 'data/isi_json/promos.json';
 
-// Fungsi helper untuk otentikasi dan mendapatkan konten file
+// --- Helper Functions ---
 async function getGithubFile(octokit, owner, repo, path) {
     try {
         const { data } = await octokit.repos.getContent({ owner, repo, path });
@@ -15,14 +15,13 @@ async function getGithubFile(octokit, owner, repo, path) {
             json: JSON.parse(Buffer.from(data.content, 'base64').toString('utf-8'))
         };
     } catch (error) {
-        if (error.status === 404) { // Jika file belum ada, buat struktur kosong
+        if (error.status === 404) {
              return { sha: null, json: {} };
         }
         throw error;
     }
 }
 
-// Fungsi helper untuk update file di GitHub
 async function updateGithubFile(octokit, owner, repo, path, sha, json, message) {
     const content = Buffer.from(JSON.stringify(json, null, 4)).toString('base64');
     await octokit.repos.createOrUpdateFileContents({
@@ -30,7 +29,7 @@ async function updateGithubFile(octokit, owner, repo, path, sha, json, message) 
     });
 }
 
-
+// --- Main Handler ---
 export default async function handler(request, response) {
     if (request.method !== 'POST') {
         return response.status(405).json({ message: 'Metode tidak diizinkan.' });
@@ -44,7 +43,7 @@ export default async function handler(request, response) {
     const octokit = new Octokit({ auth: GITHUB_TOKEN });
 
     try {
-        // --- LOGIKA PROMO ---
+        // --- PROMO LOGIC ---
         if (action.startsWith('promo')) {
             const { sha, json: promosJson } = await getGithubFile(octokit, REPO_OWNER, REPO_NAME, PROMO_FILE_PATH);
             
@@ -55,7 +54,11 @@ export default async function handler(request, response) {
 
                     if (!promoData) return response.status(404).json({ message: 'Kode promo tidak ditemukan.' });
                     if (new Date(promoData.expires) < new Date()) return response.status(410).json({ message: 'Kode promo sudah kedaluwarsa.' });
-                    if (promoData.uses >= promoData.maxUses) return response.status(409).json({ message: 'Kode promo sudah habis digunakan.' });
+                    
+                    // Logika baru untuk cek batas penggunaan (termasuk unlimited)
+                    if (promoData.maxUses !== 0 && promoData.uses >= promoData.maxUses) {
+                        return response.status(409).json({ message: 'Kode promo sudah habis digunakan.' });
+                    }
 
                     return response.status(200).json({ 
                         message: `Promo ${promoData.percentage}% berhasil diterapkan!`,
@@ -72,7 +75,8 @@ export default async function handler(request, response) {
                     if (promosJson[upperCaseCode]) {
                         return response.status(409).json({ message: `Kode promo "${upperCaseCode}" sudah ada.` });
                     }
-                    promosJson[upperCaseCode] = { code: upperCaseCode, percentage, expires, maxUses, uses: 0 };
+                    // maxUses 0 berarti unlimited
+                    promosJson[upperCaseCode] = { code: upperCaseCode, percentage, expires, maxUses: parseInt(maxUses, 10), uses: 0 };
                     await updateGithubFile(octokit, REPO_OWNER, REPO_NAME, PROMO_FILE_PATH, sha, promosJson, `feat: Menambah kode promo ${upperCaseCode}`);
                     return response.status(200).json({ message: 'Kode promo berhasil ditambahkan!' });
                 }
@@ -90,7 +94,7 @@ export default async function handler(request, response) {
             }
         }
 
-        // --- LOGIKA PRODUK ---
+        // --- PRODUCT LOGIC ---
         const { sha, json: productsJson } = await getGithubFile(octokit, REPO_OWNER, REPO_NAME, PRODUCTS_FILE_PATH);
 
         switch (action) {
