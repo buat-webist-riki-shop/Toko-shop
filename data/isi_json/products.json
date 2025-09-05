@@ -617,7 +617,7 @@
     "Stock Akun": [
         {
             "id": 60,
-            "nama": "STOCK POLOSAN",
+            "nama": "STOCK POLOSAN || FF",
             "harga": 15000,
             "hargaAsli": 15000,
             "deskripsiPanjang": "LOG FB | DATA ALL AMAN | SPECK LIAT AJA FOTO | BIND KOSONG | VAULT LUMAYAN | SENJATA LUMAYAN | SERVER AKUN INDO",
@@ -637,7 +637,10 @@
                 "https://img1.pixhost.to/images/8489/637949174_by_rikishopreal.jpg",
                 "https://img1.pixhost.to/images/8489/637949168_by_rikishopreal.jpg"
             ],
-            "menuContent": ""
+            "menuContent": "",
+            "category": "Stock Akun",
+            "discountPrice": null,
+            "discountEndDate": null
         }
     ],
     "Logo": [],
