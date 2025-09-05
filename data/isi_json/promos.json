@@ -10,5 +10,12 @@
         "expires": "2025-09-30T23:59:59Z",
         "maxUses": 1,
         "uses": 1
+    },
+    "GAGA": {
+        "code": "GAGA",
+        "percentage": 65,
+        "expires": "2025-09-05T18:54:00.000Z",
+        "maxUses": 0,
+        "uses": 0
     }
 }
