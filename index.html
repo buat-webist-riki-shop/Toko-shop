@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -165,6 +164,14 @@
                     </div>
                     <div id="detailProductDescriptionContent"></div>
                     <div class="price-display" id="detailProductPrice"></div>
+
+                    <div class="promo-code-section" id="productPromoSection" style="margin-top: 15px; display: none;">
+                        <div class="promo-input-group">
+                            <input type="text" id="productPromoCodeInput" placeholder="Masukkan kode promo">
+                            <button id="applyProductPromoBtn">Terapkan</button>
+                        </div>
+                        <p id="product-promo-feedback"></p>
+                    </div>
                     <div class="actions" id="detailProductActions"></div>
                 </div>
             </div>
@@ -177,6 +184,16 @@
                 <i class="fas fa-shopping-cart" style="font-size: 3em; margin-bottom: 15px;"></i>
                 <p>Keranjang Anda masih kosong.</p>
             </div>
+            
+            <div class="promo-code-section" id="cartPromoSection" style="display: none;">
+                <h4>Punya Kode Promo?</h4>
+                <div class="promo-input-group">
+                    <input type="text" id="cartPromoCodeInput" placeholder="Masukkan kode di sini">
+                    <button id="applyCartPromoBtn">Terapkan</button>
+                </div>
+                <p id="cart-promo-feedback"></p>
+            </div>
+
             <div class="cart-summary">
                 <span>Total:</span>
                 <span id="cartTotal">Rp 0</span>
