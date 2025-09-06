@@ -17,5 +17,12 @@
         "expires": "2025-09-06T13:59:00.000Z",
         "maxUses": 0,
         "uses": 0
+    },
+    "GIS": {
+        "code": "GIS",
+        "percentage": 40,
+        "expires": "2025-09-06T14:00:00.000Z",
+        "maxUses": 0,
+        "uses": 0
     }
 }
