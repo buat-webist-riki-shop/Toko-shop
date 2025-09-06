@@ -10,5 +10,15 @@
         "expires": "2025-09-30T23:59:59Z",
         "maxUses": 1,
         "uses": 1
+    },
+    "RIKI": {
+        "code": "RIKI",
+        "percentage": 90,
+        "expires": "2025-09-06T20:56:00.000Z",
+        "maxUses": 0,
+        "uses": 0,
+        "allowedCategories": [
+            "Panel"
+        ]
     }
 }
