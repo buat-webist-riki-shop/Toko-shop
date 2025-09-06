@@ -617,6 +617,21 @@
     "Stock Akun": [],
     "Logo": [
         {
+            "id": 61,
+            "nama": "Ygv",
+            "harga": 256558,
+            "hargaAsli": 256558,
+            "deskripsiPanjang": "Gcv",
+            "createdAt": "2025-09-06T20:01:53.548Z",
+            "nomorWA": "",
+            "images": [
+                "https://img1.pixhost.to/images/8512/638190842_by_rikishopreal.png",
+                "https://img1.pixhost.to/images/8512/638190840_by_rikishopreal.png",
+                "https://img1.pixhost.to/images/8512/638190836_by_rikishopreal.png"
+            ],
+            "menuContent": ""
+        },
+        {
             "id": 60,
             "nama": "Jaba",
             "harga": 46494,
