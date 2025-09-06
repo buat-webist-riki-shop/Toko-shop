@@ -61,14 +61,15 @@ export default async function handler(request, response) {
                     if (new Date(promoData.expires) < new Date()) return response.status(410).json({ message: 'Kode promo sudah kedaluwarsa.' });
                     if (promoData.maxUses !== 0 && promoData.uses >= promoData.maxUses) return response.status(409).json({ message: 'Kode promo sudah habis digunakan.' });
 
-                    if (promoData.allowedCategories && promoData.allowedCategories.length > 0) {
+                    // MODIFIKASI FINAL: Membuat kode lebih tahan banting (robust)
+                    // Kita cek apakah allowedCategories adalah sebuah array yang memiliki isi
+                    if (Array.isArray(promoData.allowedCategories) && promoData.allowedCategories.length > 0) {
                         if (!context || !context.type) return response.status(400).json({ message: 'Konteks produk/keranjang dibutuhkan.' });
                         
                         const allowedCatsText = `<strong>${promoData.allowedCategories.join(', ')}</strong>`;
 
                         if (context.type === 'product') {
                             if (!context.category || !promoData.allowedCategories.includes(context.category)) {
-                                // MODIFIKASI: Pesan error baru yang lebih spesifik untuk halaman produk
                                 const newErrorMessage = `Maaf, kode ini khusus kategori ${allowedCatsText}, tidak bisa digunakan di kategori ini. Harap gunakan di kategori yang sudah diatur oleh admin, yaitu ${allowedCatsText}.`;
                                 return response.status(403).json({ message: newErrorMessage });
                             }
@@ -81,7 +82,6 @@ export default async function handler(request, response) {
                             const cartCategories = new Set(context.categories);
                             const isAllowed = promoData.allowedCategories.some(cat => cartCategories.has(cat));
                             if (!isAllowed) {
-                                // MODIFIKASI: Pesan error baru yang lebih spesifik untuk halaman keranjang
                                 const newErrorMessage = `Maaf, kode ini khusus untuk kategori ${allowedCatsText}. Pastikan setidaknya ada satu produk dari kategori tersebut di keranjang Anda.`;
                                 return response.status(403).json({ message: newErrorMessage });
                             }
@@ -95,6 +95,7 @@ export default async function handler(request, response) {
                         allowedCategories: promoData.allowedCategories || []
                     });
                 }
+                // ... (sisa case lainnya tidak perlu diubah) ...
                 case 'promoGetAll': {
                     return response.status(200).json(promosJson);
                 }
