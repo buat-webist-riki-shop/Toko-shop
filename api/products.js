@@ -5,9 +5,8 @@ const REPO_OWNER = process.env.REPO_OWNER;
 const REPO_NAME = process.env.REPO_NAME;
 const PRODUCTS_FILE_PATH = 'data/isi_json/products.json';
 const PROMO_FILE_PATH = 'data/isi_json/promos.json';
-const SETTINGS_FILE_PATH = 'data/isi_json/settings.json'; // Path baru untuk settings
+const SETTINGS_FILE_PATH = 'data/isi_json/settings.json';
 
-// --- Helper Functions ---
 async function getGithubFile(octokit, owner, repo, path) {
     try {
         const { data } = await octokit.repos.getContent({ owner, repo, path });
@@ -30,7 +29,6 @@ async function updateGithubFile(octokit, owner, repo, path, sha, json, message) 
     });
 }
 
-// --- Main Handler ---
 export default async function handler(request, response) {
     if (request.method !== 'POST') {
         return response.status(405).json({ message: 'Metode tidak diizinkan.' });
@@ -44,45 +42,67 @@ export default async function handler(request, response) {
     const octokit = new Octokit({ auth: GITHUB_TOKEN });
 
     try {
-        // --- LOGIKA SETTINGS ---
         if (action === 'updateSettings') {
             const { sha } = await getGithubFile(octokit, REPO_OWNER, REPO_NAME, SETTINGS_FILE_PATH);
             await updateGithubFile(octokit, REPO_OWNER, REPO_NAME, SETTINGS_FILE_PATH, sha, data, 'feat: Memperbarui pengaturan situs');
             return response.status(200).json({ message: 'Pengaturan berhasil disimpan!' });
         }
 
-        // --- LOGIKA PROMO ---
         if (action.startsWith('promo')) {
             const { sha, json: promosJson } = await getGithubFile(octokit, REPO_OWNER, REPO_NAME, PROMO_FILE_PATH);
             
             switch(action) {
                 case 'promoValidate': {
-                    const code = data.code.toUpperCase();
-                    const promoData = promosJson[code];
+                    const { code, context } = data;
+                    const upperCaseCode = code.toUpperCase();
+                    const promoData = promosJson[upperCaseCode];
 
                     if (!promoData) return response.status(404).json({ message: 'Kode promo tidak ditemukan.' });
                     if (new Date(promoData.expires) < new Date()) return response.status(410).json({ message: 'Kode promo sudah kedaluwarsa.' });
-                    
-                    if (promoData.maxUses !== 0 && promoData.uses >= promoData.maxUses) {
-                        return response.status(409).json({ message: 'Kode promo sudah habis digunakan.' });
+                    if (promoData.maxUses !== 0 && promoData.uses >= promoData.maxUses) return response.status(409).json({ message: 'Kode promo sudah habis digunakan.' });
+
+                    // --- MODIFIKASI: Logika validasi kategori dengan pesan error yang lebih spesifik ---
+                    if (promoData.allowedCategories && promoData.allowedCategories.length > 0) {
+                        if (!context || !context.type) return response.status(400).json({ message: 'Konteks produk/keranjang dibutuhkan.' });
+                        
+                        const allowedCatsText = promoData.allowedCategories.join(', ');
+
+                        if (context.type === 'product') {
+                            if (!context.category || !promoData.allowedCategories.includes(context.category)) {
+                                return response.status(403).json({ message: `Kode ini hanya berlaku untuk produk kategori: ${allowedCatsText}.` });
+                            }
+                        }
+                        
+                        if (context.type === 'cart') {
+                            if (!context.categories || context.categories.length === 0) {
+                                return response.status(403).json({ message: `Keranjang Anda tidak berisi produk dari kategori yang diizinkan (${allowedCatsText}).` });
+                            }
+                            const cartCategories = new Set(context.categories);
+                            const isAllowed = promoData.allowedCategories.some(cat => cartCategories.has(cat));
+                            if (!isAllowed) {
+                                return response.status(403).json({ message: `Kode promo ini tidak berlaku untuk produk di keranjang Anda. Hanya untuk kategori: ${allowedCatsText}.` });
+                            }
+                        }
                     }
+                    // --- AKHIR MODIFIKASI ---
 
                     return response.status(200).json({ 
                         message: `Promo ${promoData.percentage}% berhasil diterapkan!`,
-                        code: code,
-                        percentage: promoData.percentage 
+                        code: upperCaseCode,
+                        percentage: promoData.percentage,
+                        allowedCategories: promoData.allowedCategories || []
                     });
                 }
                 case 'promoGetAll': {
                     return response.status(200).json(promosJson);
                 }
                 case 'promoAdd': {
-                    const { code, percentage, expires, maxUses } = data;
+                    const { code, percentage, expires, maxUses, allowedCategories } = data;
                     const upperCaseCode = code.toUpperCase();
                     if (promosJson[upperCaseCode]) {
                         return response.status(409).json({ message: `Kode promo "${upperCaseCode}" sudah ada.` });
                     }
-                    promosJson[upperCaseCode] = { code: upperCaseCode, percentage, expires, maxUses: parseInt(maxUses, 10), uses: 0 };
+                    promosJson[upperCaseCode] = { code: upperCaseCode, percentage, expires, maxUses: parseInt(maxUses, 10), uses: 0, allowedCategories };
                     await updateGithubFile(octokit, REPO_OWNER, REPO_NAME, PROMO_FILE_PATH, sha, promosJson, `feat: Menambah kode promo ${upperCaseCode}`);
                     return response.status(200).json({ message: 'Kode promo berhasil ditambahkan!' });
                 }
@@ -100,7 +120,6 @@ export default async function handler(request, response) {
             }
         }
 
-        // --- LOGIKA PRODUK ---
         const { sha, json: productsJson } = await getGithubFile(octokit, REPO_OWNER, REPO_NAME, PRODUCTS_FILE_PATH);
 
         switch (action) {
@@ -120,10 +139,8 @@ export default async function handler(request, response) {
                     images: data.images || [],
                     menuContent: data.menuContent || ""
                 };
-
                 if (!productsJson[data.category]) productsJson[data.category] = [];
                 productsJson[data.category].unshift(newProduct);
-                
                 await updateGithubFile(octokit, REPO_OWNER, REPO_NAME, PRODUCTS_FILE_PATH, sha, productsJson, `feat: Menambahkan produk "${data.nama}"`);
                 return response.status(200).json({ message: 'Produk berhasil ditambahkan!' });
             }
