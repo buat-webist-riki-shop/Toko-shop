@@ -46,6 +46,9 @@ const sliderNextBtn = document.getElementById('sliderNextBtn');
 const imageLightbox = document.getElementById('imageLightbox');
 const lightboxImage = document.getElementById('lightboxImage');
 const lightboxClose = document.querySelector('.lightbox-close');
+// MODIFIKASI: Tambahkan referensi ke tombol pilih di lightbox
+const lightboxActions = document.getElementById('lightboxActions');
+const lightboxSelectBtn = document.getElementById('lightboxSelectBtn');
 let currentStockImageIndex = 0;
 let totalStockImages = 0;
 const aboutUsModal = document.getElementById('aboutUsModal');
@@ -98,16 +101,18 @@ let products = {};
 let siteSettings = {};
 let cart = JSON.parse(localStorage.getItem('rikishop_cart_v2')) || [];
 let currentPage = 'home-page';
+// MODIFIKASI: Variabel untuk menyimpan target elemen saat lightbox terbuka
+let currentLightboxTarget = null; 
 const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-rikishop';
 
-async function validatePromoCode(code, context = {}) { // Terima konteks
+async function validatePromoCode(code, context = {}) {
     try {
         const response = await fetch('/api/products', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
                 action: 'promoValidate',
-                data: { code: code, context: context } // Kirim konteks ke backend
+                data: { code: code, context: context }
             })
         });
         const result = await response.json();
@@ -288,15 +293,12 @@ function showProductDetail(product, serviceType) {
     promoFeedback.textContent = '';
     promoFeedback.className = '';
     detailProductName.textContent = product.nama;
-    detailProductActions.innerHTML = ''; // Kosongkan actions dulu
+    detailProductActions.innerHTML = ''; 
     
-    // Tampilkan harga (akan di-update lagi di bawah)
     updateProductPriceDisplay();
     
-    // Tampilkan deskripsi
     detailProductDescriptionContent.innerHTML = product.deskripsiPanjang ? product.deskripsiPanjang.replace(/\|\|/g, '<br>') : 'Tidak ada deskripsi.';
 
-    // MODIFIKASI: Tambahkan tombol "Cek Menu" untuk kategori Script
     if (serviceType === 'Script' && product.menuContent) {
         const checkMenuBtn = document.createElement('button');
         checkMenuBtn.className = 'check-menu-btn';
@@ -306,37 +308,34 @@ function showProductDetail(product, serviceType) {
             genericScriptMenuContent.innerHTML = product.menuContent.replace(/\n/g, '<br>');
             genericScriptMenuModal.style.display = 'flex';
         });
-        // Sisipkan tombol ini sebelum container actions utama
         detailProductDescriptionContent.insertAdjacentElement('afterend', checkMenuBtn);
     }
     
-    // Tampilkan slider gambar untuk kategori Stock Akun dan Logo
     if ((serviceType === 'Stock Akun' || serviceType === 'Logo') && product.images && product.images.length > 0) {
         stockImageSliderContainer.style.display = 'block';
         stockImageSlider.innerHTML = '';
         product.images.forEach((imgUrl, index) => {
             const slideWrapper = document.createElement('div');
             slideWrapper.className = 'image-slide-wrapper';
-            slideWrapper.dataset.imageUrl = imgUrl; // Simpan URL untuk pesan WA
+            slideWrapper.dataset.imageUrl = imgUrl; 
             
             let slideContent = '';
 
+            // MODIFIKASI: Logika baru untuk handle klik pada gambar Logo dan Stock Akun
             if (serviceType === 'Stock Akun') {
                 slideContent = `<div class="image-slide" style="background-image: url('${imgUrl}');"></div><span class="image-number-badge">${index + 1}</span>`;
-                slideWrapper.addEventListener('click', () => openLightbox(imgUrl));
+                // Klik untuk zoom, tanpa tombol pilih
+                slideWrapper.addEventListener('click', () => openLightbox(imgUrl)); 
             } 
-            // MODIFIKASI: Logika baru untuk kategori Logo
             else if (serviceType === 'Logo') {
-                slideWrapper.classList.add('logo-selectable'); // Tambah class khusus
+                slideWrapper.classList.add('logo-selectable');
                 slideContent = `
                     <div class="image-slide" style="background-image: url('${imgUrl}');"></div>
                     <div class="logo-overlay"></div>
                     <i class="fas fa-check-circle logo-checkmark"></i>
                 `;
-                // Tambahkan event listener untuk memilih/batal memilih logo
-                slideWrapper.addEventListener('click', () => {
-                    slideWrapper.classList.toggle('selected');
-                });
+                // Klik untuk zoom, dengan tombol pilih di dalam lightbox
+                slideWrapper.addEventListener('click', () => openLightbox(imgUrl, slideWrapper));
             }
 
             slideWrapper.innerHTML = slideContent;
@@ -349,7 +348,6 @@ function showProductDetail(product, serviceType) {
         stockImageSliderContainer.style.display = 'none';
     }
 
-    // Generate tombol action (Beli, Keranjang) setelah semua elemen lain siap
     generateProductActionButtons();
 }
 
@@ -366,7 +364,6 @@ function updateProductPriceDisplay() {
         priceHtml = `<span class="original-price"><del>${formatRupiah(originalPrice)}</del></span> <span class="discounted-price">${formatRupiah(finalPrice)}</span>`;
     }
     detailProductPrice.innerHTML = priceHtml;
-    // Panggil ulang generate tombol untuk update harga di tombol
     generateProductActionButtons(finalPrice); 
 }
 
@@ -374,7 +371,6 @@ function generateProductActionButtons(currentPrice) {
     let product = currentProductOnDetailPage;
     let serviceType = findCategoryOfProduct(product.id);
     
-    // Jika currentPrice tidak diberikan, hitung ulang
     if (typeof currentPrice === 'undefined') {
         let originalPrice = product.hargaAsli || product.harga;
         currentPrice = originalPrice;
@@ -384,7 +380,7 @@ function generateProductActionButtons(currentPrice) {
         }
     }
 
-    detailProductActions.innerHTML = ''; // Selalu kosongkan dulu
+    detailProductActions.innerHTML = ''; 
 
     const addToCartBtn = document.createElement('button');
     addToCartBtn.className = 'add-to-cart';
@@ -416,26 +412,18 @@ function generateProductActionButtons(currentPrice) {
         let waMessage;
         const targetPhoneNumber = getPhoneNumberForProduct(product, serviceType);
         
-        // MODIFIKASI: Logika baru untuk pesan WA kategori Logo
         if (serviceType === 'Logo') {
-            // Dapatkan semua logo yang dipilih
             const selectedImages = document.querySelectorAll('#stockImageSlider .image-slide-wrapper.selected');
-            
-            // Validasi: harus ada minimal 1 logo yang dipilih
             if (selectedImages.length === 0) {
                 showToastNotification('Pilih minimal satu desain logo.', 'fa-exclamation-circle');
                 return;
             }
-            
-            // Buat daftar link gambar dari logo yang dipilih
             let imagesText = '';
             selectedImages.forEach((imgWrapper, index) => {
                 imagesText += `\n${index + 1}. ${imgWrapper.dataset.imageUrl}`;
             });
-            
             waMessage = `Halo Kak, saya tertarik memesan Logo:\n\nProduk: *${product.nama}*\nHarga: *${formatRupiah(currentPrice)}*\n\nDesain yang saya pilih:${imagesText}\n\nMohon info selanjutnya. Terima kasih! 🙏`;
         } else {
-            // Logika default untuk produk lain
             waMessage = `Halo Kak, saya tertarik memesan produk:\n\nProduk: *${product.nama}*\nHarga: *${formatRupiah(currentPrice)}*\n\nMohon info selanjutnya. Terima kasih! 🙏`;
         }
         window.open(`https://wa.me/${targetPhoneNumber}?text=${encodeURIComponent(waMessage)}`, "_blank");
@@ -454,12 +442,25 @@ function showPrevImage() {
     currentStockImageIndex = (currentStockImageIndex - 1 + totalStockImages) % totalStockImages;
     updateSliderPosition();
 }
-function openLightbox(imageUrl) {
+
+// MODIFIKASI: Fungsi openLightbox diubah untuk menerima elemen target
+function openLightbox(imageUrl, targetElement = null) {
     lightboxImage.src = imageUrl;
     imageLightbox.style.display = 'flex';
+    currentLightboxTarget = targetElement; // Simpan elemen yang diklik
+
+    // Tampilkan tombol "Pilih Foto" hanya jika targetElement ada (artinya ini adalah Logo)
+    if (targetElement) {
+        lightboxActions.style.display = 'block';
+    } else {
+        lightboxActions.style.display = 'none';
+    }
 }
+
+// MODIFIKASI: Fungsi closeLightbox diubah untuk mereset target
 function closeLightbox() {
     imageLightbox.style.display = 'none';
+    currentLightboxTarget = null; // Reset target saat lightbox ditutup
 }
 
 function addToCart(itemData) {
@@ -520,7 +521,6 @@ function updateCartTotal() {
         const allowed = cartPagePromo.allowedCategories;
 
         if (allowed && allowed.length > 0) {
-            // Hitung diskon hanya untuk item di kategori yang diizinkan
             cart.forEach(item => {
                 const itemCategory = findCategoryOfProduct(item.id);
                 if (allowed.includes(itemCategory)) {
@@ -533,7 +533,6 @@ function updateCartTotal() {
             const finalTotal = (discountedTotal - discountAmount) + nonDiscountedTotal;
              cartTotalSpan.innerHTML = `<span class="original-total">${formatRupiah(originalSubtotal)}</span><span class="final-total">${formatRupiah(finalTotal)}</span>`;
         } else {
-            // Promo berlaku untuk semua
             const discountAmount = originalSubtotal * (cartPagePromo.percentage / 100);
             const finalTotal = originalSubtotal - discountAmount;
             cartTotalSpan.innerHTML = `<span class="original-total">${formatRupiah(originalSubtotal)}</span><span class="final-total">${formatRupiah(finalTotal)}</span>`;
@@ -670,7 +669,6 @@ if (showCartPromoPopupBtn) showCartPromoPopupBtn.addEventListener('click', () =>
 if (closePromoSheetBtn) closePromoSheetBtn.addEventListener('click', closePromoPopup);
 if (promoOverlay) promoOverlay.addEventListener('click', closePromoPopup);
 
-// KODE PROMO YANG SUDAH DIPERBAIKI
 if (promoApplyBtn) {
     promoApplyBtn.addEventListener('click', async () => {
         const code = promoInput.value.trim();
@@ -745,7 +743,6 @@ backArrows.forEach(arrow => {
     arrow.addEventListener('click', () => {
         const backToPageId = arrow.dataset.backTo;
         if (currentPage === 'service-detail-page' && productDetailViewDiv.style.display === 'block') {
-            // Hapus tombol cek menu jika ada, untuk mencegah duplikasi saat kembali
             const existingMenuBtn = document.querySelector('.check-menu-btn');
             if (existingMenuBtn) existingMenuBtn.remove();
             
@@ -762,13 +759,23 @@ if (lightboxClose) lightboxClose.addEventListener('click', closeLightbox);
 if (imageLightbox) imageLightbox.addEventListener('click', (e) => {
     if (e.target === imageLightbox) closeLightbox();
 });
+// MODIFIKASI: Event listener baru untuk tombol "Pilih Foto" di dalam lightbox
+if (lightboxSelectBtn) {
+    lightboxSelectBtn.addEventListener('click', () => {
+        if (currentLightboxTarget) {
+            currentLightboxTarget.classList.toggle('selected'); // Pilih atau batal pilih
+            closeLightbox(); // Tutup lightbox setelah memilih
+        }
+    });
+}
+
 if (openMenuBtn) openMenuBtn.addEventListener('click', () => { offcanvasMenu.classList.add('active'); overlay.classList.add('active'); });
 if (closeMenuBtn) closeMenuBtn.addEventListener('click', () => { offcanvasMenu.classList.remove('active'); overlay.classList.remove('active'); });
 if (overlay) overlay.addEventListener('click', () => { offcanvasMenu.classList.remove('active'); overlay.classList.remove('active'); });
 document.querySelectorAll('#offcanvasMenu a').forEach(link => { const pageTarget = link.dataset.page; if (pageTarget) { link.addEventListener('click', (e) => { e.preventDefault(); showPage(pageTarget); offcanvasMenu.classList.remove('active'); overlay.classList.remove('active'); }); } });
 if (openAboutUsModalBtn) openAboutUsModalBtn.addEventListener('click', (e) => { e.preventDefault(); aboutUsModal.style.display = 'flex'; offcanvasMenu.classList.remove('active'); overlay.classList.remove('active'); });
 if (closeAboutUsModalBtn) closeAboutUsModalBtn.addEventListener('click', () => aboutUsModal.style.display = 'none');
-if (closeGenericScriptMenuModalBtn) closeGenericScriptMenuModalBtn.addEventListener('click', () => genericScriptMenuModal.style.display = 'none'); // Pastikan tombol close modal script berfungsi
+if (closeGenericScriptMenuModalBtn) closeGenericScriptMenuModalBtn.addEventListener('click', () => genericScriptMenuModal.style.display = 'none'); 
 if (openChatAiModalBtn) openChatAiModalBtn.addEventListener('click', (e) => { e.preventDefault(); chatAiModal.style.display = 'flex'; offcanvasMenu.classList.remove('active'); overlay.classList.remove('active'); });
 if (closeChatAiModalBtn) closeChatAiModalBtn.addEventListener('click', () => chatAiModal.style.display = 'none');
 if (sendChatAiBtnPage) sendChatAiBtnPage.addEventListener('click', handleSendChatMessagePage);
@@ -825,10 +832,8 @@ async function initializeApp() {
     }, 80);
 }
 document.addEventListener('firebaseReady', () => {
-    // initializeApp(); // Hapus ini karena sudah dipanggil di event listener DOMContentLoaded
     setupFirebaseVisitorCounter();
 });
 document.addEventListener('firebaseFailed', () => {
-    // initializeApp(); // Hapus ini juga
     if(visitorCountDisplay) visitorCountDisplay.querySelector('.count').textContent = 'R/S';
 });
