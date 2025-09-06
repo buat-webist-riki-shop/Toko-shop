@@ -591,3 +591,57 @@ button.add-new-btn {
         margin-bottom: 5px;
     }
 }
+
+.admin-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 15px;
+    background-color: var(--card-bg-color);
+    border-bottom: 1px solid var(--border-color);
+    gap: 10px;
+}
+
+.admin-header .header-left,
+.admin-header .header-center,
+.admin-header .header-right {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.admin-header .header-center {
+    flex-grow: 1;
+    justify-content: center;
+}
+
+.admin-header .header-left {
+    justify-content: flex-start;
+}
+
+.admin-header .header-right {
+    justify-content: flex-end;
+}
+
+body .back-button {
+    position: static;
+    transform: none;
+    box-shadow: none;
+    background-color: transparent;
+    color: var(--text-color);
+    font-size: 1.2em;
+    margin: 0;
+}
+.admin-header .profile-pic {
+    margin: 0;
+}
+.admin-header h2 {
+    margin: 0;
+    font-size: 1.1em;
+}
+
+@media (max-width: 400px) {
+    .admin-header h2 {
+        display: none; 
+    }
+}

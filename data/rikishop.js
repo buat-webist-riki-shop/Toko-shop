@@ -106,7 +106,6 @@ let cart = JSON.parse(localStorage.getItem('rikishop_cart_v2')) || [];
 let currentPage = 'home-page';
 let currentLightboxTarget = null; 
 const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-rikishop';
-// MODIFIKASI 1: Tambahkan variabel penanda untuk mencegah loop saat tombol kembali ditekan
 let isHandlingPopState = false;
 
 function showCustomAlert(title, message) {
@@ -197,14 +196,12 @@ async function setupFirebaseVisitorCounter() {
     }
 }
 
-// MODIFIKASI 2: Ubah fungsi showPage dan showProductDetail untuk menambahkan entri history
 function showPage(pageId) {
     document.querySelectorAll('.page-content').forEach(page => page.classList.remove('active'));
     document.getElementById(pageId).classList.add('active');
     currentPage = pageId;
     mainContainer.scrollTop = 0;
 
-    // Hanya tambahkan ke history jika ini bukan hasil dari event popstate (tombol kembali)
     if (!isHandlingPopState) {
         history.pushState({ page: pageId }, '', `#${pageId.replace('-page', '')}`);
     }
@@ -334,6 +331,13 @@ function showProductDetail(product, serviceType) {
     
     detailProductDescriptionContent.innerHTML = product.deskripsiPanjang ? product.deskripsiPanjang.replace(/\|\|/g, '<br>') : 'Tidak ada deskripsi.';
 
+    // MODIFIKASI: Hapus tombol "Cek Menu" yang mungkin ada dari tampilan sebelumnya
+    const existingMenuBtn = document.querySelector('.check-menu-btn');
+    if (existingMenuBtn) {
+        existingMenuBtn.remove();
+    }
+    // AKHIR MODIFIKASI
+
     if (serviceType === 'Script' && product.menuContent) {
         const checkMenuBtn = document.createElement('button');
         checkMenuBtn.className = 'check-menu-btn';
@@ -382,7 +386,6 @@ function showProductDetail(product, serviceType) {
 
     generateProductActionButtons();
 
-    // Hanya tambahkan ke history jika ini bukan hasil dari event popstate (tombol kembali)
     if (!isHandlingPopState) {
         history.pushState({ page: 'product-detail' }, '', `#product/${product.id}`);
     }
@@ -774,7 +777,6 @@ if (checkoutButton) {
 if (openCartBtn) openCartBtn.addEventListener('click', () => { showPage('cart-page'); renderCart(); });
 backArrows.forEach(arrow => {
     arrow.addEventListener('click', () => {
-        // Gunakan history.back() agar sesuai dengan perilaku tombol kembali HP
         history.back();
     });
 });
@@ -854,7 +856,6 @@ async function initializeApp() {
                 welcomeScreen.addEventListener('transitionend', () => {
                     welcomeScreen.style.display = "none";
                     mainContainer.style.display = "flex";
-                    // Ganti state awal di history saat aplikasi siap
                     history.replaceState({ page: 'home-page' }, '', '#home');
                     showPage('home-page');
                     setupBannerCarousel();
@@ -870,23 +871,17 @@ document.addEventListener('firebaseFailed', () => {
     if(visitorCountDisplay) visitorCountDisplay.querySelector('.count').textContent = 'R/S';
 });
 
-// MODIFIKASI 3: Tambahkan event listener untuk menangani tombol kembali
 window.addEventListener('popstate', function(event) {
     isHandlingPopState = true;
 
-    // Logika untuk menentukan halaman mana yang harus ditampilkan
-    // Jika detail produk sedang aktif, tombol kembali akan menutupnya dan menampilkan daftar produk
     if (productDetailViewDiv.style.display === 'block') {
         productDetailViewDiv.style.display = 'none';
         productListDiv.style.display = 'block';
-        currentPage = 'service-detail-page'; // Update halaman saat ini secara manual
+        currentPage = 'service-detail-page'; 
     } 
-    // Jika halaman saat ini bukan halaman utama, kembali ke halaman utama
     else if (currentPage !== 'home-page') {
         showPage('home-page');
     } 
-    // Jika sudah di halaman utama, biarkan browser menangani (keluar dari web)
     
-    // Setel ulang penanda setelah selesai
     setTimeout(() => { isHandlingPopState = false; }, 100);
 });
