@@ -28,21 +28,21 @@
     </div>
     
     <div id="product-form-screen" class="main-container" style="display: none;">
-        <header class="admin-header">
-            <div class="header-left">
-                <a href="index.html" class="back-button" aria-label="Kembali ke Beranda">
-                    <i class="fas fa-arrow-left"></i>
-                </a>
-            </div>
-            <div class="header-center">
-                <img src="logo.jpg" alt="Rikishopreal" class="profile-pic">
-                <h2>Admin Website</h2>
-            </div>
-            <div class="header-right">
-                <div class="theme-switch" id="themeSwitchBtnPanel"><i class="fas fa-moon"></i></div>
-                <button id="logoutBtn" class="logout-button" title="Keluar"><i class="fas fa-sign-out-alt"></i></button>
-            </div>
-        </header>
+        
+        <div class="admin-header-container">
+            <header class="admin-header">
+                <div class="header-logo">
+                    <a href="index.html" aria-label="Kembali ke Beranda">
+                        <img src="logo.jpg" alt="Rikishopreal Logo">
+                    </a>
+                </div>
+                <h2 class="header-title">Admin Website</h2>
+                <div class="header-actions">
+                    <div class="theme-switch" id="themeSwitchBtnPanel" title="Ganti Tema"><i class="fas fa-moon"></i></div>
+                    <button id="logoutBtn" class="logout-button" title="Keluar"><i class="fas fa-sign-out-alt"></i></button>
+                </div>
+            </header>
+        </div>
         <nav class="admin-tabs">
             <button type="button" class="tab-button active" data-tab="addProduct">Tambah Produk</button>
             <button type="button" class="tab-button" data-tab="manageProducts">Kelola Produk</button>
