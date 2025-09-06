@@ -10,5 +10,12 @@
         "expires": "2025-09-30T23:59:59Z",
         "maxUses": 1,
         "uses": 1
+    },
+    "BABA": {
+        "code": "BABA",
+        "percentage": 10,
+        "expires": "2025-09-06T13:59:00.000Z",
+        "maxUses": 0,
+        "uses": 0
     }
 }
