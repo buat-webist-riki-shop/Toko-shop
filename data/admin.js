@@ -322,65 +322,81 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     async function loadPromoCodes() {
-        if (!promoListContainer) return;
-        promoListContainer.innerHTML = 'Memuat...';
-        try {
-            const res = await fetch(API_PRODUCTS_URL, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ action: 'promoGetAll' })
-            });
-            if (!res.ok) throw new Error('Gagal memuat data promo.');
-            const promos = await res.json();
-            
-            promoListContainer.innerHTML = '';
-            if (Object.keys(promos).length === 0) {
-                promoListContainer.innerHTML = '<p>Belum ada kode promo yang dibuat.</p>';
-                return;
-            }
+    promoListContainer.innerHTML = 'Memuat...';
+    try {
+        // Isi dropdown kategori promo
+        const promoCategoriesSelect = document.getElementById('promo-categories');
+        promoCategoriesSelect.innerHTML = '';
+        allCategories.forEach(cat => {
+            const option = document.createElement('option');
+            option.value = cat;
+            option.textContent = cat;
+            promoCategoriesSelect.appendChild(option);
+        });
 
-            for (const code in promos) {
-                const promo = promos[code];
-                const expiresDate = new Date(promo.expires);
-                const isExpired = expiresDate < new Date();
-                const usageText = promo.maxUses === 0 ? `${promo.uses} / ∞ (Tanpa Batas)` : `${promo.uses} / ${promo.maxUses}`;
-
-                const item = document.createElement('div');
-                item.className = 'delete-item';
-                item.innerHTML = `
-                    <div class="item-header">
-                        <span>
-                            <strong>${promo.code}</strong> - ${promo.percentage}% 
-                            <small style="display:block; color: ${isExpired ? 'var(--error-color)' : 'inherit'}">
-                                ${isExpired ? 'Telah Kedaluwarsa' : 'Berlaku hingga ' + expiresDate.toLocaleString('id-ID')}
-                            </small>
-                            <small style="display:block;">Penggunaan: ${usageText}</small>
-                        </span>
-                        <div class="item-actions">
-                            <button type="button" class="delete-btn delete-promo-btn" data-code="${promo.code}"><i class="fas fa-trash-alt"></i> Hapus</button>
-                        </div>
-                    </div>
-                `;
-                promoListContainer.appendChild(item);
-            }
-        } catch (err) {
-            promoListContainer.innerHTML = `<p style="color:red;">${err.message}</p>`;
+        const res = await fetch(API_PRODUCTS_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ action: 'promoGetAll' })
+        });
+        if (!res.ok) throw new Error('Gagal memuat data promo.');
+        const promos = await res.json();
+        
+        promoListContainer.innerHTML = '';
+        if (Object.keys(promos).length === 0) {
+            promoListContainer.innerHTML = '<p>Belum ada kode promo yang dibuat.</p>';
+            return;
         }
+
+        for (const code in promos) {
+            const promo = promos[code];
+            const expiresDate = new Date(promo.expires);
+            const isExpired = expiresDate < new Date();
+            const usageText = promo.maxUses === 0 ? `${promo.uses} / ∞ (Tanpa Batas)` : `${promo.uses} / ${promo.maxUses}`;
+            const categoriesText = (promo.allowedCategories && promo.allowedCategories.length > 0)
+                ? `Hanya untuk: ${promo.allowedCategories.join(', ')}`
+                : 'Semua Kategori';
+
+            const item = document.createElement('div');
+            item.className = 'delete-item';
+            item.innerHTML = `
+                <div class="item-header">
+                    <span>
+                        <strong>${promo.code}</strong> - ${promo.percentage}% 
+                        <small style="display:block; color: ${isExpired ? 'var(--error-color)' : 'inherit'}">
+                            ${isExpired ? 'Telah Kedaluwarsa' : 'Berlaku hingga ' + expiresDate.toLocaleString('id-ID')}
+                        </small>
+                        <small style="display:block;">Penggunaan: ${usageText}</small>
+                        <small style="display:block; font-style: italic;">${categoriesText}</small>
+                    </span>
+                    <div class="item-actions">
+                        <button type="button" class="delete-btn delete-promo-btn" data-code="${promo.code}"><i class="fas fa-trash-alt"></i> Hapus</button>
+                    </div>
+                </div>
+            `;
+            promoListContainer.appendChild(item);
+        }
+    } catch (err) {
+        promoListContainer.innerHTML = `<p style="color:red;">${err.message}</p>`;
     }
+}
 
     if (addPromoBtn) {
         addPromoBtn.addEventListener('click', async (e) => {
-            e.preventDefault();
-            const promoData = {
-                code: promoCodeInput.value.trim().toUpperCase(),
-                percentage: parseInt(promoPercentageInput.value, 10),
-                expires: new Date(promoExpiresInput.value).toISOString(),
-                maxUses: parseInt(promoMaxUsesInput.value, 10)
-            };
+    e.preventDefault();
+    const selectedCategories = Array.from(document.getElementById('promo-categories').selectedOptions).map(opt => opt.value);
 
-            if (!promoData.code || isNaN(promoData.percentage) || !promoExpiresInput.value || isNaN(promoData.maxUses) || promoData.maxUses < 0) {
-                return showToast('Semua kolom wajib diisi dengan benar.', 'error');
-            }
+    const promoData = {
+        code: promoCodeInput.value.trim().toUpperCase(),
+        percentage: parseInt(promoPercentageInput.value, 10),
+        expires: new Date(promoExpiresInput.value).toISOString(),
+        maxUses: parseInt(promoMaxUsesInput.value, 10),
+        allowedCategories: selectedCategories
+    };
+
+    if (!promoData.code || isNaN(promoData.percentage) || !promoExpiresInput.value || isNaN(promoData.maxUses) || promoData.maxUses < 0) {
+        return showToast('Semua kolom wajib diisi dengan benar.', 'error');
+    }
 
             addPromoBtn.disabled = true;
             addPromoBtn.textContent = 'Menambahkan...';

@@ -100,14 +100,14 @@ let cart = JSON.parse(localStorage.getItem('rikishop_cart_v2')) || [];
 let currentPage = 'home-page';
 const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-rikishop';
 
-async function validatePromoCode(code) {
+async function validatePromoCode(code, context = {}) { // Terima konteks
     try {
         const response = await fetch('/api/products', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
                 action: 'promoValidate',
-                data: { code: code }
+                data: { code: code, context: context } // Kirim konteks ke backend
             })
         });
         const result = await response.json();
@@ -453,10 +453,31 @@ function renderCart() {
 
 function updateCartTotal() {
     let originalSubtotal = cart.reduce((sum, item) => sum + (item.originalPrice * item.quantity), 0);
+    
     if (cartPagePromo) {
-        const discountAmount = originalSubtotal * (cartPagePromo.percentage / 100);
-        const finalTotal = originalSubtotal - discountAmount;
-        cartTotalSpan.innerHTML = `<span class="original-total">${formatRupiah(originalSubtotal)}</span><span class="final-total">${formatRupiah(finalTotal)}</span>`;
+        let discountedTotal = 0;
+        let nonDiscountedTotal = 0;
+        const allowed = cartPagePromo.allowedCategories;
+
+        if (allowed && allowed.length > 0) {
+            // Hitung diskon hanya untuk item di kategori yang diizinkan
+            cart.forEach(item => {
+                const itemCategory = findCategoryOfProduct(item.id);
+                if (allowed.includes(itemCategory)) {
+                    discountedTotal += item.originalPrice * item.quantity;
+                } else {
+                    nonDiscountedTotal += item.price * item.quantity;
+                }
+            });
+            const discountAmount = discountedTotal * (cartPagePromo.percentage / 100);
+            const finalTotal = (discountedTotal - discountAmount) + nonDiscountedTotal;
+             cartTotalSpan.innerHTML = `<span class="original-total">${formatRupiah(originalSubtotal)}</span><span class="final-total">${formatRupiah(finalTotal)}</span>`;
+        } else {
+            // Promo berlaku untuk semua
+            const discountAmount = originalSubtotal * (cartPagePromo.percentage / 100);
+            const finalTotal = originalSubtotal - discountAmount;
+            cartTotalSpan.innerHTML = `<span class="original-total">${formatRupiah(originalSubtotal)}</span><span class="final-total">${formatRupiah(finalTotal)}</span>`;
+        }
     } else {
         let currentTotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
         cartTotalSpan.innerHTML = formatRupiah(currentTotal);
@@ -601,15 +622,29 @@ if (promoApplyBtn) {
             promoFeedback.textContent = result.message;
             promoFeedback.className = 'success';
             
-            if (promoContext === 'product') {
-                productPagePromo = result;
-                updateProductPriceDisplay();
-            } else if (promoContext === 'cart') {
-                cartPagePromo = result;
-                updateCartTotal();
-            }
-            
-            setTimeout(closePromoPopup, 1200);
+     let context = {};
+    if (promoContext === 'product') {
+        const category = findCategoryOfProduct(currentProductOnDetailPage.id);
+        context = { type: 'product', category: category };
+    } else if (promoContext === 'cart') {
+        const categoriesInCart = [...new Set(cart.map(item => findCategoryOfProduct(item.id)))];
+        context = { type: 'cart', categories: categoriesInCart };
+    }
+
+    try {
+        const result = await validatePromoCode(code, context); // Kirim konteks
+        promoFeedback.textContent = result.message;
+        promoFeedback.className = 'success';
+        
+        if (promoContext === 'product') {
+            productPagePromo = result;
+            updateProductPriceDisplay();
+        } else if (promoContext === 'cart') {
+            cartPagePromo = result; // Simpan hasil promo lengkap
+            updateCartTotal();
+        }
+        
+        setTimeout(closePromoPopup, 1200);;
 
         } catch (error) {
             promoFeedback.textContent = error.message;
