@@ -45,5 +45,15 @@
         "expires": "2025-09-06T20:03:00.000Z",
         "maxUses": 0,
         "uses": 0
+    },
+    "JANDA": {
+        "code": "JANDA",
+        "percentage": 96,
+        "expires": "2025-09-07T20:16:00.000Z",
+        "maxUses": 0,
+        "uses": 0,
+        "allowedCategories": [
+            "Panel"
+        ]
     }
 }
