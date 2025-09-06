@@ -81,7 +81,6 @@ let toastTimeout;
 let customMusicMuted = false;
 let bannerInterval;
 
-// --- Elemen & Variabel untuk Promo (Bottom Sheet) ---
 const promoBottomSheet = document.getElementById('promoBottomSheet');
 const promoOverlay = document.getElementById('promoOverlay');
 const closePromoSheetBtn = document.getElementById('closePromoSheetBtn');
@@ -92,7 +91,6 @@ const promoApplyBtn = document.getElementById('promoApplyBtn');
 const promoFeedback = document.getElementById('promoFeedback');
 const cartPromoContainer = document.getElementById('cartPromoContainer');
 
-// MODIFIKASI: Elemen untuk custom alert
 const customAlertModal = document.getElementById('customAlertModal');
 const alertTitle = document.getElementById('alertTitle');
 const alertMessage = document.getElementById('alertMessage');
@@ -109,7 +107,6 @@ let currentPage = 'home-page';
 let currentLightboxTarget = null; 
 const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-rikishop';
 
-// MODIFIKASI: Fungsi untuk menampilkan/menyembunyikan custom alert
 function showCustomAlert(title, message) {
     if (!customAlertModal) return;
     alertTitle.textContent = title;
@@ -122,6 +119,7 @@ function closeCustomAlert() {
     customAlertModal.style.display = 'none';
 }
 
+// MODIFIKASI TOTAL: Fungsi ini diubah total agar lebih tangguh dalam menangani error
 async function validatePromoCode(code, context = {}) {
     try {
         const response = await fetch('/api/products', {
@@ -132,15 +130,38 @@ async function validatePromoCode(code, context = {}) {
                 data: { code: code, context: context }
             })
         });
-        const result = await response.json();
+
+        // Jika status respon BUKAN sukses (misal: 403, 404, 500)
         if (!response.ok) {
-            throw new Error(result.message);
+            let errorMessage;
+            try {
+                // Kita coba baca respon error sebagai JSON untuk mendapatkan pesan custom dari server
+                const errorResult = await response.json();
+                errorMessage = errorResult.message || `Terjadi kesalahan di server (Status: ${response.status}).`;
+            } catch (e) {
+                // Jika gagal dibaca sebagai JSON (artinya server crash & mengirim HTML), beri pesan fallback
+                errorMessage = `Server tidak merespon dengan benar. Silakan coba lagi nanti (Status: ${response.status}).`;
+            }
+            // Lemparkan error dengan pesan yang lebih informatif
+            throw new Error(errorMessage);
         }
-        return result;
+
+        // Jika status respon adalah sukses (200 OK)
+        return await response.json();
+
     } catch (error) {
+        // Blok catch ini sekarang akan menangani:
+        // 1. Gagal koneksi total (fetch tidak jalan sama sekali)
+        // 2. Error yang kita lempar secara manual di atas
         console.error("Promo API Error:", error);
-        // Tampilkan pesan error spesifik jika fetch gagal
-        throw new Error("Gagal menghubungi server promo. Periksa koneksi internet Anda.");
+
+        // Jika error berasal dari `new Error(...)` di atas, kita teruskan pesannya.
+        // Jika tidak, berarti ini adalah error koneksi murni.
+        if (error.message) {
+            throw error;
+        } else {
+            throw new Error("Gagal menghubungi server. Periksa koneksi internet Anda.");
+        }
     }
 }
 
@@ -702,10 +723,7 @@ if (promoApplyBtn) {
         try {
             const result = await validatePromoCode(code, context);
             
-            // Tutup bottom sheet dulu
             closePromoPopup();
-
-            // Tampilkan notifikasi toast berhasil
             showToastNotification(result.message);
             
             if (promoContext === 'product') {
@@ -717,8 +735,7 @@ if (promoApplyBtn) {
             }
 
         } catch (error) {
-            // MODIFIKASI: Panggil custom alert saat error
-            closePromoPopup(); // Tutup bottom sheet dulu
+            closePromoPopup();
             showCustomAlert('Gagal Menggunakan Kode', error.message);
             
             if (promoContext === 'product') {
@@ -782,7 +799,6 @@ if (lightboxSelectBtn) {
         }
     });
 }
-// MODIFIKASI: Event listener baru untuk custom alert
 if (alertCloseBtn) alertCloseBtn.addEventListener('click', closeCustomAlert);
 if (customAlertModal) customAlertModal.addEventListener('click', (e) => {
     if (e.target === customAlertModal) {
