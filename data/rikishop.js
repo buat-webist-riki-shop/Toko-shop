@@ -106,6 +106,8 @@ let cart = JSON.parse(localStorage.getItem('rikishop_cart_v2')) || [];
 let currentPage = 'home-page';
 let currentLightboxTarget = null; 
 const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-rikishop';
+// MODIFIKASI 1: Tambahkan variabel penanda untuk mencegah loop saat tombol kembali ditekan
+let isHandlingPopState = false;
 
 function showCustomAlert(title, message) {
     if (!customAlertModal) return;
@@ -119,7 +121,6 @@ function closeCustomAlert() {
     customAlertModal.style.display = 'none';
 }
 
-// MODIFIKASI TOTAL: Fungsi ini diubah total agar lebih tangguh dalam menangani error
 async function validatePromoCode(code, context = {}) {
     try {
         const response = await fetch('/api/products', {
@@ -131,32 +132,21 @@ async function validatePromoCode(code, context = {}) {
             })
         });
 
-        // Jika status respon BUKAN sukses (misal: 403, 404, 500)
         if (!response.ok) {
             let errorMessage;
             try {
-                // Kita coba baca respon error sebagai JSON untuk mendapatkan pesan custom dari server
                 const errorResult = await response.json();
                 errorMessage = errorResult.message || `Terjadi kesalahan di server (Status: ${response.status}).`;
             } catch (e) {
-                // Jika gagal dibaca sebagai JSON (artinya server crash & mengirim HTML), beri pesan fallback
                 errorMessage = `Server tidak merespon dengan benar. Silakan coba lagi nanti (Status: ${response.status}).`;
             }
-            // Lemparkan error dengan pesan yang lebih informatif
             throw new Error(errorMessage);
         }
 
-        // Jika status respon adalah sukses (200 OK)
         return await response.json();
 
     } catch (error) {
-        // Blok catch ini sekarang akan menangani:
-        // 1. Gagal koneksi total (fetch tidak jalan sama sekali)
-        // 2. Error yang kita lempar secara manual di atas
         console.error("Promo API Error:", error);
-
-        // Jika error berasal dari `new Error(...)` di atas, kita teruskan pesannya.
-        // Jika tidak, berarti ini adalah error koneksi murni.
         if (error.message) {
             throw error;
         } else {
@@ -207,11 +197,17 @@ async function setupFirebaseVisitorCounter() {
     }
 }
 
+// MODIFIKASI 2: Ubah fungsi showPage dan showProductDetail untuk menambahkan entri history
 function showPage(pageId) {
     document.querySelectorAll('.page-content').forEach(page => page.classList.remove('active'));
     document.getElementById(pageId).classList.add('active');
     currentPage = pageId;
     mainContainer.scrollTop = 0;
+
+    // Hanya tambahkan ke history jika ini bukan hasil dari event popstate (tombol kembali)
+    if (!isHandlingPopState) {
+        history.pushState({ page: pageId }, '', `#${pageId.replace('-page', '')}`);
+    }
 }
 
 function formatRupiah(number) {
@@ -385,6 +381,11 @@ function showProductDetail(product, serviceType) {
     }
 
     generateProductActionButtons();
+
+    // Hanya tambahkan ke history jika ini bukan hasil dari event popstate (tombol kembali)
+    if (!isHandlingPopState) {
+        history.pushState({ page: 'product-detail' }, '', `#product/${product.id}`);
+    }
 }
 
 
@@ -773,16 +774,8 @@ if (checkoutButton) {
 if (openCartBtn) openCartBtn.addEventListener('click', () => { showPage('cart-page'); renderCart(); });
 backArrows.forEach(arrow => {
     arrow.addEventListener('click', () => {
-        const backToPageId = arrow.dataset.backTo;
-        if (currentPage === 'service-detail-page' && productDetailViewDiv.style.display === 'block') {
-            const existingMenuBtn = document.querySelector('.check-menu-btn');
-            if (existingMenuBtn) existingMenuBtn.remove();
-            
-            productListDiv.style.display = 'block';
-            productDetailViewDiv.style.display = 'none';
-        } else {
-            showPage(backToPageId || 'home-page');
-        }
+        // Gunakan history.back() agar sesuai dengan perilaku tombol kembali HP
+        history.back();
     });
 });
 if (sliderNextBtn) sliderNextBtn.addEventListener('click', showNextImage);
@@ -861,6 +854,8 @@ async function initializeApp() {
                 welcomeScreen.addEventListener('transitionend', () => {
                     welcomeScreen.style.display = "none";
                     mainContainer.style.display = "flex";
+                    // Ganti state awal di history saat aplikasi siap
+                    history.replaceState({ page: 'home-page' }, '', '#home');
                     showPage('home-page');
                     setupBannerCarousel();
                 }, { once: true });
@@ -873,4 +868,25 @@ document.addEventListener('firebaseReady', () => {
 });
 document.addEventListener('firebaseFailed', () => {
     if(visitorCountDisplay) visitorCountDisplay.querySelector('.count').textContent = 'R/S';
+});
+
+// MODIFIKASI 3: Tambahkan event listener untuk menangani tombol kembali
+window.addEventListener('popstate', function(event) {
+    isHandlingPopState = true;
+
+    // Logika untuk menentukan halaman mana yang harus ditampilkan
+    // Jika detail produk sedang aktif, tombol kembali akan menutupnya dan menampilkan daftar produk
+    if (productDetailViewDiv.style.display === 'block') {
+        productDetailViewDiv.style.display = 'none';
+        productListDiv.style.display = 'block';
+        currentPage = 'service-detail-page'; // Update halaman saat ini secara manual
+    } 
+    // Jika halaman saat ini bukan halaman utama, kembali ke halaman utama
+    else if (currentPage !== 'home-page') {
+        showPage('home-page');
+    } 
+    // Jika sudah di halaman utama, biarkan browser menangani (keluar dari web)
+    
+    // Setel ulang penanda setelah selesai
+    setTimeout(() => { isHandlingPopState = false; }, 100);
 });
