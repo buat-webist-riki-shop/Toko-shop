@@ -617,38 +617,42 @@ if (promoApplyBtn) {
             promoFeedback.className = 'error';
             return;
         }
+
+        // 1. Bangun objek 'context' terlebih dahulu berdasarkan halaman saat ini.
+        let context = {};
+        if (promoContext === 'product') {
+            const category = findCategoryOfProduct(currentProductOnDetailPage.id);
+            context = { type: 'product', category: category };
+        } else if (promoContext === 'cart') {
+            const categoriesInCart = [...new Set(cart.map(item => findCategoryOfProduct(item.id)))];
+            context = { type: 'cart', categories: categoriesInCart };
+        }
+
+        // 2. Lakukan HANYA SATU kali pemanggilan API di dalam satu blok try...catch.
         try {
-            const result = await validatePromoCode(code);
+            // Panggil validatePromoCode dengan menyertakan 'context'.
+            const result = await validatePromoCode(code, context);
+            
             promoFeedback.textContent = result.message;
             promoFeedback.className = 'success';
             
-     let context = {};
-    if (promoContext === 'product') {
-        const category = findCategoryOfProduct(currentProductOnDetailPage.id);
-        context = { type: 'product', category: category };
-    } else if (promoContext === 'cart') {
-        const categoriesInCart = [...new Set(cart.map(item => findCategoryOfProduct(item.id)))];
-        context = { type: 'cart', categories: categoriesInCart };
-    }
-
-    try {
-        const result = await validatePromoCode(code, context); // Kirim konteks
-        promoFeedback.textContent = result.message;
-        promoFeedback.className = 'success';
-        
-        if (promoContext === 'product') {
-            productPagePromo = result;
-            updateProductPriceDisplay();
-        } else if (promoContext === 'cart') {
-            cartPagePromo = result; // Simpan hasil promo lengkap
-            updateCartTotal();
-        }
-        
-        setTimeout(closePromoPopup, 1200);;
+            // Terapkan hasil promo ke halaman yang sesuai.
+            if (promoContext === 'product') {
+                productPagePromo = result;
+                updateProductPriceDisplay();
+            } else if (promoContext === 'cart') {
+                cartPagePromo = result;
+                updateCartTotal();
+            }
+            
+            setTimeout(closePromoPopup, 1200);
 
         } catch (error) {
+            // Tangani jika validasi gagal.
             promoFeedback.textContent = error.message;
             promoFeedback.className = 'error';
+
+            // Hapus promo yang mungkin sebelumnya sudah diterapkan.
             if (promoContext === 'product') {
                 productPagePromo = null;
                 updateProductPriceDisplay();
