@@ -614,24 +614,7 @@
             "discountEndDate": null
         }
     ],
-    "Stock Akun": [
-        {
-            "id": 60,
-            "nama": "Ciabbaja",
-            "harga": 10000,
-            "hargaAsli": 10000,
-            "deskripsiPanjang": "Halo",
-            "createdAt": "2025-09-06T23:49:47.693Z",
-            "nomorWA": "",
-            "images": [
-                "https://img1.pixhost.to/images/8515/638262216_by_rikishopreal.png",
-                "https://img1.pixhost.to/images/8515/638262220_by_rikishopreal.png",
-                "https://img1.pixhost.to/images/8515/638262219_by_rikishopreal.png",
-                "https://img1.pixhost.to/images/8515/638262231_by_rikishopreal.png"
-            ],
-            "menuContent": ""
-        }
-    ],
+    "Stock Akun": [],
     "Logo": [],
     "Suntik Sosmed": []
 }
