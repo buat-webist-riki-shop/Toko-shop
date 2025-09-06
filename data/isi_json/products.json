@@ -614,25 +614,7 @@
             "discountEndDate": null
         }
     ],
-    "Stock Akun": [
-        {
-            "id": 62,
-            "nama": "Jaja",
-            "harga": 64848,
-            "hargaAsli": 64848,
-            "deskripsiPanjang": "Gava",
-            "createdAt": "2025-09-06T20:55:34.565Z",
-            "nomorWA": "",
-            "images": [
-                "https://img1.pixhost.to/images/8512/638210156_by_rikishopreal.jpg",
-                "https://img1.pixhost.to/images/8512/638210157_by_rikishopreal.jpg",
-                "https://img1.pixhost.to/images/8512/638210161_by_rikishopreal.jpg",
-                "https://img1.pixhost.to/images/8512/638210164_by_rikishopreal.jpg",
-                "https://img1.pixhost.to/images/8512/638210166_by_rikishopreal.jpg"
-            ],
-            "menuContent": ""
-        }
-    ],
+    "Stock Akun": [],
     "Logo": [],
     "Suntik Sosmed": []
 }
