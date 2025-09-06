@@ -288,25 +288,57 @@ function showProductDetail(product, serviceType) {
     promoFeedback.textContent = '';
     promoFeedback.className = '';
     detailProductName.textContent = product.nama;
-    detailProductActions.innerHTML = '';
+    detailProductActions.innerHTML = ''; // Kosongkan actions dulu
+    
+    // Tampilkan harga (akan di-update lagi di bawah)
     updateProductPriceDisplay();
+    
+    // Tampilkan deskripsi
+    detailProductDescriptionContent.innerHTML = product.deskripsiPanjang ? product.deskripsiPanjang.replace(/\|\|/g, '<br>') : 'Tidak ada deskripsi.';
+
+    // MODIFIKASI: Tambahkan tombol "Cek Menu" untuk kategori Script
+    if (serviceType === 'Script' && product.menuContent) {
+        const checkMenuBtn = document.createElement('button');
+        checkMenuBtn.className = 'check-menu-btn';
+        checkMenuBtn.innerHTML = '<i class="fas fa-list-alt"></i> Cek Menu';
+        checkMenuBtn.addEventListener('click', () => {
+            genericScriptMenuTitle.textContent = `Menu Script: ${product.nama}`;
+            genericScriptMenuContent.innerHTML = product.menuContent.replace(/\n/g, '<br>');
+            genericScriptMenuModal.style.display = 'flex';
+        });
+        // Sisipkan tombol ini sebelum container actions utama
+        detailProductDescriptionContent.insertAdjacentElement('afterend', checkMenuBtn);
+    }
+    
+    // Tampilkan slider gambar untuk kategori Stock Akun dan Logo
     if ((serviceType === 'Stock Akun' || serviceType === 'Logo') && product.images && product.images.length > 0) {
         stockImageSliderContainer.style.display = 'block';
-        detailProductDescriptionContent.innerHTML = product.deskripsiPanjang ? product.deskripsiPanjang.replace(/\|\|/g, '<br>') : 'Tidak ada deskripsi.';
         stockImageSlider.innerHTML = '';
         product.images.forEach((imgUrl, index) => {
             const slideWrapper = document.createElement('div');
             slideWrapper.className = 'image-slide-wrapper';
-            slideWrapper.dataset.imageUrl = imgUrl;
+            slideWrapper.dataset.imageUrl = imgUrl; // Simpan URL untuk pesan WA
+            
             let slideContent = '';
+
             if (serviceType === 'Stock Akun') {
                 slideContent = `<div class="image-slide" style="background-image: url('${imgUrl}');"></div><span class="image-number-badge">${index + 1}</span>`;
                 slideWrapper.addEventListener('click', () => openLightbox(imgUrl));
-            } else if (serviceType === 'Logo') {
-                slideWrapper.classList.add('logo-selectable');
-                slideContent = `<div class="image-slide" style="background-image: url('${imgUrl}');"></div><div class="logo-overlay"></div><i class="fas fa-check-circle logo-checkmark"></i>`;
-                slideWrapper.addEventListener('click', () => slideWrapper.classList.toggle('selected'));
+            } 
+            // MODIFIKASI: Logika baru untuk kategori Logo
+            else if (serviceType === 'Logo') {
+                slideWrapper.classList.add('logo-selectable'); // Tambah class khusus
+                slideContent = `
+                    <div class="image-slide" style="background-image: url('${imgUrl}');"></div>
+                    <div class="logo-overlay"></div>
+                    <i class="fas fa-check-circle logo-checkmark"></i>
+                `;
+                // Tambahkan event listener untuk memilih/batal memilih logo
+                slideWrapper.addEventListener('click', () => {
+                    slideWrapper.classList.toggle('selected');
+                });
             }
+
             slideWrapper.innerHTML = slideContent;
             stockImageSlider.appendChild(slideWrapper);
         });
@@ -315,9 +347,12 @@ function showProductDetail(product, serviceType) {
         updateSliderPosition();
     } else {
         stockImageSliderContainer.style.display = 'none';
-        detailProductDescriptionContent.innerHTML = product.deskripsiPanjang ? product.deskripsiPanjang.replace(/\|\|/g, '<br>') : 'Tidak ada deskripsi.';
     }
+
+    // Generate tombol action (Beli, Keranjang) setelah semua elemen lain siap
+    generateProductActionButtons();
 }
+
 
 function updateProductPriceDisplay() {
     if (!currentProductOnDetailPage) return;
@@ -331,13 +366,26 @@ function updateProductPriceDisplay() {
         priceHtml = `<span class="original-price"><del>${formatRupiah(originalPrice)}</del></span> <span class="discounted-price">${formatRupiah(finalPrice)}</span>`;
     }
     detailProductPrice.innerHTML = priceHtml;
-    generateProductActionButtons(finalPrice);
+    // Panggil ulang generate tombol untuk update harga di tombol
+    generateProductActionButtons(finalPrice); 
 }
 
 function generateProductActionButtons(currentPrice) {
     let product = currentProductOnDetailPage;
     let serviceType = findCategoryOfProduct(product.id);
-    detailProductActions.innerHTML = '';
+    
+    // Jika currentPrice tidak diberikan, hitung ulang
+    if (typeof currentPrice === 'undefined') {
+        let originalPrice = product.hargaAsli || product.harga;
+        currentPrice = originalPrice;
+        if (productPagePromo) {
+            const discountAmount = originalPrice * (productPagePromo.percentage / 100);
+            currentPrice = originalPrice - discountAmount;
+        }
+    }
+
+    detailProductActions.innerHTML = ''; // Selalu kosongkan dulu
+
     const addToCartBtn = document.createElement('button');
     addToCartBtn.className = 'add-to-cart';
     addToCartBtn.textContent = 'Tambah ke Keranjang';
@@ -358,6 +406,7 @@ function generateProductActionButtons(currentPrice) {
         addToCart(itemData);
     });
     detailProductActions.appendChild(addToCartBtn);
+
     const buyNowLink = document.createElement('a');
     buyNowLink.className = 'buy-now';
     buyNowLink.textContent = 'Beli Sekarang';
@@ -366,16 +415,27 @@ function generateProductActionButtons(currentPrice) {
         e.preventDefault();
         let waMessage;
         const targetPhoneNumber = getPhoneNumberForProduct(product, serviceType);
+        
+        // MODIFIKASI: Logika baru untuk pesan WA kategori Logo
         if (serviceType === 'Logo') {
+            // Dapatkan semua logo yang dipilih
             const selectedImages = document.querySelectorAll('#stockImageSlider .image-slide-wrapper.selected');
+            
+            // Validasi: harus ada minimal 1 logo yang dipilih
             if (selectedImages.length === 0) {
                 showToastNotification('Pilih minimal satu desain logo.', 'fa-exclamation-circle');
                 return;
             }
+            
+            // Buat daftar link gambar dari logo yang dipilih
             let imagesText = '';
-            selectedImages.forEach((imgWrapper, index) => { imagesText += `\n${index + 1}. ${imgWrapper.dataset.imageUrl}`; });
+            selectedImages.forEach((imgWrapper, index) => {
+                imagesText += `\n${index + 1}. ${imgWrapper.dataset.imageUrl}`;
+            });
+            
             waMessage = `Halo Kak, saya tertarik memesan Logo:\n\nProduk: *${product.nama}*\nHarga: *${formatRupiah(currentPrice)}*\n\nDesain yang saya pilih:${imagesText}\n\nMohon info selanjutnya. Terima kasih! 🙏`;
         } else {
+            // Logika default untuk produk lain
             waMessage = `Halo Kak, saya tertarik memesan produk:\n\nProduk: *${product.nama}*\nHarga: *${formatRupiah(currentPrice)}*\n\nMohon info selanjutnya. Terima kasih! 🙏`;
         }
         window.open(`https://wa.me/${targetPhoneNumber}?text=${encodeURIComponent(waMessage)}`, "_blank");
@@ -609,6 +669,8 @@ if (showProductPromoPopupBtn) showProductPromoPopupBtn.addEventListener('click',
 if (showCartPromoPopupBtn) showCartPromoPopupBtn.addEventListener('click', () => openPromoPopup('cart'));
 if (closePromoSheetBtn) closePromoSheetBtn.addEventListener('click', closePromoPopup);
 if (promoOverlay) promoOverlay.addEventListener('click', closePromoPopup);
+
+// KODE PROMO YANG SUDAH DIPERBAIKI
 if (promoApplyBtn) {
     promoApplyBtn.addEventListener('click', async () => {
         const code = promoInput.value.trim();
@@ -618,7 +680,6 @@ if (promoApplyBtn) {
             return;
         }
 
-        // 1. Bangun objek 'context' terlebih dahulu berdasarkan halaman saat ini.
         let context = {};
         if (promoContext === 'product') {
             const category = findCategoryOfProduct(currentProductOnDetailPage.id);
@@ -628,15 +689,11 @@ if (promoApplyBtn) {
             context = { type: 'cart', categories: categoriesInCart };
         }
 
-        // 2. Lakukan HANYA SATU kali pemanggilan API di dalam satu blok try...catch.
         try {
-            // Panggil validatePromoCode dengan menyertakan 'context'.
             const result = await validatePromoCode(code, context);
-            
             promoFeedback.textContent = result.message;
             promoFeedback.className = 'success';
             
-            // Terapkan hasil promo ke halaman yang sesuai.
             if (promoContext === 'product') {
                 productPagePromo = result;
                 updateProductPriceDisplay();
@@ -648,11 +705,9 @@ if (promoApplyBtn) {
             setTimeout(closePromoPopup, 1200);
 
         } catch (error) {
-            // Tangani jika validasi gagal.
             promoFeedback.textContent = error.message;
             promoFeedback.className = 'error';
 
-            // Hapus promo yang mungkin sebelumnya sudah diterapkan.
             if (promoContext === 'product') {
                 productPagePromo = null;
                 updateProductPriceDisplay();
@@ -663,6 +718,7 @@ if (promoApplyBtn) {
         }
     });
 }
+
 if (checkoutButton) {
     checkoutButton.addEventListener('click', () => {
         if (cart.length === 0) return;
@@ -689,6 +745,10 @@ backArrows.forEach(arrow => {
     arrow.addEventListener('click', () => {
         const backToPageId = arrow.dataset.backTo;
         if (currentPage === 'service-detail-page' && productDetailViewDiv.style.display === 'block') {
+            // Hapus tombol cek menu jika ada, untuk mencegah duplikasi saat kembali
+            const existingMenuBtn = document.querySelector('.check-menu-btn');
+            if (existingMenuBtn) existingMenuBtn.remove();
+            
             productListDiv.style.display = 'block';
             productDetailViewDiv.style.display = 'none';
         } else {
@@ -708,6 +768,7 @@ if (overlay) overlay.addEventListener('click', () => { offcanvasMenu.classList.r
 document.querySelectorAll('#offcanvasMenu a').forEach(link => { const pageTarget = link.dataset.page; if (pageTarget) { link.addEventListener('click', (e) => { e.preventDefault(); showPage(pageTarget); offcanvasMenu.classList.remove('active'); overlay.classList.remove('active'); }); } });
 if (openAboutUsModalBtn) openAboutUsModalBtn.addEventListener('click', (e) => { e.preventDefault(); aboutUsModal.style.display = 'flex'; offcanvasMenu.classList.remove('active'); overlay.classList.remove('active'); });
 if (closeAboutUsModalBtn) closeAboutUsModalBtn.addEventListener('click', () => aboutUsModal.style.display = 'none');
+if (closeGenericScriptMenuModalBtn) closeGenericScriptMenuModalBtn.addEventListener('click', () => genericScriptMenuModal.style.display = 'none'); // Pastikan tombol close modal script berfungsi
 if (openChatAiModalBtn) openChatAiModalBtn.addEventListener('click', (e) => { e.preventDefault(); chatAiModal.style.display = 'flex'; offcanvasMenu.classList.remove('active'); overlay.classList.remove('active'); });
 if (closeChatAiModalBtn) closeChatAiModalBtn.addEventListener('click', () => chatAiModal.style.display = 'none');
 if (sendChatAiBtnPage) sendChatAiBtnPage.addEventListener('click', handleSendChatMessagePage);
@@ -764,10 +825,10 @@ async function initializeApp() {
     }, 80);
 }
 document.addEventListener('firebaseReady', () => {
-    initializeApp();
+    // initializeApp(); // Hapus ini karena sudah dipanggil di event listener DOMContentLoaded
     setupFirebaseVisitorCounter();
 });
 document.addEventListener('firebaseFailed', () => {
-    initializeApp();
+    // initializeApp(); // Hapus ini juga
     if(visitorCountDisplay) visitorCountDisplay.querySelector('.count').textContent = 'R/S';
 });
