@@ -31,5 +31,12 @@
         "expires": "2025-09-06T19:37:00.000Z",
         "maxUses": 0,
         "uses": 0
+    },
+    "GABUNG": {
+        "code": "GABUNG",
+        "percentage": 99,
+        "expires": "2025-09-06T20:03:00.000Z",
+        "maxUses": 0,
+        "uses": 0
     }
 }
