@@ -120,6 +120,14 @@ function closeCustomAlert() {
     customAlertModal.style.display = 'none';
 }
 
+// MODIFIKASI: Buat fungsi khusus untuk menutup semua popup
+function closeAllPopups() {
+    if (genericScriptMenuModal) genericScriptMenuModal.style.display = 'none';
+    if (aboutUsModal) aboutUsModal.style.display = 'none';
+    if (chatAiModal) chatAiModal.style.display = 'none';
+    // Tambahkan popup lain di sini jika ada
+}
+
 async function validatePromoCode(code, context = {}) {
     try {
         const response = await fetch('/api/products', {
@@ -197,6 +205,9 @@ async function setupFirebaseVisitorCounter() {
 }
 
 function showPage(pageId) {
+    // MODIFIKASI: Panggil fungsi penutup popup di sini
+    closeAllPopups();
+
     document.querySelectorAll('.page-content').forEach(page => page.classList.remove('active'));
     document.getElementById(pageId).classList.add('active');
     currentPage = pageId;
@@ -331,12 +342,10 @@ function showProductDetail(product, serviceType) {
     
     detailProductDescriptionContent.innerHTML = product.deskripsiPanjang ? product.deskripsiPanjang.replace(/\|\|/g, '<br>') : 'Tidak ada deskripsi.';
 
-    // MODIFIKASI: Hapus tombol "Cek Menu" yang mungkin ada dari tampilan sebelumnya
     const existingMenuBtn = document.querySelector('.check-menu-btn');
     if (existingMenuBtn) {
         existingMenuBtn.remove();
     }
-    // AKHIR MODIFIKASI
 
     if (serviceType === 'Script' && product.menuContent) {
         const checkMenuBtn = document.createElement('button');
@@ -873,6 +882,9 @@ document.addEventListener('firebaseFailed', () => {
 
 window.addEventListener('popstate', function(event) {
     isHandlingPopState = true;
+    
+    // MODIFIKASI: Panggil fungsi penutup popup di sini juga
+    closeAllPopups();
 
     if (productDetailViewDiv.style.display === 'block') {
         productDetailViewDiv.style.display = 'none';
