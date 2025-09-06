@@ -30,5 +30,17 @@
         "allowedCategories": [
             "Script"
         ]
+    },
+    "HAHA": {
+        "code": "HAHA",
+        "percentage": 49,
+        "expires": "2025-09-08T23:56:00.000Z",
+        "maxUses": 0,
+        "uses": 0,
+        "allowedCategories": [
+            "Panel",
+            "VPS",
+            "Script"
+        ]
     }
 }
