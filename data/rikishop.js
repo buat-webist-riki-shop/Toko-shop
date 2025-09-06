@@ -46,7 +46,6 @@ const sliderNextBtn = document.getElementById('sliderNextBtn');
 const imageLightbox = document.getElementById('imageLightbox');
 const lightboxImage = document.getElementById('lightboxImage');
 const lightboxClose = document.querySelector('.lightbox-close');
-// MODIFIKASI: Tambahkan referensi ke tombol pilih di lightbox
 const lightboxActions = document.getElementById('lightboxActions');
 const lightboxSelectBtn = document.getElementById('lightboxSelectBtn');
 let currentStockImageIndex = 0;
@@ -93,6 +92,12 @@ const promoApplyBtn = document.getElementById('promoApplyBtn');
 const promoFeedback = document.getElementById('promoFeedback');
 const cartPromoContainer = document.getElementById('cartPromoContainer');
 
+// MODIFIKASI: Elemen untuk custom alert
+const customAlertModal = document.getElementById('customAlertModal');
+const alertTitle = document.getElementById('alertTitle');
+const alertMessage = document.getElementById('alertMessage');
+const alertCloseBtn = document.getElementById('alertCloseBtn');
+
 let promoContext = '';
 let currentProductOnDetailPage = null;
 let productPagePromo = null;
@@ -101,9 +106,21 @@ let products = {};
 let siteSettings = {};
 let cart = JSON.parse(localStorage.getItem('rikishop_cart_v2')) || [];
 let currentPage = 'home-page';
-// MODIFIKASI: Variabel untuk menyimpan target elemen saat lightbox terbuka
 let currentLightboxTarget = null; 
 const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-rikishop';
+
+// MODIFIKASI: Fungsi untuk menampilkan/menyembunyikan custom alert
+function showCustomAlert(title, message) {
+    if (!customAlertModal) return;
+    alertTitle.textContent = title;
+    alertMessage.innerHTML = message;
+    customAlertModal.style.display = 'flex';
+}
+
+function closeCustomAlert() {
+    if (!customAlertModal) return;
+    customAlertModal.style.display = 'none';
+}
 
 async function validatePromoCode(code, context = {}) {
     try {
@@ -122,7 +139,8 @@ async function validatePromoCode(code, context = {}) {
         return result;
     } catch (error) {
         console.error("Promo API Error:", error);
-        throw new Error("Gagal menghubungi server promo.");
+        // Tampilkan pesan error spesifik jika fetch gagal
+        throw new Error("Gagal menghubungi server promo. Periksa koneksi internet Anda.");
     }
 }
 
@@ -321,10 +339,8 @@ function showProductDetail(product, serviceType) {
             
             let slideContent = '';
 
-            // MODIFIKASI: Logika baru untuk handle klik pada gambar Logo dan Stock Akun
             if (serviceType === 'Stock Akun') {
                 slideContent = `<div class="image-slide" style="background-image: url('${imgUrl}');"></div><span class="image-number-badge">${index + 1}</span>`;
-                // Klik untuk zoom, tanpa tombol pilih
                 slideWrapper.addEventListener('click', () => openLightbox(imgUrl)); 
             } 
             else if (serviceType === 'Logo') {
@@ -334,7 +350,6 @@ function showProductDetail(product, serviceType) {
                     <div class="logo-overlay"></div>
                     <i class="fas fa-check-circle logo-checkmark"></i>
                 `;
-                // Klik untuk zoom, dengan tombol pilih di dalam lightbox
                 slideWrapper.addEventListener('click', () => openLightbox(imgUrl, slideWrapper));
             }
 
@@ -443,13 +458,11 @@ function showPrevImage() {
     updateSliderPosition();
 }
 
-// MODIFIKASI: Fungsi openLightbox diubah untuk menerima elemen target
 function openLightbox(imageUrl, targetElement = null) {
     lightboxImage.src = imageUrl;
     imageLightbox.style.display = 'flex';
-    currentLightboxTarget = targetElement; // Simpan elemen yang diklik
+    currentLightboxTarget = targetElement; 
 
-    // Tampilkan tombol "Pilih Foto" hanya jika targetElement ada (artinya ini adalah Logo)
     if (targetElement) {
         lightboxActions.style.display = 'block';
     } else {
@@ -457,10 +470,9 @@ function openLightbox(imageUrl, targetElement = null) {
     }
 }
 
-// MODIFIKASI: Fungsi closeLightbox diubah untuk mereset target
 function closeLightbox() {
     imageLightbox.style.display = 'none';
-    currentLightboxTarget = null; // Reset target saat lightbox ditutup
+    currentLightboxTarget = null; 
 }
 
 function addToCart(itemData) {
@@ -689,8 +701,12 @@ if (promoApplyBtn) {
 
         try {
             const result = await validatePromoCode(code, context);
-            promoFeedback.textContent = result.message;
-            promoFeedback.className = 'success';
+            
+            // Tutup bottom sheet dulu
+            closePromoPopup();
+
+            // Tampilkan notifikasi toast berhasil
+            showToastNotification(result.message);
             
             if (promoContext === 'product') {
                 productPagePromo = result;
@@ -699,13 +715,12 @@ if (promoApplyBtn) {
                 cartPagePromo = result;
                 updateCartTotal();
             }
-            
-            setTimeout(closePromoPopup, 1200);
 
         } catch (error) {
-            promoFeedback.textContent = error.message;
-            promoFeedback.className = 'error';
-
+            // MODIFIKASI: Panggil custom alert saat error
+            closePromoPopup(); // Tutup bottom sheet dulu
+            showCustomAlert('Gagal Menggunakan Kode', error.message);
+            
             if (promoContext === 'product') {
                 productPagePromo = null;
                 updateProductPriceDisplay();
@@ -759,15 +774,21 @@ if (lightboxClose) lightboxClose.addEventListener('click', closeLightbox);
 if (imageLightbox) imageLightbox.addEventListener('click', (e) => {
     if (e.target === imageLightbox) closeLightbox();
 });
-// MODIFIKASI: Event listener baru untuk tombol "Pilih Foto" di dalam lightbox
 if (lightboxSelectBtn) {
     lightboxSelectBtn.addEventListener('click', () => {
         if (currentLightboxTarget) {
-            currentLightboxTarget.classList.toggle('selected'); // Pilih atau batal pilih
-            closeLightbox(); // Tutup lightbox setelah memilih
+            currentLightboxTarget.classList.toggle('selected');
+            closeLightbox();
         }
     });
 }
+// MODIFIKASI: Event listener baru untuk custom alert
+if (alertCloseBtn) alertCloseBtn.addEventListener('click', closeCustomAlert);
+if (customAlertModal) customAlertModal.addEventListener('click', (e) => {
+    if (e.target === customAlertModal) {
+        closeCustomAlert();
+    }
+});
 
 if (openMenuBtn) openMenuBtn.addEventListener('click', () => { offcanvasMenu.classList.add('active'); overlay.classList.add('active'); });
 if (closeMenuBtn) closeMenuBtn.addEventListener('click', () => { offcanvasMenu.classList.remove('active'); overlay.classList.remove('active'); });

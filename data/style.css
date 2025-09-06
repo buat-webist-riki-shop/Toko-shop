@@ -584,3 +584,87 @@ h3 { font-size: 1.2em; color: var(--primary-color); margin-bottom: 15px; border-
   border-color: #444;
   color: #e0e0e0;
 }
+
+.alert-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.4);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1001; /* Pastikan popup ini selalu paling atas */
+    backdrop-filter: blur(2px);
+    -webkit-backdrop-filter: blur(2px);
+}
+
+.alert-modal-box {
+    background-color: rgba(249, 249, 249, 0.95);
+    color: #000;
+    padding-top: 20px;
+    border-radius: 14px;
+    text-align: center;
+    width: 270px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    animation: alert-popup 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    transform: scale(1);
+    opacity: 1;
+    transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.dark-mode .alert-modal-box {
+    background-color: rgba(44, 44, 46, 0.95);
+    color: #fff;
+}
+
+.alert-title {
+    margin: 0 16px 5px 16px;
+    font-size: 17px;
+    font-weight: 600;
+}
+
+.alert-message {
+    margin: 0 16px 20px 16px;
+    font-size: 14px;
+    line-height: 1.4;
+}
+
+.alert-close-btn {
+    background-color: transparent;
+    border: none;
+    border-top: 1px solid rgba(60, 60, 67, 0.29);
+    color: #007aff;
+    font-size: 17px;
+    font-weight: 600;
+    padding: 12px 0;
+    width: 100%;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.alert-close-btn:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+.dark-mode .alert-close-btn {
+    border-top: 1px solid rgba(84, 84, 88, 0.65);
+    color: #0a84ff;
+}
+
+.dark-mode .alert-close-btn:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+
+@keyframes alert-popup {
+    from {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
