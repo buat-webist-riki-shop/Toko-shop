@@ -614,35 +614,7 @@
             "discountEndDate": null
         }
     ],
-    "Stock Akun": [
-        {
-            "id": 60,
-            "nama": "STOCK POLOSAN || FF",
-            "harga": 15000,
-            "hargaAsli": 15000,
-            "deskripsiPanjang": "LOG FB | DATA ALL AMAN | SPECK LIAT AJA FOTO | BIND KOSONG | VAULT LUMAYAN | SENJATA LUMAYAN | SERVER AKUN INDO",
-            "createdAt": "2025-09-05T21:07:40.649Z",
-            "nomorWA": "",
-            "images": [
-                "https://img1.pixhost.to/images/8489/637949163_by_rikishopreal.jpg",
-                "https://img1.pixhost.to/images/8489/637949166_by_rikishopreal.jpg",
-                "https://img1.pixhost.to/images/8489/637949170_by_rikishopreal.jpg",
-                "https://img1.pixhost.to/images/8489/637949167_by_rikishopreal.jpg",
-                "https://img1.pixhost.to/images/8489/637949180_by_rikishopreal.jpg",
-                "https://img1.pixhost.to/images/8489/637949169_by_rikishopreal.jpg",
-                "https://img1.pixhost.to/images/8489/637949164_by_rikishopreal.jpg",
-                "https://img1.pixhost.to/images/8489/637949172_by_rikishopreal.jpg",
-                "https://img1.pixhost.to/images/8489/637949173_by_rikishopreal.jpg",
-                "https://img1.pixhost.to/images/8489/637949175_by_rikishopreal.jpg",
-                "https://img1.pixhost.to/images/8489/637949174_by_rikishopreal.jpg",
-                "https://img1.pixhost.to/images/8489/637949168_by_rikishopreal.jpg"
-            ],
-            "menuContent": "",
-            "category": "Stock Akun",
-            "discountPrice": null,
-            "discountEndDate": null
-        }
-    ],
+    "Stock Akun": [],
     "Logo": [],
     "Suntik Sosmed": []
 }
