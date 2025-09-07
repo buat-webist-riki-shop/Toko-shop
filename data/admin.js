@@ -324,9 +324,8 @@ document.addEventListener('DOMContentLoaded', () => {
     async function loadPromoCodes() {
         promoListContainer.innerHTML = 'Memuat...';
         try {
-            // MODIFIKASI: Isi dropdown kategori promo dengan kategori yang ada
             const promoCategoriesSelect = document.getElementById('promo-categories');
-            promoCategoriesSelect.innerHTML = ''; // Kosongkan dulu
+            promoCategoriesSelect.innerHTML = '';
             allCategories.forEach(cat => {
                 const option = document.createElement('option');
                 option.value = cat;
@@ -354,7 +353,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 const isExpired = expiresDate < new Date();
                 const usageText = promo.maxUses === 0 ? `${promo.uses} / ∞ (Tanpa Batas)` : `${promo.uses} / ${promo.maxUses}`;
                 
-                // MODIFIKASI: Tampilkan kategori yang diizinkan jika ada
                 const categoriesText = (promo.allowedCategories && promo.allowedCategories.length > 0)
                     ? `Hanya untuk: <strong>${promo.allowedCategories.join(', ')}</strong>`
                     : 'Berlaku untuk Semua Kategori';
@@ -386,7 +384,6 @@ document.addEventListener('DOMContentLoaded', () => {
     if (addPromoBtn) {
         addPromoBtn.addEventListener('click', async (e) => {
             e.preventDefault();
-            // MODIFIKASI: Ambil nilai dari select kategori yang bisa dipilih lebih dari satu
             const selectedCategories = Array.from(document.getElementById('promo-categories').selectedOptions).map(opt => opt.value);
 
             const promoData = {
@@ -394,7 +391,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 percentage: parseInt(promoPercentageInput.value, 10),
                 expires: new Date(promoExpiresInput.value).toISOString(),
                 maxUses: parseInt(promoMaxUsesInput.value, 10),
-                allowedCategories: selectedCategories // Kirim array kategori yang dipilih
+                allowedCategories: selectedCategories
             };
 
             if (!promoData.code || isNaN(promoData.percentage) || !promoExpiresInput.value || isNaN(promoData.maxUses) || promoData.maxUses < 0) {
@@ -445,47 +442,50 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
     
+    // MODIFIKASI 1: Memperbaiki logika penyimpanan icon kategori
     async function addCategoryLogic() {
         const categoryName = newCategoryNameInput.value.trim();
         if (!categoryName) return showToast('Nama kategori tidak boleh kosong.', 'error');
-
+    
         addCategoryBtn.disabled = true;
         addCategoryBtn.textContent = "Menambah...";
-
+    
         try {
+            // Langkah 1: Tambah kategori ke products.json
             const resProd = await fetch(API_PRODUCTS_URL, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ action: 'addCategory', data: { categoryName } })
             });
             const resultProd = await resProd.json();
-            if(!resProd.ok) throw new Error(resultProd.message);
-
-            await loadCategoriesAndSettings();
-
+            if (!resProd.ok) throw new Error(resultProd.message);
+    
+            // Langkah 2: Siapkan data metadata baru
+            let newMetadata = siteSettings.categoryMetadata || {};
+            let iconUrl = "";
+    
+            // Langkah 3: Jika ada file icon, upload dan dapatkan URL-nya
             if (newCategoryIconInput.files.length > 0) {
                 const uploadedUrls = await uploadImages(newCategoryIconInput.files, addCategoryBtn);
                 if (uploadedUrls.length > 0) {
-                    const iconUrl = uploadedUrls[0];
-                    if (!siteSettings.categoryMetadata) {
-                        siteSettings.categoryMetadata = {};
-                    }
-                    siteSettings.categoryMetadata[categoryName] = { icon: iconUrl };
-                    await saveAllSettings(siteSettings);
+                    iconUrl = uploadedUrls[0];
                 }
-            } else {
-                 if (!siteSettings.categoryMetadata) {
-                    siteSettings.categoryMetadata = {};
-                }
-                siteSettings.categoryMetadata[categoryName] = { icon: "" }; 
-                await saveAllSettings(siteSettings);
             }
-
-            showToast(resultProd.message, 'success');
+    
+            // Langkah 4: Tambahkan data icon ke metadata
+            newMetadata[categoryName] = { icon: iconUrl };
+    
+            // Langkah 5: Simpan semua pengaturan yang telah diperbarui
+            const updatedSettings = { ...siteSettings, categoryMetadata: newMetadata };
+            await saveAllSettings(updatedSettings);
+    
+            showToast(`Kategori "${categoryName}" berhasil ditambahkan.`, 'success');
             newCategoryNameInput.value = '';
             newCategoryIconInput.value = '';
+    
+            // Muat ulang semua data agar tampilan sinkron
             await loadCategoriesAndSettings();
-
+    
         } catch (err) {
             showToast(err.message || 'Gagal menambah kategori.', 'error');
         } finally {
@@ -581,7 +581,8 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }
-
+    
+    // MODIFIKASI 2: Menambahkan logika pengecekan diskon saat menampilkan produk di admin
     function renderManageList(productsToRender, category) {
         manageProductList.innerHTML = '';
         productsToRender.forEach(prod => {
@@ -590,12 +591,22 @@ document.addEventListener('DOMContentLoaded', () => {
             item.className = 'delete-item';
             item.setAttribute('draggable', 'true');
             item.dataset.id = prod.id;
-            let priceDisplay = `<span>${formatRupiah(prod.harga)}</span>`;
-            if (prod.hargaAsli && prod.hargaAsli > prod.harga) {
-                priceDisplay = `<span class="original-price"><del>${formatRupiah(prod.hargaAsli)}</del></span> <span class="discounted-price">${formatRupiah(prod.harga)}</span>`;
-            } else if (prod.hargaAsli) {
-                priceDisplay = `<span>${formatRupiah(prod.hargaAsli)}</span>`;
+    
+            // Logika baru untuk menentukan harga yang akan ditampilkan
+            let currentPrice = prod.harga;
+            let originalPrice = prod.hargaAsli;
+            const isDiscountExpired = originalPrice && prod.discountEndDate && new Date(prod.discountEndDate) < new Date();
+    
+            if (isDiscountExpired) {
+                currentPrice = originalPrice; // Jika expired, harga saat ini adalah harga asli
             }
+    
+            let priceDisplay = `<span>${formatRupiah(currentPrice)}</span>`;
+            if (originalPrice && originalPrice > currentPrice && !isDiscountExpired) {
+                // Tampilkan harga coret hanya jika ada harga asli & diskon belum expired
+                priceDisplay = `<span class="original-price"><del>${formatRupiah(originalPrice)}</del></span> <span class="discounted-price">${formatRupiah(currentPrice)}</span>`;
+            }
+    
             item.innerHTML = `
                 <div class="item-header">
                     <span>${prod.nama} - ${priceDisplay} ${isNew ? '<span class="new-badge">NEW</span>' : ''}</span>
@@ -643,7 +654,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 editModalTitle.innerHTML = `<i class="fas fa-edit"></i> Edit Produk: ${product.nama}`;
                 editNameInput.value = product.nama;
                 editPriceInput.value = product.hargaAsli || product.harga;
-                editDiscountPriceInput.value = product.discountPrice || '';
+                editDiscountPriceInput.value = product.hargaAsli > product.harga ? product.harga : '';
                 editDiscountDateInput.value = product.discountEndDate ? product.discountEndDate.slice(0, 16) : '';
                 editDescInput.value = product.deskripsiPanjang ? product.deskripsiPanjang.replace(/ \|\| /g, '\n') : '';
                 editWhatsappNumberInput.value = product.nomorWA || '';
@@ -701,25 +712,27 @@ document.addEventListener('DOMContentLoaded', () => {
                     return showToast("Format Nomor WA salah. Harus diawali kode negara (contoh: 628...)", 'error');
                 }
                 const hargaAsli = parseInt(editPriceInput.value, 10);
-                const discountPrice = editDiscountPriceInput.value ? parseInt(editDiscountPriceInput.value, 10) : null;
+                const discountPriceVal = editDiscountPriceInput.value ? parseInt(editDiscountPriceInput.value, 10) : null;
                 const discountEndDate = editDiscountDateInput.value ? new Date(editDiscountDateInput.value).toISOString() : null;
+                
                 let harga = hargaAsli;
-                if (discountPrice !== null && discountPrice > 0 && discountEndDate && new Date(discountEndDate) > new Date()) {
-                    harga = discountPrice;
+                if (discountPriceVal !== null && discountPriceVal > 0 && discountPriceVal < hargaAsli) {
+                    harga = discountPriceVal;
                 }
+                
                 const productData = {
                     id: parseInt(editProductId.value),
                     category: editProductCategory.value,
                     nama: editNameInput.value.trim(),
                     hargaAsli,
                     harga,
-                    discountPrice,
                     discountEndDate,
                     deskripsiPanjang: editDescInput.value.trim().replace(/\n/g, ' || '),
                     images: [...editPhotoGrid.querySelectorAll('.photo-item img')].map(img => img.src),
                     menuContent: editScriptMenuContent.value.trim(),
                     nomorWA: newWaNumber
                 };
+
                 if (isNaN(productData.hargaAsli) || productData.hargaAsli < 0 || !productData.nama || !productData.deskripsiPanjang) {
                     return showToast('Data tidak valid (Nama, Harga Asli, Deskripsi harus diisi).', 'error');
                 }
