@@ -28,5 +28,13 @@
         "allowedCategories": [
             "Script"
         ]
+    },
+    "GA": {
+        "code": "GA",
+        "percentage": 21,
+        "expires": "2025-09-07T17:30:00.000Z",
+        "maxUses": 1,
+        "uses": 0,
+        "allowedCategories": []
     }
 }
