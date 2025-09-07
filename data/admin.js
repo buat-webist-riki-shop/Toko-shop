@@ -351,7 +351,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 const promo = promos[code];
                 const expiresDate = new Date(promo.expires);
                 const isExpired = expiresDate < new Date();
-                const usageText = promo.maxUses === 0 ? `${promo.uses} / ∞ (Tanpa Batas)` : `${promo.uses} / ${promo.maxUses}`;
+                
+                // MODIFIKASI: Menampilkan jumlah pemakaian
+                const uses = promo.uses || 0;
+                const maxUses = promo.maxUses || 0;
+                const usageText = maxUses === 0 ? `${uses} / ∞ (Tanpa Batas)` : `${uses} / ${maxUses}`;
                 
                 const categoriesText = (promo.allowedCategories && promo.allowedCategories.length > 0)
                     ? `Hanya untuk: <strong>${promo.allowedCategories.join(', ')}</strong>`
@@ -442,7 +446,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
     
-    // MODIFIKASI 1: Memperbaiki logika penyimpanan icon kategori
     async function addCategoryLogic() {
         const categoryName = newCategoryNameInput.value.trim();
         if (!categoryName) return showToast('Nama kategori tidak boleh kosong.', 'error');
@@ -451,7 +454,6 @@ document.addEventListener('DOMContentLoaded', () => {
         addCategoryBtn.textContent = "Menambah...";
     
         try {
-            // Langkah 1: Tambah kategori ke products.json
             const resProd = await fetch(API_PRODUCTS_URL, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -460,11 +462,9 @@ document.addEventListener('DOMContentLoaded', () => {
             const resultProd = await resProd.json();
             if (!resProd.ok) throw new Error(resultProd.message);
     
-            // Langkah 2: Siapkan data metadata baru
             let newMetadata = siteSettings.categoryMetadata || {};
             let iconUrl = "";
     
-            // Langkah 3: Jika ada file icon, upload dan dapatkan URL-nya
             if (newCategoryIconInput.files.length > 0) {
                 const uploadedUrls = await uploadImages(newCategoryIconInput.files, addCategoryBtn);
                 if (uploadedUrls.length > 0) {
@@ -472,10 +472,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             }
     
-            // Langkah 4: Tambahkan data icon ke metadata
             newMetadata[categoryName] = { icon: iconUrl };
     
-            // Langkah 5: Simpan semua pengaturan yang telah diperbarui
             const updatedSettings = { ...siteSettings, categoryMetadata: newMetadata };
             await saveAllSettings(updatedSettings);
     
@@ -483,7 +481,6 @@ document.addEventListener('DOMContentLoaded', () => {
             newCategoryNameInput.value = '';
             newCategoryIconInput.value = '';
     
-            // Muat ulang semua data agar tampilan sinkron
             await loadCategoriesAndSettings();
     
         } catch (err) {
@@ -582,7 +579,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
     
-    // MODIFIKASI 2: Menambahkan logika pengecekan diskon saat menampilkan produk di admin
     function renderManageList(productsToRender, category) {
         manageProductList.innerHTML = '';
         productsToRender.forEach(prod => {
@@ -592,18 +588,16 @@ document.addEventListener('DOMContentLoaded', () => {
             item.setAttribute('draggable', 'true');
             item.dataset.id = prod.id;
     
-            // Logika baru untuk menentukan harga yang akan ditampilkan
             let currentPrice = prod.harga;
             let originalPrice = prod.hargaAsli;
             const isDiscountExpired = originalPrice && prod.discountEndDate && new Date(prod.discountEndDate) < new Date();
     
             if (isDiscountExpired) {
-                currentPrice = originalPrice; // Jika expired, harga saat ini adalah harga asli
+                currentPrice = originalPrice;
             }
     
             let priceDisplay = `<span>${formatRupiah(currentPrice)}</span>`;
             if (originalPrice && originalPrice > currentPrice && !isDiscountExpired) {
-                // Tampilkan harga coret hanya jika ada harga asli & diskon belum expired
                 priceDisplay = `<span class="original-price"><del>${formatRupiah(originalPrice)}</del></span> <span class="discounted-price">${formatRupiah(currentPrice)}</span>`;
             }
     
