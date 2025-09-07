@@ -310,10 +310,22 @@ function loadServiceProducts(serviceType) {
             const productItem = document.createElement('div');
             productItem.classList.add('product-item');
             let isNew = product.createdAt && (Date.now() - new Date(product.createdAt).getTime() < 86400000);
+            
             let finalPrice = product.harga;
-            if (product.discountEndDate && new Date(product.discountEndDate) < new Date()) { finalPrice = product.hargaAsli; }
-            let priceDisplay = `<span class="product-price-list">${formatRupiah(finalPrice)}</span>`;
-            if (product.hargaAsli && product.hargaAsli > finalPrice) { priceDisplay = `<span class="original-price"><del>${formatRupiah(product.hargaAsli)}</del></span> <span class="discounted-price">${formatRupiah(finalPrice)}</span>`; }
+            let priceToDisplay = product.harga;
+            let originalPriceToDisplay = product.hargaAsli;
+
+            // Logika untuk cek apakah diskon sudah kedaluwarsa
+            const isDiscountExpired = originalPriceToDisplay && product.discountEndDate && new Date(product.discountEndDate) < new Date();
+            if (isDiscountExpired) {
+                priceToDisplay = originalPriceToDisplay;
+            }
+
+            let priceDisplay = `<span class="product-price-list">${formatRupiah(priceToDisplay)}</span>`;
+            if (originalPriceToDisplay && originalPriceToDisplay > priceToDisplay && !isDiscountExpired) { 
+                priceDisplay = `<span class="original-price"><del>${formatRupiah(originalPriceToDisplay)}</del></span> <span class="discounted-price">${formatRupiah(priceToDisplay)}</span>`; 
+            }
+
             productItem.innerHTML = `<div><span class="product-name">${product.nama} ${isNew ? '<span class="new-badge">NEW</span>' : ''}</span><p class="product-short-desc">${product.deskripsiPanjang ? product.deskripsiPanjang.split('||')[0].trim() + '...' : ''}</p>${priceDisplay}</div><i class="fas fa-chevron-right"></i>`;
             productItem.addEventListener('click', () => showProductDetail(product, serviceType));
             productListDiv.appendChild(productItem);
@@ -335,6 +347,7 @@ function showProductDetail(product, serviceType) {
     detailProductName.textContent = product.nama;
     detailProductActions.innerHTML = ''; 
     
+    // Panggil update harga, yang akan menangani semua logika diskon & promo
     updateProductPriceDisplay();
     
     detailProductDescriptionContent.innerHTML = product.deskripsiPanjang ? product.deskripsiPanjang.replace(/\|\|/g, '<br>') : 'Tidak ada deskripsi.';
@@ -344,41 +357,11 @@ function showProductDetail(product, serviceType) {
         existingMenuBtn.remove();
     }
     
-    // MODIFIKASI: Hentikan dan sembunyikan timer dari produk sebelumnya
     if (countdownInterval) clearInterval(countdownInterval);
     countdownTimerDiv.style.display = 'none';
 
-    // MODIFIKASI: Cek dan jalankan timer jika ada diskon aktif
-    const hasActiveDiscount = product.hargaAsli && product.harga < product.hargaAsli && product.discountEndDate;
-    if (hasActiveDiscount) {
-        const endDate = new Date(product.discountEndDate).getTime();
-        
-        const updateCountdown = () => {
-            const now = new Date().getTime();
-            const distance = endDate - now;
-
-            if (distance < 0) {
-                clearInterval(countdownInterval);
-                countdownTimerDiv.style.display = 'none';
-                // Opsional: perbarui harga di tampilan jika diskon sudah berakhir
-                // updateProductPriceDisplay(); 
-                return;
-            }
-
-            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-            
-            const countdownDisplay = document.getElementById('countdown-display');
-            countdownDisplay.innerHTML = `<span>${days}h</span> <span>${hours}j</span> <span>${minutes}m</span> <span>${seconds}d</span>`;
-            countdownTimerDiv.style.display = 'block';
-        };
-
-        updateCountdown(); // Jalankan sekali agar tidak ada delay 1 detik
-        countdownInterval = setInterval(updateCountdown, 1000);
-    }
-
+    // Logika timer dipindahkan ke dalam updateProductPriceDisplay
+    
     if (serviceType === 'Script' && product.menuContent) {
         const checkMenuBtn = document.createElement('button');
         checkMenuBtn.className = 'check-menu-btn';
@@ -425,42 +408,78 @@ function showProductDetail(product, serviceType) {
         stockImageSliderContainer.style.display = 'none';
     }
 
-    generateProductActionButtons();
-
     if (!isHandlingPopState) {
         history.pushState({ page: 'product-detail' }, '', `#product/${product.id}`);
     }
 }
 
-
+// MODIFIKASI TOTAL: Fungsi ini ditulis ulang untuk menangani semua kondisi harga dan timer
 function updateProductPriceDisplay() {
     if (!currentProductOnDetailPage) return;
     let product = currentProductOnDetailPage;
-    let originalPrice = product.hargaAsli || product.harga;
-    let finalPrice = originalPrice;
-    let priceHtml = formatRupiah(originalPrice);
-    if (productPagePromo) {
-        const discountAmount = originalPrice * (productPagePromo.percentage / 100);
-        finalPrice = originalPrice - discountAmount;
-        priceHtml = `<span class="original-price"><del>${formatRupiah(originalPrice)}</del></span> <span class="discounted-price">${formatRupiah(finalPrice)}</span>`;
+    let priceHtml = '';
+    let finalPriceForActions = 0;
+    
+    const basePrice = product.hargaAsli || product.harga;
+    const discountPrice = product.harga;
+
+    // Hentikan timer lama sebelum memulai yang baru
+    if (countdownInterval) clearInterval(countdownInterval);
+    countdownTimerDiv.style.display = 'none';
+
+    // Cek apakah diskon produk bawaan aktif dan belum kedaluwarsa
+    const isDiscountActive = basePrice > discountPrice && product.discountEndDate && new Date(product.discountEndDate) > new Date();
+
+    if (isDiscountActive) {
+        // Jika diskon aktif, tampilkan harga coret dan harga diskon
+        priceHtml = `<span class="original-price"><del>${formatRupiah(basePrice)}</del></span> <span class="discounted-price">${formatRupiah(discountPrice)}</span>`;
+        finalPriceForActions = discountPrice;
+        
+        // Jalankan countdown timer
+        const endDate = new Date(product.discountEndDate).getTime();
+        const updateCountdown = () => {
+            const now = new Date().getTime();
+            const distance = endDate - now;
+
+            if (distance < 0) {
+                clearInterval(countdownInterval);
+                // Jika waktu habis, panggil ulang fungsi ini untuk render ulang harga ke normal
+                updateProductPriceDisplay();
+                return;
+            }
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+            
+            const countdownDisplay = document.getElementById('countdown-display');
+            countdownDisplay.innerHTML = `<span>${days}h</span> <span>${hours}j</span> <span>${minutes}m</span> <span>${seconds}d</span>`;
+            countdownTimerDiv.style.display = 'block';
+        };
+        updateCountdown();
+        countdownInterval = setInterval(updateCountdown, 1000);
+    } else {
+        // Jika tidak ada diskon aktif, tampilkan harga normal
+        priceHtml = formatRupiah(basePrice);
+        finalPriceForActions = basePrice;
     }
+    
+    // Setelah harga produk ditentukan, cek apakah ada KODE PROMO yang diterapkan
+    if (productPagePromo) {
+        const priceToDiscount = basePrice; // Promo selalu dihitung dari harga asli
+        const promoDiscountAmount = priceToDiscount * (productPagePromo.percentage / 100);
+        finalPriceForActions = priceToDiscount - promoDiscountAmount;
+        priceHtml = `<span class="original-price" style="text-decoration: line-through;"><del>${formatRupiah(basePrice)}</del></span> <span class="discounted-price">${formatRupiah(finalPriceForActions)}</span>`;
+    }
+
     detailProductPrice.innerHTML = priceHtml;
-    generateProductActionButtons(finalPrice); 
+    generateProductActionButtons(finalPriceForActions);
 }
 
 function generateProductActionButtons(currentPrice) {
     let product = currentProductOnDetailPage;
     let serviceType = findCategoryOfProduct(product.id);
     
-    if (typeof currentPrice === 'undefined') {
-        let originalPrice = product.hargaAsli || product.harga;
-        currentPrice = originalPrice;
-        if (productPagePromo) {
-            const discountAmount = originalPrice * (productPagePromo.percentage / 100);
-            currentPrice = originalPrice - discountAmount;
-        }
-    }
-
     detailProductActions.innerHTML = ''; 
 
     const addToCartBtn = document.createElement('button');
@@ -663,6 +682,7 @@ function findCategoryOfProduct(productId) {
     return null;
 }
 
+// Sisa kode di bawah sini tidak ada perubahan
 function getAiResponse(input) {
     const lowerInput = input.toLowerCase();
     const responses = {
