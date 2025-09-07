@@ -120,12 +120,10 @@ function closeCustomAlert() {
     customAlertModal.style.display = 'none';
 }
 
-// MODIFIKASI: Buat fungsi khusus untuk menutup semua popup
 function closeAllPopups() {
     if (genericScriptMenuModal) genericScriptMenuModal.style.display = 'none';
     if (aboutUsModal) aboutUsModal.style.display = 'none';
     if (chatAiModal) chatAiModal.style.display = 'none';
-    // Tambahkan popup lain di sini jika ada
 }
 
 async function validatePromoCode(code, context = {}) {
@@ -205,7 +203,6 @@ async function setupFirebaseVisitorCounter() {
 }
 
 function showPage(pageId) {
-    // MODIFIKASI: Panggil fungsi penutup popup di sini
     closeAllPopups();
 
     document.querySelectorAll('.page-content').forEach(page => page.classList.remove('active'));
@@ -345,6 +342,41 @@ function showProductDetail(product, serviceType) {
     const existingMenuBtn = document.querySelector('.check-menu-btn');
     if (existingMenuBtn) {
         existingMenuBtn.remove();
+    }
+    
+    // MODIFIKASI: Hentikan dan sembunyikan timer dari produk sebelumnya
+    if (countdownInterval) clearInterval(countdownInterval);
+    countdownTimerDiv.style.display = 'none';
+
+    // MODIFIKASI: Cek dan jalankan timer jika ada diskon aktif
+    const hasActiveDiscount = product.hargaAsli && product.harga < product.hargaAsli && product.discountEndDate;
+    if (hasActiveDiscount) {
+        const endDate = new Date(product.discountEndDate).getTime();
+        
+        const updateCountdown = () => {
+            const now = new Date().getTime();
+            const distance = endDate - now;
+
+            if (distance < 0) {
+                clearInterval(countdownInterval);
+                countdownTimerDiv.style.display = 'none';
+                // Opsional: perbarui harga di tampilan jika diskon sudah berakhir
+                // updateProductPriceDisplay(); 
+                return;
+            }
+
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+            
+            const countdownDisplay = document.getElementById('countdown-display');
+            countdownDisplay.innerHTML = `<span>${days}h</span> <span>${hours}j</span> <span>${minutes}m</span> <span>${seconds}d</span>`;
+            countdownTimerDiv.style.display = 'block';
+        };
+
+        updateCountdown(); // Jalankan sekali agar tidak ada delay 1 detik
+        countdownInterval = setInterval(updateCountdown, 1000);
     }
 
     if (serviceType === 'Script' && product.menuContent) {
@@ -883,7 +915,6 @@ document.addEventListener('firebaseFailed', () => {
 window.addEventListener('popstate', function(event) {
     isHandlingPopState = true;
     
-    // MODIFIKASI: Panggil fungsi penutup popup di sini juga
     closeAllPopups();
 
     if (productDetailViewDiv.style.display === 'block') {
