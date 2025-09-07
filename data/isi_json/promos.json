@@ -18,5 +18,15 @@
         "allowedCategories": [
             "Script"
         ]
+    },
+    "A": {
+        "code": "A",
+        "percentage": 68,
+        "expires": "2025-09-09T15:01:00.000Z",
+        "maxUses": 1,
+        "uses": 0,
+        "allowedCategories": [
+            "Script"
+        ]
     }
 }
