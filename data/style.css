@@ -699,3 +699,43 @@ h3 { font-size: 1.2em; color: var(--primary-color); margin-bottom: 15px; border-
     font-weight: bold;
     margin: 0 2px;
 }
+
+.promo-confirm-actions {
+    display: flex;
+    width: 100%;
+    border-top: 1px solid rgba(60, 60, 67, 0.29);
+    margin-top: 20px;
+}
+
+.dark-mode .promo-confirm-actions {
+    border-top: 1px solid rgba(84, 84, 88, 0.65);
+}
+
+.promo-confirm-btn {
+    flex: 1;
+    background: transparent;
+    border: none;
+    padding: 12px 5px;
+    font-size: 17px;
+    cursor: pointer;
+    font-weight: 400;
+}
+
+.promo-confirm-btn.cancel {
+    color: #007aff;
+    border-right: 1px solid rgba(60, 60, 67, 0.29);
+}
+
+.dark-mode .promo-confirm-btn.cancel {
+    color: #0a84ff;
+    border-right: 1px solid rgba(84, 84, 88, 0.65);
+}
+
+.promo-confirm-btn.ok {
+    color: #007aff;
+    font-weight: 600;
+}
+
+.dark-mode .promo-confirm-btn.ok {
+    color: #0a84ff;
+}

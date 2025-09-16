@@ -96,6 +96,13 @@ const alertTitle = document.getElementById('alertTitle');
 const alertMessage = document.getElementById('alertMessage');
 const alertCloseBtn = document.getElementById('alertCloseBtn');
 
+// MODIFIKASI: Tambah elemen untuk modal konfirmasi promo
+const promoConfirmModal = document.getElementById('promoConfirmModal');
+const promoConfirmTitle = document.getElementById('promoConfirmTitle');
+const promoConfirmMessage = document.getElementById('promoConfirmMessage');
+const promoConfirmOkBtn = document.getElementById('promoConfirmOkBtn');
+const promoConfirmCancelBtn = document.getElementById('promoConfirmCancelBtn');
+
 let promoContext = '';
 let currentProductOnDetailPage = null;
 let productPagePromo = null;
@@ -118,6 +125,28 @@ function showCustomAlert(title, message) {
 function closeCustomAlert() {
     if (!customAlertModal) return;
     customAlertModal.style.display = 'none';
+}
+
+// MODIFIKASI: Fungsi baru untuk menampilkan modal konfirmasi
+function showPromoConfirm(title, message) {
+    return new Promise((resolve) => {
+        if (!promoConfirmModal) {
+            resolve(false); // Jika elemen tidak ada, anggap batal
+            return;
+        }
+        promoConfirmTitle.textContent = title;
+        promoConfirmMessage.innerHTML = message;
+        promoConfirmModal.style.display = 'flex';
+
+        promoConfirmOkBtn.onclick = () => {
+            promoConfirmModal.style.display = 'none';
+            resolve(true);
+        };
+        promoConfirmCancelBtn.onclick = () => {
+            promoConfirmModal.style.display = 'none';
+            resolve(false);
+        };
+    });
 }
 
 function closeAllPopups() {
@@ -160,6 +189,7 @@ async function validatePromoCode(code, context = {}) {
     }
 }
 
+// ... (sisa fungsi sampai showPage tetap sama) ...
 async function setupFirebaseVisitorCounter() {
     if (!visitorCountSpan) return;
     visitorCountSpan.textContent = '-';
@@ -431,7 +461,6 @@ function updateProductPriceDisplay() {
 
             if (distance < 0) {
                 clearInterval(countdownInterval);
-                // Jika waktu habis, panggil ulang fungsi ini untuk render ulang harga ke normal
                 updateProductPriceDisplay();
                 return;
             }
@@ -752,6 +781,7 @@ if (showCartPromoPopupBtn) showCartPromoPopupBtn.addEventListener('click', () =>
 if (closePromoSheetBtn) closePromoSheetBtn.addEventListener('click', closePromoPopup);
 if (promoOverlay) promoOverlay.addEventListener('click', closePromoPopup);
 
+// MODIFIKASI: Alur penerapan promo ditulis ulang sepenuhnya
 if (promoApplyBtn) {
     promoApplyBtn.addEventListener('click', async () => {
         const code = promoInput.value.trim();
@@ -764,24 +794,62 @@ if (promoApplyBtn) {
         let context = {};
         if (promoContext === 'product') {
             const category = findCategoryOfProduct(currentProductOnDetailPage.id);
-            context = { type: 'product', category: category };
+            context = {
+                type: 'product',
+                category: category,
+                productId: currentProductOnDetailPage.id // Kirim ID produk
+            };
         } else if (promoContext === 'cart') {
             const categoriesInCart = [...new Set(cart.map(item => findCategoryOfProduct(item.id)))];
-            context = { type: 'cart', categories: categoriesInCart };
+            context = {
+                type: 'cart',
+                categories: categoriesInCart
+            };
         }
 
         try {
+            // Langkah 1: Validasi kode
             const result = await validatePromoCode(code, context);
             
             closePromoPopup();
-            showToastNotification(result.message);
-            
+
+            // Langkah 2: Cek apakah butuh konfirmasi (untuk kode 1x pakai)
+            if (result.maxUses === 1) {
+                const isConfirmed = await showPromoConfirm(
+                    'Konfirmasi Penggunaan Kode',
+                    'Kode ini hanya untuk 1x penerapan dan tidak bisa digunakan lagi setelah ini. Lanjutkan?'
+                );
+                if (!isConfirmed) {
+                    return; // Jika pengguna membatalkan, proses berhenti
+                }
+            }
+
+            // Langkah 3: Jika valid (dan dikonfirmasi jika perlu), catat pemakaiannya di server
+            await fetch('/api/products', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ action: 'promoUse', data: { code: code } })
+            });
+
+            // Langkah 4: Terapkan promo di tampilan & beri notifikasi
             if (promoContext === 'product') {
                 productPagePromo = result;
                 updateProductPriceDisplay();
             } else if (promoContext === 'cart') {
                 cartPagePromo = result;
                 updateCartTotal();
+            }
+
+            // Langkah 5: Beri notifikasi sesuai sisa kuota
+            const remaining = result.maxUses - (result.uses + 1);
+            if (result.maxUses > 1) {
+                if (remaining > 0) {
+                    showToastNotification(`Promo berhasil! Kode tersisa ${remaining}x lagi.`);
+                } else {
+                    showToastNotification('Promo berhasil! Ini adalah penggunaan terakhir untuk kode ini.');
+                }
+            } else {
+                showToastNotification(result.message);
             }
 
         } catch (error) {
@@ -846,6 +914,12 @@ if (customAlertModal) customAlertModal.addEventListener('click', (e) => {
         closeCustomAlert();
     }
 });
+if (promoConfirmModal) promoConfirmModal.addEventListener('click', (e) => {
+    if(e.target === promoConfirmModal) {
+        promoConfirmCancelBtn.click();
+    }
+});
+
 
 if (openMenuBtn) openMenuBtn.addEventListener('click', () => { offcanvasMenu.classList.add('active'); overlay.classList.add('active'); });
 if (closeMenuBtn) closeMenuBtn.addEventListener('click', () => { offcanvasMenu.classList.remove('active'); overlay.classList.remove('active'); });
