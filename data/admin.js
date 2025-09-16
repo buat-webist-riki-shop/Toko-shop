@@ -76,6 +76,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const promoMaxUsesInput = document.getElementById('promo-max-uses');
     const addPromoBtn = document.getElementById('add-promo-btn');
     const promoListContainer = document.getElementById('promo-list-container');
+    // MODIFIKASI: Tambah variabel untuk dropdown promo baru
+    const promoCategoriesSelect = document.getElementById('promo-categories');
+    const promoProductSelect = document.getElementById('promo-product');
 
     // Alamat API
     const API_PRODUCTS_URL = '/api/products';
@@ -84,6 +87,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let activeToastTimeout = null;
     let siteSettings = {};
     let allCategories = [];
+    let allProducts = {}; // Simpan semua produk untuk lookup
     
     async function uploadImages(fileList, buttonElement) {
         if (!fileList || fileList.length === 0) {
@@ -220,6 +224,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const productsRes = await fetch(`data/isi_json/products.json?v=${Date.now()}`);
             if (!productsRes.ok) throw new Error('Gagal memuat produk untuk kategori.');
             const productsData = await productsRes.json();
+            allProducts = productsData; // Simpan data produk lengkap
             allCategories = Object.keys(productsData);
 
             const categoryDropdowns = document.querySelectorAll('#category, #manage-category');
@@ -321,10 +326,11 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
+    // MODIFIKASI: Fungsi loadPromoCodes diubah untuk mengisi semua dropdown
     async function loadPromoCodes() {
         promoListContainer.innerHTML = 'Memuat...';
         try {
-            const promoCategoriesSelect = document.getElementById('promo-categories');
+            // Isi dropdown kategori
             promoCategoriesSelect.innerHTML = '';
             allCategories.forEach(cat => {
                 const option = document.createElement('option');
@@ -332,6 +338,18 @@ document.addEventListener('DOMContentLoaded', () => {
                 option.textContent = cat;
                 promoCategoriesSelect.appendChild(option);
             });
+            promoCategoriesSelect.value = '';
+
+            // Isi dropdown produk
+            promoProductSelect.innerHTML = '<option value="">-- Tidak Ada --</option>'; // Reset
+            for (const category in allProducts) {
+                allProducts[category].forEach(product => {
+                    const option = document.createElement('option');
+                    option.value = product.id;
+                    option.textContent = `${category} - ${product.nama}`;
+                    promoProductSelect.appendChild(option);
+                });
+            }
 
             const res = await fetch(API_PRODUCTS_URL, {
                 method: 'POST',
@@ -351,15 +369,23 @@ document.addEventListener('DOMContentLoaded', () => {
                 const promo = promos[code];
                 const expiresDate = new Date(promo.expires);
                 const isExpired = expiresDate < new Date();
+                const usageText = promo.maxUses === 0 ? `${promo.uses || 0} / ∞` : `${promo.uses || 0} / ${promo.maxUses}`;
                 
-                // MODIFIKASI: Menampilkan jumlah pemakaian
-                const uses = promo.uses || 0;
-                const maxUses = promo.maxUses || 0;
-                const usageText = maxUses === 0 ? `${uses} / ∞ (Tanpa Batas)` : `${uses} / ${maxUses}`;
-                
-                const categoriesText = (promo.allowedCategories && promo.allowedCategories.length > 0)
-                    ? `Hanya untuk: <strong>${promo.allowedCategories.join(', ')}</strong>`
-                    : 'Berlaku untuk Semua Kategori';
+                let restrictionText = 'Berlaku untuk Semua';
+                if (promo.allowedProductId) {
+                    let productName = 'Produk Dihapus';
+                    // Cari nama produk berdasarkan ID
+                    for (const category in allProducts) {
+                        const found = allProducts[category].find(p => p.id === promo.allowedProductId);
+                        if (found) {
+                            productName = found.nama;
+                            break;
+                        }
+                    }
+                    restrictionText = `Hanya untuk: <strong>${productName}</strong>`;
+                } else if (promo.allowedCategories && promo.allowedCategories.length > 0) {
+                    restrictionText = `Kategori: <strong>${promo.allowedCategories.join(', ')}</strong>`;
+                }
 
                 const item = document.createElement('div');
                 item.className = 'delete-item';
@@ -368,10 +394,10 @@ document.addEventListener('DOMContentLoaded', () => {
                         <span>
                             <strong>${promo.code}</strong> - ${promo.percentage}% 
                             <small style="display:block; color: ${isExpired ? 'var(--error-color)' : 'inherit'}">
-                                ${isExpired ? 'Telah Kedaluwarsa' : 'Berlaku hingga ' + expiresDate.toLocaleString('id-ID')}
+                                ${isExpired ? 'Kedaluwarsa' : 's/d ' + expiresDate.toLocaleString('id-ID')}
                             </small>
                             <small style="display:block;">Penggunaan: ${usageText}</small>
-                            <small style="display:block; font-style: italic;">${categoriesText}</small>
+                            <small style="display:block; font-style: italic;">${restrictionText}</small>
                         </span>
                         <div class="item-actions">
                             <button type="button" class="delete-btn delete-promo-btn" data-code="${promo.code}"><i class="fas fa-trash-alt"></i> Hapus</button>
@@ -388,14 +414,17 @@ document.addEventListener('DOMContentLoaded', () => {
     if (addPromoBtn) {
         addPromoBtn.addEventListener('click', async (e) => {
             e.preventDefault();
-            const selectedCategories = Array.from(document.getElementById('promo-categories').selectedOptions).map(opt => opt.value);
+            
+            const selectedProductId = parseInt(promoProductSelect.value, 10) || null;
+            const selectedCategories = selectedProductId ? [] : Array.from(promoCategoriesSelect.selectedOptions).map(opt => opt.value);
 
             const promoData = {
                 code: promoCodeInput.value.trim().toUpperCase(),
                 percentage: parseInt(promoPercentageInput.value, 10),
                 expires: new Date(promoExpiresInput.value).toISOString(),
                 maxUses: parseInt(promoMaxUsesInput.value, 10),
-                allowedCategories: selectedCategories
+                allowedCategories: selectedCategories,
+                allowedProductId: selectedProductId
             };
 
             if (!promoData.code || isNaN(promoData.percentage) || !promoExpiresInput.value || isNaN(promoData.maxUses) || promoData.maxUses < 0) {
@@ -415,6 +444,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 showToast(result.message, 'success');
                 addPromoForm.reset();
+                promoCategoriesSelect.disabled = false;
+                promoProductSelect.disabled = false;
                 loadPromoCodes();
             } catch (err) {
                 showToast(err.message, 'error');
@@ -424,6 +455,30 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }
+
+    // MODIFIKASI: Tambah event listener untuk disable/enable pilihan promo
+    if (promoCategoriesSelect) {
+        promoCategoriesSelect.addEventListener('change', () => {
+            if (promoCategoriesSelect.selectedOptions.length > 0) {
+                promoProductSelect.value = '';
+                promoProductSelect.disabled = true;
+            } else {
+                promoProductSelect.disabled = false;
+            }
+        });
+    }
+    if (promoProductSelect) {
+        promoProductSelect.addEventListener('change', () => {
+            if (promoProductSelect.value) {
+                // Hapus semua pilihan di multi-select
+                Array.from(promoCategoriesSelect.options).forEach(opt => opt.selected = false);
+                promoCategoriesSelect.disabled = true;
+            } else {
+                promoCategoriesSelect.disabled = false;
+            }
+        });
+    }
+
     
     async function saveAllSettings(updatedSettings) {
         saveSettingsButton.disabled = true;
