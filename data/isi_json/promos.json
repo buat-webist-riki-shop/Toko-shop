@@ -4,7 +4,7 @@
         "percentage": 50,
         "expires": "2025-09-17T16:17:00.000Z",
         "maxUses": 2,
-        "uses": 1,
+        "uses": 2,
         "allowedCategories": [],
         "allowedProductId": 12
     }
