@@ -43,6 +43,7 @@
                 </div>
             </header>
         </div>
+
         <nav class="admin-tabs">
             <button type="button" class="tab-button active" data-tab="addProduct">Tambah Produk</button>
             <button type="button" class="tab-button" data-tab="manageProducts">Kelola Produk</button>
@@ -134,7 +135,13 @@
                     <label for="promo-categories">Berlaku untuk Kategori (Opsional):</label>
                     <select id="promo-categories" multiple>
                     </select>
-                    <small>Tahan CTRL (atau Command di Mac) dan klik untuk memilih lebih dari satu. Kosongkan pilihan untuk membuat promo berlaku di semua kategori.</small>
+                    <small>Tahan CTRL (atau Command) & klik untuk memilih lebih dari satu. Kosongkan untuk berlaku di semua produk.</small>
+                    
+                    <label for="promo-product">Berlaku untuk Produk Spesifik (Opsional):</label>
+                    <select id="promo-product">
+                        <option value="">-- Tidak Ada --</option>
+                    </select>
+                    <small>Jika Anda memilih produk, maka pilihan kategori di atas akan diabaikan.</small>
                     <button type="button" id="add-promo-btn">Tambah Kode Promo</button>
                 </form>
             </div>
