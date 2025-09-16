@@ -1,14 +1,4 @@
 {
-    "DARI RIKI": {
-        "code": "DARI RIKI",
-        "percentage": 16,
-        "expires": "2025-09-08T00:05:00.000Z",
-        "maxUses": 0,
-        "uses": 0,
-        "allowedCategories": [
-            "Script"
-        ]
-    },
     "RIKI": {
         "code": "RIKI",
         "percentage": 30,
