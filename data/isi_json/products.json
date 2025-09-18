@@ -485,12 +485,15 @@
         {
             "id": 40,
             "nama": "Murid unbend",
-            "harga": 15000,
+            "harga": 10000,
             "hargaAsli": 15000,
             "deskripsiPanjang": "keuntungan join murid unbend || bisa unbend nomor sendri || bisa open jasa unbend || bisa open murid unbend lagi || mendapat kan teks gacor dan update teks || jamin balmon kalo ada niat dan selalu berusaha.",
             "nomorWA": "",
             "discountPrice": null,
-            "discountEndDate": null
+            "discountEndDate": "2025-09-19T18:50:00.000Z",
+            "category": "murid",
+            "images": [],
+            "menuContent": ""
         },
         {
             "id": 41,
