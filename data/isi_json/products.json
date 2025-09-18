@@ -524,12 +524,15 @@
         {
             "id": 43,
             "nama": "Murid logo ai",
-            "harga": 5000,
+            "harga": 3000,
             "hargaAsli": 5000,
             "deskripsiPanjang": "keuntungan join murid logo ai || membuat logo dengan mudah menggunakan teks || bisa open logo kece || teks kece² dan ada update teks jika mod || bisa open murid lagi || jamin balmon kalo ada niat dan selalu berusaha.",
             "nomorWA": "",
             "discountPrice": null,
-            "discountEndDate": null
+            "discountEndDate": "2025-09-19T18:51:00.000Z",
+            "category": "murid",
+            "images": [],
+            "menuContent": ""
         },
         {
             "id": 44,
