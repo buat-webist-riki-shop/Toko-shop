@@ -498,12 +498,15 @@
         {
             "id": 41,
             "nama": "Murid suntik sosmed",
-            "harga": 10000,
+            "harga": 7000,
             "hargaAsli": 10000,
             "deskripsiPanjang": "keuntungan join murid suntik sosmed || bisa suntik akun sendiri || dapat web suntik murah || bisa open jasa suntik || deposit webiste nya murah || bisa open murid lagi || jamin balmon kalo ada niat dan selalu berusaha.",
             "nomorWA": "",
             "discountPrice": null,
-            "discountEndDate": null
+            "discountEndDate": "2025-09-19T18:50:00.000Z",
+            "category": "murid",
+            "images": [],
+            "menuContent": ""
         },
         {
             "id": 42,
