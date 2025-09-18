@@ -1,11 +1,1 @@
-{
-    "RAYY": {
-        "code": "RAYY",
-        "percentage": 50,
-        "expires": "2025-09-17T16:25:00.000Z",
-        "maxUses": 1,
-        "uses": 1,
-        "allowedCategories": [],
-        "allowedProductId": 12
-    }
-}
+{}
