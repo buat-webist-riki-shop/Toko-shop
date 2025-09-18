@@ -120,12 +120,15 @@
         {
             "id": 10,
             "nama": "Panel Ram 10GB",
-            "harga": 12000,
+            "harga": 9600,
             "hargaAsli": 12000,
             "deskripsiPanjang": "Syarat & Ketentuan : Server private & kualitas terbaik! || Script bot dijamin aman (anti drama/maling) | masa aktif panel 30 hari || Garansi 15 hari (1x replace) || Server anti delay/lemot! || Claim garansi wajib bawa bukti transaksi dan data panel yang lengkap",
             "nomorWA": "",
             "discountPrice": null,
-            "discountEndDate": null
+            "discountEndDate": "2025-09-19T18:46:00.000Z",
+            "category": "Panel",
+            "images": [],
+            "menuContent": ""
         },
         {
             "id": 11,
