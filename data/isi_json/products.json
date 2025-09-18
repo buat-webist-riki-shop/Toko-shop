@@ -29,12 +29,12 @@
         {
             "id": 3,
             "nama": "Panel Ram 3GB",
-            "harga": 2000,
+            "harga": 3500,
             "hargaAsli": 5000,
             "deskripsiPanjang": "Syarat & Ketentuan : Server private & kualitas terbaik! || Script bot dijamin aman (anti drama/maling) | masa aktif panel 30 hari || Garansi 15 hari (1x replace) || Server anti delay/lemot! || Claim garansi wajib bawa bukti transaksi dan data panel yang lengkap",
             "nomorWA": "",
             "discountPrice": 2000,
-            "discountEndDate": "2025-09-07T14:26:00.000Z",
+            "discountEndDate": null,
             "category": "Panel",
             "images": [],
             "menuContent": ""
