@@ -550,12 +550,15 @@
         {
             "id": 45,
             "nama": "Pt Panel",
-            "harga": 40000,
+            "harga": 30000,
             "hargaAsli": 40000,
             "deskripsiPanjang": "KEUNTUNGAN JOIN PT PANEL ||* Masa aktif permanen ||* bisa jualan panel ||* Bisa open admin panel ||* Bisa open reseller panel ||* Free script cpanel, push, jagagb ||* Dapet tutor step by step nya di deskripsi grup ||* Di jamin balik modal kalo kamu ada niat dan usaha ||* Patunga 5k kalo panel nya mokad atau down ||* Kegunaan patungan adalah untuk mengganti server jika terjadi mokad atau down.",
             "nomorWA": "",
             "discountPrice": null,
-            "discountEndDate": null
+            "discountEndDate": "2025-09-19T18:51:00.000Z",
+            "category": "murid",
+            "images": [],
+            "menuContent": ""
         }
     ],
     "Sewa Bot": [
