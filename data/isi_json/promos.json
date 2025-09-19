@@ -4,7 +4,7 @@
         "percentage": 15,
         "expires": "2025-09-19T18:53:00.000Z",
         "maxUses": 5,
-        "uses": 1,
+        "uses": 2,
         "allowedCategories": [
             "Script"
         ],
