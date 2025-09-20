@@ -483,6 +483,17 @@
     ],
     "murid": [
         {
+            "id": 60,
+            "nama": "Reseller subdomain",
+            "harga": 15000,
+            "hargaAsli": 15000,
+            "deskripsiPanjang": "BISA OPEN SUBDOMAIN || BISA BUAT DOMAIN SEPUASNYA || BISA UNTUK VERCEL || BISA UNTUK INSTALL PANEL/VPS || MAS AKTIF SEUMUR HIDUP  || TIDAK DI PUNGUT BIYAYA LAHI",
+            "createdAt": "2025-09-20T00:13:45.134Z",
+            "nomorWA": "",
+            "images": [],
+            "menuContent": ""
+        },
+        {
             "id": 40,
             "nama": "Murid unbend",
             "harga": 10000,
