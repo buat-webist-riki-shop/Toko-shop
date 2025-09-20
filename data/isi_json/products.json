@@ -483,6 +483,17 @@
     ],
     "murid": [
         {
+            "id": 61,
+            "nama": "RESELLER WEBISTE",
+            "harga": 10000,
+            "hargaAsli": 10000,
+            "deskripsiPanjang": "BISA DOPLAY WEBSITE  || BEBAS DOPLAY WEBISTE || DOPAMIN DENGAN DOMAIN PILIHAN MU || MASA AKTIF SEUMUR HIDUP TANPA DI PUNGUT BIYAYA || BISA JUALAN WEBISTE TANPA HARUS RIBET",
+            "createdAt": "2025-09-20T00:15:13.555Z",
+            "nomorWA": "",
+            "images": [],
+            "menuContent": ""
+        },
+        {
             "id": 60,
             "nama": "Reseller subdomain",
             "harga": 15000,
