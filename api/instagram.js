@@ -6,28 +6,27 @@ export default async function handler(request, response) {
     }
 
     const { url: instagramUrl } = request.body;
-    const apiKey = "free"; // Sesuai dengan contoh API Anda
     
     if (!instagramUrl || !instagramUrl.includes('instagram.com')) {
         return response.status(400).json({ message: 'URL Instagram tidak valid.' });
     }
 
-    // URL API eksternal untuk Instagram
-    const externalApiUrl = `https://api-simplebot.vercel.app/download/instagram?apikey=${apiKey}&url=${encodeURIComponent(instagramUrl)}`;
+    // URL API baru dari RikiShop
+    const externalApiUrl = `https://api.rikishop.my.id/download/instagram?url=${encodeURIComponent(instagramUrl)}`;
 
     try {
         const apiResponse = await fetch(externalApiUrl);
         const data = await apiResponse.json();
 
-        if (!apiResponse.ok || !data.status) {
-            // Jika ada pesan error dari API, gunakan itu
-            const errorMessage = data.result && typeof data.result === 'string' 
-                ? data.result 
-                : 'Gagal mengambil data dari API eksternal.';
+        // Cek status dari API baru
+        if (!apiResponse.ok || data.status !== true) {
+            const errorMessage = (data.result && typeof data.result === 'string')
+                ? data.result
+                : (data.message || 'Gagal mengambil data dari API RikiShop.');
             throw new Error(errorMessage);
         }
 
-        // Kirim kembali hanya bagian "result" (yang berupa array) ke frontend
+        // Kirim kembali hanya bagian "result" (yang berisi object `source` dan `medias`)
         response.status(200).json(data.result);
 
     } catch (error) {
@@ -35,3 +34,4 @@ export default async function handler(request, response) {
         response.status(500).json({ message: error.message || 'Terjadi kesalahan di server.' });
     }
 }
+
