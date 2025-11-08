@@ -43,8 +43,22 @@
         .upload-area i { font-size: clamp(2em, 8vw, 3em); color: var(--primary-color); margin-bottom: 15px; }
         .upload-area span { font-size: clamp(0.85em, 3.5vw, 1em); }
         #file-input { display: none; }
-        #preview-container { margin-top: 20px; text-align: center; }
-        #image-preview { max-width: 100%; max-height: 200px; border-radius: 12px; }
+        
+        /* --- PERBAIKAN UKURAN GAMBAR PREVIEW --- */
+        #preview-container { 
+            margin-top: 20px; 
+            text-align: center; 
+            width: 100%;
+        }
+        #image-preview { 
+            width: 100%; /* Diubah dari max-width */
+            max-height: 300px; /* Diperbesar dari 200px */
+            border-radius: 12px; 
+            object-fit: contain; /* Ditambahkan agar gambar tidak gepeng */
+            background-color: var(--bg-body); /* Latar belakang jika gambar tidak pas */
+        }
+        /* --- AKHIR PERBAIKAN --- */
+
         #enhance-btn {
             width: 100%; padding: 15px; margin-top: 25px; background-color: var(--primary-color); color: white;
             border: none; border-radius: 12px; font-size: 1.1em; font-weight: 600; cursor: pointer; display: none;
@@ -71,15 +85,60 @@
         }
         #back-button:hover { color: var(--primary-color); background-color: rgba(0,0,0,0.05); }
         body.dark-mode #back-button:hover { background-color: rgba(255,255,255,0.05); }
-        .footer { margin-top: 30px; text-align: center; font-size: 0.9em; color: var(--text-secondary); }
-
-        /* CSS FOOTER & ANIMASI YOUTUBE DARI KODE ASLI */
-        .footer a { color: var(--text-secondary); text-decoration: none; font-weight: 600; display: inline-flex; align-items: center; gap: 8px; transition: color 0.3s ease, text-shadow 0.3s ease; }
-        .footer a:hover { color: var(--primary-color); text-shadow: 0 0 8px var(--primary-color); }
-        .footer .fab.fa-youtube { color: #ff0000; }
-        .footer a:hover .fab.fa-youtube { text-shadow: 0 0 8px #ff0000; }
+        
+        /* --- FOOTER BARU YANG ESTETIK --- */
+        .footer { 
+            margin-top: 30px; 
+            text-align: center; 
+            font-size: 0.9em; 
+            color: var(--text-secondary);
+            padding-top: 20px; 
+            border-top: 1px solid var(--border-color);
+        }
+        .footer p { margin: 0; }
         .glow-text { text-shadow: 0 0 5px var(--primary-color); }
-        .glow-youtube { text-shadow: 0 0 5px rgba(255, 0, 0, 0.6); }
+
+        .footer-buttons {
+            display: flex;
+            gap: 12px;
+            margin-top: 15px; /* Jarak dari teks "Powered by" */
+        }
+        .footer-btn {
+            flex: 1;
+            padding: 12px;
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            font-size: 0.95em;
+        }
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: white;
+            box-shadow: 0 4px 12px rgba(88, 101, 242, 0.3); /* Sesuai --primary-color */
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(88, 101, 242, 0.4);
+        }
+        .btn-secondary {
+            background-color: var(--bg-container);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+        }
+        .btn-secondary:hover {
+            transform: translateY(-2px);
+            border-color: var(--text-primary);
+        }
+        .btn-secondary .fa-youtube {
+            color: #FF0000;
+        }
+        /* --- AKHIR FOOTER BARU --- */
+
         .click-animation { position: relative; display: inline-flex; }
         .click-hand {
             position: absolute; bottom: -25px; left: 50%; width: 25px; height: 25px;
@@ -131,13 +190,19 @@
             position: relative;
         }
 
+        /* --- PERBAIKAN UKURAN GAMBAR POPUP --- */
         .slide img {
             width: 100%;
-            height: auto;
+            /* height: auto; Dihapus */
             display: block;
             user-select: none;
             -webkit-user-drag: none; /* Mencegah ghost image saat drag di Chrome */
+            aspect-ratio: 4 / 3; /* Rasio standar foto */
+            object-fit: contain; /* Agar gambar utuh */
+            background-color: var(--bg-body); /* Latar belakang */
         }
+        /* --- AKHIR PERBAIKAN --- */
+
         .slide .label {
             position: absolute; top: 10px; left: 10px; background-color: rgba(0, 0, 0, 0.6);
             color: white; padding: 4px 10px; border-radius: 8px; font-size: 0.9em;
@@ -194,12 +259,19 @@
         <input type="file" id="file-input" accept="image/jpeg, image/png, image/webp">
         <div id="preview-container"></div>
         <button id="enhance-btn"><span>HD-kan Gambar Ini</span></button>
+        
+        <!-- FOOTER BARU DITERAPKAN DI SINI -->
         <div class="footer">
-            Powered by <a href="https://toko.rikishop.my.id" target="_blank" style="margin-left: 5px;"><span class="glow-text">Riki Shop</span></a>
-            <span style="margin: 0 10px;">|</span>
-            <a href="https://www.youtube.com/@rikishopreal" target="_blank" class="click-animation">
-                <i class="fab fa-youtube glow-youtube"></i> Subscribe
-            </a>
+            <p>Powered by <span class="glow-text">Riki Shop</span></p>
+            <div class="footer-buttons">
+                <a href="https://toko.rikishop.my.id" target="_blank" class="footer-btn btn-primary">
+                    <i class="fas fa-store"></i> Kunjungi Toko
+                </a>
+                <a href="https://www.youtube.com/@rikishopreal" target="_blank" class="footer-btn btn-secondary click-animation">
+                    <i class="fab fa-youtube"></i> Subscribe
+                    <div class="click-hand"></div>
+                </a>
+            </div>
         </div>
     </div>
 
@@ -426,17 +498,9 @@
                 };
             }
 
-            // Script untuk animasi YouTube
-            const footer = document.querySelector('.footer');
-            if(footer) {
-                const youtubeLink = footer.querySelector('a[href*="youtube.com"]');
-                if (youtubeLink) {
-                    const hand = document.createElement('div');
-                    hand.className = 'click-hand';
-                    youtubeLink.appendChild(hand);
-                }
-            }
+            // Logika click-hand sudah di-handle di dalam HTML dan CSS baru
         });
     </script>
 </body>
 </html>
+

@@ -25,70 +25,87 @@
             display: flex; justify-content: center; align-items: center; 
             min-height: 100vh; padding: 20px; box-sizing: border-box; transition: background-color 0.3s ease;
         }
-.container {
-    position: relative; /* Diperlukan untuk tombol kembali */
-    background-color: var(--bg-container); border-radius: 24px; box-shadow: 0 10px 40px var(--shadow-color);
-    padding: 30px 40px; width: 100%; max-width: 500px; text-align: center;
-    animation: fadeIn 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-}
-.back-button {
-    position: absolute;
-    top: 20px;
-    left: 20px;
-    background-color: var(--bg-body);
-    color: var(--text-secondary);
-    border: 1px solid var(--border-color);
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-decoration: none;
-    font-size: 1.2em;
-    transition: all 0.2s ease;
-}
-.back-button:hover {
-    background-color: var(--primary-color);
-    color: white;
-    border-color: var(--primary-color);
-}
+        .container {
+            position: relative; /* Diperlukan untuk tombol kembali */
+            background-color: var(--bg-container); border-radius: 24px; box-shadow: 0 10px 40px var(--shadow-color);
+            padding: 30px 40px; width: 100%; max-width: 500px; text-align: center;
+            animation: fadeIn 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .back-button {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background-color: var(--bg-body);
+            color: var(--text-secondary);
+            border: 1px solid var(--border-color);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            font-size: 1.2em;
+            transition: all 0.2s ease;
+        }
+        .back-button:hover {
+            background-color: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
         h1 {
-    margin-top: 30px; /* Beri sedikit ruang dari tombol kembali */
-    color: var(--text-primary); margin: 0 0 10px; font-weight: 700; display: flex;
-    align-items: center; justify-content: center; gap: 12px;
-}
+            margin-top: 30px; /* Beri sedikit ruang dari tombol kembali */
+            color: var(--text-primary); margin: 0 0 10px; font-weight: 700; display: flex;
+            align-items: center; justify-content: center; gap: 12px;
+        }
         p.subtitle { color: var(--text-secondary); margin-bottom: 30px; }
-.upload-area {
-    border: 2px dashed var(--border-color); /* Kembali ke dashed untuk gaya iOS */
-    border-radius: 16px;
-    padding: 40px 20px;
-    cursor: pointer;
-    text-align: center;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    transition: all 0.3s ease;
-    background-color: transparent;
-    position: relative; /* Tambahkan ini */
-}
-
-/* Tambahkan pseudo-element untuk ikon awan */
-.upload-area::before {
-    content: '\f0c2'; /* Kode ikon awan dari Font Awesome */
-    font-family: 'Font Awesome 6 Free';
-    font-weight: 900;
-    font-size: 3em;
-    color: var(--primary-color);
-    margin-bottom: 15px;
-}
-        .upload-area i { font-size: 3em; color: var(--primary-color); margin-bottom: 15px; }
+        .upload-area {
+            border: 2px dashed var(--border-color); /* Kembali ke dashed untuk gaya iOS */
+            border-radius: 16px;
+            padding: 40px 20px;
+            cursor: pointer;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            transition: all 0.3s ease;
+            background-color: transparent;
+            position: relative; /* Tambahkan ini */
+        }
+        /* Ganti ikon i dengan pseudo-element agar lebih konsisten */
+        .upload-area::before {
+            content: '\f0c2'; /* Kode ikon awan dari Font Awesome */
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            font-size: 3em;
+            color: var(--primary-color);
+            margin-bottom: 15px;
+        }
+        .upload-area:hover {
+            border-color: var(--primary-color);
+            background-color: var(--bg-body);
+        }
         .upload-area span { display: block; font-weight: 500; }
         #file-input { display: none; }
-        #preview-container { margin-top: 20px; display: grid; grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); gap: 12px; }
-        .preview-image { width: 100%; height: 80px; object-fit: cover; border-radius: 12px; }
+        
+        /* --- PERBAIKAN UKURAN GAMBAR PREVIEW --- */
+        #preview-container { 
+            margin-top: 20px; 
+            display: grid; 
+            grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); 
+            gap: 12px; 
+        }
+        .preview-image { 
+            width: 100%; 
+            /* height: 80px; Dihapus */
+            aspect-ratio: 1 / 1; /* Ditambahkan: Membuat preview kotak */
+            object-fit: cover; 
+            border-radius: 12px; 
+        }
+        /* --- AKHIR PERBAIKAN --- */
+
         #upload-button {
             width: 100%; padding: 15px; margin-top: 25px; background-color: var(--primary-color); color: white;
             border: none; border-radius: 12px; font-size: 1.1em; font-weight: 600; cursor: pointer; display: none;
@@ -109,7 +126,7 @@
             box-shadow: 0 4px 10px var(--shadow-color); z-index: 1001;
         }
         
-        /* FOOTER YANG SUDAH DIPERBAIKI */
+        /* --- FOOTER BARU YANG ESTETIK --- */
         .footer {
             margin-top: 30px;
             padding-top: 20px;
@@ -118,33 +135,71 @@
             font-size: 0.9em;
             color: var(--text-secondary);
         }
-        .footer a { color: var(--text-secondary); text-decoration: none; font-weight: 600; display: inline-flex; align-items: center; gap: 8px; transition: color 0.3s ease, text-shadow 0.3s ease; }
-        .footer a:hover { color: var(--primary-color); text-shadow: 0 0 8px var(--primary-color); }
-        .footer .fab.fa-youtube { color: #ff0000; }
-        .footer a:hover .fab.fa-youtube { text-shadow: 0 0 8px #ff0000; }
-        .glow-text { text-shadow: 0 0 5px rgba(0, 122, 255, 0.6); }
-        .glow-youtube { text-shadow: 0 0 5px rgba(255, 0, 0, 0.6); }
+        .footer p { margin: 0; }
+        .glow-text { text-shadow: 0 0 5px var(--primary-color); }
+
+        .footer-buttons {
+            display: flex;
+            gap: 12px;
+            margin-top: 15px; /* Jarak dari teks "Powered by" */
+        }
+        .footer-btn {
+            flex: 1;
+            padding: 12px;
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            font-size: 0.95em;
+        }
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: white;
+            box-shadow: 0 4px 12px rgba(0, 122, 255, 0.3); /* Sesuai --primary-color */
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0, 122, 255, 0.4);
+        }
+        .btn-secondary {
+            background-color: var(--bg-container);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+        }
+        .btn-secondary:hover {
+            transform: translateY(-2px);
+            border-color: var(--text-primary);
+        }
+        .btn-secondary .fa-youtube {
+            color: #FF0000;
+        }
+        /* --- AKHIR FOOTER BARU --- */
+
         .click-animation { position: relative; }
-.click-hand {
-    position: absolute;
-    bottom: -30px; /* Pindahkan ke bawah */
-    left: 50%; /* Tengah horizontal */
-    transform: translateX(-50%) rotate(-90deg); /* Geser ke tengah dan putar ke atas */
-    width: 25px;
-    height: 25px;
-    background-image: url('https://em-content.zobj.net/source/twitter/376/backhand-index-pointing-right_1f449.png');
-    background-size: contain; background-repeat: no-repeat;
-    opacity: 0;
-    transform-origin: top center; /* Ubah origin rotasi */
-    animation: clicking-up 2s infinite ease-in-out 1s; /* Ganti nama animasi */
-    pointer-events: none;
-}
-@keyframes clicking-up { /* Animasi menunjuk ke atas */
-    0%, 80%, 100% { opacity: 0; transform: translateX(-50%) rotate(-90deg) scale(0.9); }
-    10%, 50% { opacity: 1; transform: translateX(-50%) rotate(-90deg) scale(1); }
-    30% { transform: translateX(-50%) rotate(-90deg) scale(0.85); }
-    60% { opacity: 0; transform: translateX(-50%) rotate(-90deg) scale(0.9); }
-}
+        .click-hand {
+            position: absolute;
+            bottom: -30px; /* Pindahkan ke bawah */
+            left: 50%; /* Tengah horizontal */
+            transform: translateX(-50%) rotate(-90deg); /* Geser ke tengah dan putar ke atas */
+            width: 25px;
+            height: 25px;
+            background-image: url('https://em-content.zobj.net/source/twitter/376/backhand-index-pointing-right_1f449.png');
+            background-size: contain; background-repeat: no-repeat;
+            opacity: 0;
+            transform-origin: top center; /* Ubah origin rotasi */
+            animation: clicking-up 2s infinite ease-in-out 1s; /* Ganti nama animasi */
+            pointer-events: none;
+        }
+        @keyframes clicking-up { /* Animasi menunjuk ke atas */
+            0%, 80%, 100% { opacity: 0; transform: translateX(-50%) rotate(-90deg) scale(0.9); }
+            10%, 50% { opacity: 1; transform: translateX(-50%) rotate(-90deg) scale(1); }
+            30% { transform: translateX(-50%) rotate(-90deg) scale(0.85); }
+            60% { opacity: 0; transform: translateX(-50%) rotate(-90deg) scale(0.9); }
+        }
 
         /* GAYA POPUP */
         .popup-overlay {
@@ -203,12 +258,18 @@
         
         <button id="upload-button">Unggah Gambar</button>
 
+        <!-- FOOTER BARU DITERAPKAN DI SINI -->
         <div class="footer">
-            Powered by <a href="https://toko.rikishop.my.id" target="_blank" style="margin-left: 5px;"><span class="glow-text">Riki Shop</span></a>
-            <span style="margin: 0 10px;">|</span>
-            <a href="https://www.youtube.com/@rikishopreal" target="_blank">
-                <i class="fab fa-youtube glow-youtube"></i> Subscribe
-            </a>
+            <p>Powered by <span class="glow-text">Riki Shop</span></p>
+            <div class="footer-buttons">
+                <a href="https://toko.rikishop.my.id" target="_blank" class="footer-btn btn-primary">
+                    <i class="fas fa-store"></i> Kunjungi Toko
+                </a>
+                <a href="https://www.youtube.com/@rikishopreal" target="_blank" class="footer-btn btn-secondary click-animation">
+                    <i class="fab fa-youtube"></i> Subscribe
+                    <div class="click-hand"></div>
+                </a>
+            </div>
         </div>
     </div>
 
@@ -245,7 +306,7 @@
                 selectedFiles = Array.from(files).filter(file => file.type.startsWith('image/'));
                 previewContainer.innerHTML = '';
                 if (selectedFiles.length === 0) {
-                    uploadText.innerHTML = '<i class="fas fa-cloud-upload-alt"></i><span>Klik atau seret gambar ke sini</span>';
+                    uploadText.innerHTML = '<span>Klik atau seret gambar ke sini</span>';
                     uploadButton.style.display = 'none';
                     return;
                 }
@@ -335,8 +396,13 @@
                     button.onclick = (e) => {
                         const input = e.target.previousElementSibling;
                         input.select();
-                        navigator.clipboard.writeText(input.value);
-                        e.target.textContent = 'Tersalin!';
+                        // Gunakan document.execCommand untuk kompatibilitas iframe
+                        try {
+                            document.execCommand('copy');
+                            e.target.textContent = 'Tersalin!';
+                        } catch (err) {
+                            e.target.textContent = 'Gagal';
+                        }
                         setTimeout(() => { e.target.textContent = 'Salin'; }, 2000);
                     };
                 });
@@ -347,20 +413,15 @@
                 uploadButton.disabled = false;
                 uploadButton.style.display = 'none';
                 previewContainer.innerHTML = '';
-                uploadText.innerHTML = '<i class="fas fa-cloud-upload-alt"></i><span>Klik atau seret gambar ke sini</span>';
+                uploadText.innerHTML = '<span>Klik atau seret gambar ke sini</span>';
                 selectedFiles = [];
                 fileInput.value = '';
             }
 
-            const youtubeLink = document.querySelector('.footer a[href*="youtube.com"]');
-            if (youtubeLink) {
-                const hand = document.createElement('div');
-                hand.className = 'click-hand';
-                youtubeLink.classList.add('click-animation');
-                youtubeLink.appendChild(hand);
-            }
+            // Logika click-hand sudah di-handle di dalam HTML dan CSS baru
         });
     </script>
 
 </body>
 </html>
+
