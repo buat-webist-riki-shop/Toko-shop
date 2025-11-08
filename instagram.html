@@ -77,6 +77,7 @@
             display: flex; 
             align-items: center; 
             justify-content: center; 
+            gap: 8px; /* Jarak ikon dan teks */
             transition: filter 0.2s ease, transform 0.2s ease;
         }
         /* --- AKHIR PERUBAHAN LAYOUT --- */
@@ -164,13 +165,16 @@
             font-size: 0.9em; color: var(--text-secondary);
             margin-top: 15px; height: 1.2em;
         }
+        .popup-buttons { display: flex; flex-direction: column; gap: 10px; margin-top: 10px; }
         .popup-button { 
             display: block; padding: 12px; border: none; border-radius: 10px; color: white; 
             font-weight: 600; text-decoration: none; text-align: center; 
             background-color: var(--primary-color);
-            margin-top: 10px;
         }
         .popup-button:empty { display: none; }
+        .btn-download-all {
+            background-color: var(--success-color);
+        }
         
         #close-popup-button {
             width: 100%; margin-top: 15px; padding: 12px; font-weight: 600; cursor: pointer; border-radius: 10px;
@@ -258,15 +262,22 @@
                 downloadBtn.innerHTML = '<span class="spinner"></span>';
                 downloadBtn.disabled = true;
                 try {
+                    // Panggil API baru
                     const response = await fetch('/api/instagram', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ url: instaUrl, type: 'instagram' })
+                        body: JSON.stringify({ url: instaUrl })
                     });
-                    const result = await response.json();
+                    const result = await response.json(); // Ini adalah object { source, medias }
                     if (!response.ok) throw new Error(result.message || 'Gagal memproses link.');
+                    
+                    if (!result.medias || result.medias.length === 0) {
+                        throw new Error('Tidak ada media yang ditemukan.');
+                    }
+                    
                     showToast('Berhasil mendapatkan data!', 'success');
-                    showResultPopup(result); // result adalah array media
+                    showResultPopup(result.medias); // Kirim array 'medias' ke popup
+                
                 } catch (error) {
                     showToast(error.message, 'error');
                 } finally {
@@ -284,22 +295,28 @@
                 popupOverlay.className = 'popup-overlay';
 
                 let slidesHTML = '';
-                mediaArray.forEach((item, index) => {
-                    const isVideo = item.kualitas.toLowerCase().includes('video');
-                    const thumbnailUrl = `/api/imageProxy?url=${encodeURIComponent(item.thumbnail)}`;
+                mediaArray.forEach((media, index) => {
+                    const isVideo = media.type === 'video';
+                    // Gunakan URL asli untuk video, proxy untuk gambar
+                    const displayUrl = isVideo ? media.url : `/api/imageProxy?url=${encodeURIComponent(media.url)}`;
                     
                     let mediaElement = isVideo 
-                        ? `<video src="${item.url_download}" controls poster="${thumbnailUrl}"></video>`
-                        : `<img src="${thumbnailUrl}" alt="Instagram Media ${index + 1}">`;
+                        ? `<video src="${displayUrl}" controls></video>`
+                        : `<img src="${displayUrl}" alt="Instagram Media ${index + 1}">`;
 
                     slidesHTML += `
                         <div class="media-slide" 
                              data-is-video="${isVideo}" 
-                             data-download-url="${item.url_download}">
+                             data-download-url="${media.url}">
                             ${mediaElement}
                         </div>
                     `;
                 });
+
+                let downloadAllButtonHTML = '';
+                if (mediaArray.length > 1) {
+                    downloadAllButtonHTML = `<button id="downloadAllBtn" class="popup-button btn-download-all"><i class="fas fa-images"></i> Download Semua (${mediaArray.length})</button>`;
+                }
 
                 popupOverlay.innerHTML = `
                     <div class="popup">
@@ -307,7 +324,10 @@
                         <div class="popup-content">
                             <div class="media-container">${slidesHTML}</div>
                             <div class="slide-indicator"></div>
-                            <a id="insta-dynamic-download-btn" class="popup-button"></a>
+                            <div class="popup-buttons">
+                                <a id="insta-dynamic-download-btn" class="popup-button"></a>
+                                ${downloadAllButtonHTML}
+                            </div>
                         </div>
                         <button id="close-popup-button">Tutup</button>
                     </div>
@@ -326,7 +346,7 @@
                     const currentSlide = slides[index];
                     const isVideo = currentSlide.dataset.isVideo === 'true';
                     const downloadUrl = currentSlide.dataset.downloadUrl;
-                    const filename = `instagram_${Date.now()}.${isVideo ? 'mp4' : 'jpg'}`;
+                    const filename = `instagram_riki_${Date.now()}.${isVideo ? 'mp4' : 'jpg'}`;
                     
                     const proxyDownloadUrl = `/api/downloadProxy?url=${encodeURIComponent(downloadUrl)}&filename=${filename}`;
                     
@@ -354,7 +374,34 @@
                     }, 100);
                 });
 
-                updateDownloadButton(0);
+                updateDownloadButton(0); // Inisialisasi
+
+                const downloadAllBtn = popupOverlay.querySelector('#downloadAllBtn');
+                if (downloadAllBtn) {
+                    downloadAllBtn.onclick = async () => {
+                        downloadAllBtn.textContent = 'Mengunduh... (1/' + totalSlides + ')';
+                        downloadAllBtn.disabled = true;
+                        for (let i = 0; i < totalSlides; i++) {
+                            const slide = slides[i];
+                            const isVideo = slide.dataset.isVideo === 'true';
+                            const url = slide.dataset.downloadUrl;
+                            const ext = isVideo ? 'mp4' : 'jpg';
+                            const proxyUrl = `/api/downloadProxy?url=${encodeURIComponent(url)}&filename=instagram_riki_${Date.now()}_${i+1}.${ext}`;
+                            
+                            const a = document.createElement('a');
+                            a.href = proxyUrl;
+                            document.body.appendChild(a);
+                            a.click();
+                            document.body.removeChild(a);
+                            
+                            downloadAllBtn.textContent = `Mengunduh... (${i + 1}/${totalSlides})`;
+                            await new Promise(resolve => setTimeout(resolve, 500)); // Jeda antar download
+                        }
+                        showToast('Semua media telah diunduh!', 'success');
+                        downloadAllBtn.textContent = `Download Semua (${totalSlides})`;
+                        downloadAllBtn.disabled = false;
+                    };
+                }
 
                 const close = () => {
                     popupOverlay.classList.remove('show');
