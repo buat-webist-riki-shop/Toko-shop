@@ -27,8 +27,7 @@
         .container {
             background-color: var(--bg-container); border-radius: 24px; box-shadow: 0 10px 40px var(--shadow-color);
             padding: 30px 25px; width: 100%; max-width: 500px; text-align: center;
-            animation: fadeIn 0.5s ease;
-            position: relative;
+            animation: fadeIn 0.5s ease; position: relative;
         }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
         h1 { margin: 0 0 10px; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 12px; font-size: 1.8em; }
@@ -43,22 +42,11 @@
         .upload-area i { font-size: clamp(2em, 8vw, 3em); color: var(--primary-color); margin-bottom: 15px; }
         .upload-area span { font-size: clamp(0.85em, 3.5vw, 1em); }
         #file-input { display: none; }
-        
-        /* --- PERBAIKAN UKURAN GAMBAR PREVIEW --- */
-        #preview-container { 
-            margin-top: 20px; 
-            text-align: center; 
-            width: 100%;
-        }
+        #preview-container { margin-top: 20px; text-align: center; width: 100%; }
         #image-preview { 
-            width: 100%; /* Diubah dari max-width */
-            max-height: 300px; /* Diperbesar dari 200px */
-            border-radius: 12px; 
-            object-fit: contain; /* Ditambahkan agar gambar tidak gepeng */
-            background-color: var(--bg-body); /* Latar belakang jika gambar tidak pas */
+            width: 100%; max-height: 300px; border-radius: 12px; 
+            object-fit: contain; background-color: var(--bg-body);
         }
-        /* --- AKHIR PERBAIKAN --- */
-
         #enhance-btn {
             width: 100%; padding: 15px; margin-top: 25px; background-color: var(--primary-color); color: white;
             border: none; border-radius: 12px; font-size: 1.1em; font-weight: 600; cursor: pointer; display: none;
@@ -86,59 +74,28 @@
         #back-button:hover { color: var(--primary-color); background-color: rgba(0,0,0,0.05); }
         body.dark-mode #back-button:hover { background-color: rgba(255,255,255,0.05); }
         
-        /* --- FOOTER BARU YANG ESTETIK --- */
         .footer { 
-            margin-top: 30px; 
-            text-align: center; 
-            font-size: 0.9em; 
-            color: var(--text-secondary);
-            padding-top: 20px; 
-            border-top: 1px solid var(--border-color);
+            margin-top: 30px; text-align: center; font-size: 0.9em; 
+            color: var(--text-secondary); padding-top: 20px; border-top: 1px solid var(--border-color);
         }
         .footer p { margin: 0; }
         .glow-text { text-shadow: 0 0 5px var(--primary-color); }
-
-        .footer-buttons {
-            display: flex;
-            gap: 12px;
-            margin-top: 15px; /* Jarak dari teks "Powered by" */
-        }
+        .footer-buttons { display: flex; gap: 12px; margin-top: 15px; }
         .footer-btn {
-            flex: 1;
-            padding: 12px;
-            border-radius: 12px;
-            text-decoration: none;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-            font-size: 0.95em;
+            flex: 1; padding: 12px; border-radius: 12px; text-decoration: none;
+            font-weight: 600; display: flex; align-items: center; justify-content: center;
+            gap: 8px; transition: transform 0.2s ease, box-shadow 0.2s ease; font-size: 0.95em;
         }
         .btn-primary {
-            background-color: var(--primary-color);
-            color: white;
-            box-shadow: 0 4px 12px rgba(88, 101, 242, 0.3); /* Sesuai --primary-color */
+            background-color: var(--primary-color); color: white;
+            box-shadow: 0 4px 12px rgba(88, 101, 242, 0.3);
         }
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 16px rgba(88, 101, 242, 0.4);
-        }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 16px rgba(88, 101, 242, 0.4); }
         .btn-secondary {
-            background-color: var(--bg-container);
-            color: var(--text-primary);
-            border: 1px solid var(--border-color);
+            background-color: var(--bg-container); color: var(--text-primary); border: 1px solid var(--border-color);
         }
-        .btn-secondary:hover {
-            transform: translateY(-2px);
-            border-color: var(--text-primary);
-        }
-        .btn-secondary .fa-youtube {
-            color: #FF0000;
-        }
-        /* --- AKHIR FOOTER BARU --- */
-
+        .btn-secondary:hover { transform: translateY(-2px); border-color: var(--text-primary); }
+        .btn-secondary .fa-youtube { color: #FF0000; }
         .click-animation { position: relative; display: inline-flex; }
         .click-hand {
             position: absolute; bottom: -25px; left: 50%; width: 25px; height: 25px;
@@ -152,7 +109,6 @@
             80% { transform: translateX(-50%) translateY(10px); opacity: 0; }
         }
 
-        /* CSS BARU UNTUK SLIDER GESER */
         .popup-overlay {
             position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.8);
             display: flex; align-items: center; justify-content: center; padding: 10px;
@@ -161,53 +117,25 @@
         .popup-overlay.show { visibility: visible; opacity: 1; transition-delay: 0s; }
         .popup {
             background-color: var(--bg-container); border-radius: 20px; width: 100%; 
-            max-width: 600px;
-            padding: 25px; text-align: center; max-height: 90vh; overflow-y: auto; 
+            max-width: 600px; padding: 25px; text-align: center; max-height: 90vh; overflow-y: auto; 
             transform: scale(0.95); transition: transform 0.3s ease; display: flex; flex-direction: column;
         }
         .popup-overlay.show .popup { transform: scale(1); }
-
         .slider-container {
-            width: 100%;
-            position: relative;
-            overflow: hidden;
-            border-radius: 12px;
-            margin-top: 15px;
-            border: 1px solid var(--border-color);
-            touch-action: pan-y;
+            width: 100%; position: relative; overflow: hidden; border-radius: 12px;
+            margin-top: 15px; border: 1px solid var(--border-color); touch-action: pan-y;
         }
-
-        .slider-wrapper {
-            display: flex;
-            width: 200%; /* Karena ada 2 gambar */
-            transition: transform 0.4s ease-in-out;
-        }
-
-        .slide {
-            width: 50%; /* Lebar per slide */
-            flex-shrink: 0;
-            box-sizing: border-box;
-            position: relative;
-        }
-
-        /* --- PERBAIKAN UKURAN GAMBAR POPUP --- */
+        .slider-wrapper { display: flex; width: 200%; transition: transform 0.4s ease-in-out; }
+        .slide { width: 50%; flex-shrink: 0; box-sizing: border-box; position: relative; }
         .slide img {
-            width: 100%;
-            /* height: auto; Dihapus */
-            display: block;
-            user-select: none;
-            -webkit-user-drag: none; /* Mencegah ghost image saat drag di Chrome */
-            aspect-ratio: 4 / 3; /* Rasio standar foto */
-            object-fit: contain; /* Agar gambar utuh */
-            background-color: var(--bg-body); /* Latar belakang */
+            width: 100%; display: block; user-select: none; -webkit-user-drag: none;
+            aspect-ratio: 4 / 3; object-fit: contain; background-color: var(--bg-body);
+            cursor: zoom-in;
         }
-        /* --- AKHIR PERBAIKAN --- */
-
         .slide .label {
             position: absolute; top: 10px; left: 10px; background-color: rgba(0, 0, 0, 0.6);
             color: white; padding: 4px 10px; border-radius: 8px; font-size: 0.9em;
         }
-
         .slider-btn {
             position: absolute; top: 50%; transform: translateY(-50%);
             background-color: rgba(0, 0, 0, 0.4); color: white; border: none;
@@ -218,16 +146,12 @@
         .slider-btn:hover { background-color: rgba(0, 0, 0, 0.7); }
         .slider-btn.prev { left: 10px; }
         .slider-btn.next { right: 10px; }
-
-        .slider-dots {
-            display: flex; gap: 8px; justify-content: center; margin-top: 15px;
-        }
+        .slider-dots { display: flex; gap: 8px; justify-content: center; margin-top: 15px; }
         .dot {
             width: 10px; height: 10px; background-color: var(--border-color);
             border-radius: 50%; cursor: pointer; transition: background-color 0.3s ease;
         }
         .dot.active { background-color: var(--primary-color); }
-        
         .popup-buttons { display: flex; flex-direction: column; gap: 10px; margin-top: 20px; }
         .popup-button { display: block; padding: 12px; border: none; border-radius: 10px; color: white; font-weight: 600; text-decoration: none; background-color: var(--primary-color); }
         #close-popup-button { background-color: transparent; color: var(--text-secondary); border: 1px solid var(--border-color); }
@@ -242,6 +166,59 @@
         .toast-notification.show { opacity: 1; transform: translateY(0); }
         .toast-notification.success { background-color: var(--success-color); }
         .toast-notification.error { background-color: var(--error-color); }
+
+        .lightbox-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0s 0.3s;
+            cursor: zoom-out;
+        }
+        .lightbox-overlay.show {
+            opacity: 1;
+            visibility: visible;
+            transition-delay: 0s;
+        }
+        .lightbox-content {
+            position: relative;
+            padding: 10px;
+            width: 90%;
+            max-width: 90vw;
+            max-height: 90vh;
+        }
+        .lightbox-content img {
+            width: 100%;
+            height: auto;
+            max-height: 90vh;
+            object-fit: contain;
+            border-radius: 8px;
+            transform: scale(0.95);
+            transition: transform 0.3s ease;
+        }
+        .lightbox-overlay.show .lightbox-content img {
+            transform: scale(1);
+        }
+        .lightbox-close {
+            position: absolute;
+            top: -15px;
+            right: -15px;
+            color: white;
+            background-color: rgba(0, 0, 0, 0.5);
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            font-size: 1.5em;
+            line-height: 30px;
+            text-align: center;
+            cursor: pointer;
+            border: 1px solid white;
+        }
     </style>
 </head>
 <body>
@@ -260,7 +237,6 @@
         <div id="preview-container"></div>
         <button id="enhance-btn"><span>HD-kan Gambar Ini</span></button>
         
-        <!-- FOOTER BARU DITERAPKAN DI SINI -->
         <div class="footer">
             <p>Powered by <span class="glow-text">Riki Shop</span></p>
             <div class="footer-buttons">
@@ -275,11 +251,36 @@
         </div>
     </div>
 
+    <div id="lightbox" class="lightbox-overlay"></div>
+
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const body = document.body;
             const darkModeToggle = document.getElementById('dark-mode-toggle');
-          
+            const lightbox = document.getElementById('lightbox');
+            
+            function showLightbox(imageUrl) {
+                lightbox.innerHTML = `
+                    <div class="lightbox-content">
+                        <img src="${imageUrl}" alt="Gambar Zoom">
+                        <span class="lightbox-close">&times;</span>
+                    </div>
+                `;
+                lightbox.classList.add('show');
+                
+                lightbox.querySelector('.lightbox-close').onclick = closeLightbox;
+                lightbox.onclick = (e) => {
+                    if (e.target === lightbox) {
+                        closeLightbox();
+                    }
+                };
+            }
+
+            function closeLightbox() {
+                lightbox.classList.remove('show');
+                setTimeout(() => { lightbox.innerHTML = ''; }, 300);
+            }
+
             darkModeToggle.addEventListener('click', () => {
                 body.classList.toggle('dark-mode');
                 const isDarkMode = body.classList.contains('dark-mode');
@@ -412,7 +413,6 @@
                 document.body.appendChild(popupOverlay);
                 popupOverlay.classList.add('show');
                 
-                // --- LOGIKA SLIDER GESER ---
                 const sliderContainer = popupOverlay.querySelector('.slider-container');
                 const sliderWrapper = popupOverlay.querySelector('.slider-wrapper');
                 const prevBtn = popupOverlay.querySelector('.slider-btn.prev');
@@ -465,9 +465,13 @@
                     cancelAnimationFrame(animationID);
                     
                     const movedBy = getPositionX(e) - startPosX;
+                    const swipeThreshold = 50; // Jarak minimal untuk geser
 
-                    if (movedBy < -50 && currentIndex < totalSlides - 1) currentIndex += 1;
-                    if (movedBy > 50 && currentIndex > 0) currentIndex -= 1;
+                    // Hanya pindah slide jika bukan cuma klik (movedBy kecil)
+                    if (Math.abs(movedBy) > swipeThreshold) {
+                        if (movedBy < -swipeThreshold && currentIndex < totalSlides - 1) currentIndex += 1;
+                        if (movedBy > swipeThreshold && currentIndex > 0) currentIndex -= 1;
+                    }
                     
                     goToSlide(currentIndex);
                 }
@@ -479,28 +483,34 @@
 
                 sliderContainer.addEventListener('mousedown', dragStart);
                 sliderContainer.addEventListener('touchstart', dragStart, { passive: true });
-                
                 sliderContainer.addEventListener('mousemove', dragging);
                 sliderContainer.addEventListener('touchmove', dragging, { passive: true });
-
                 sliderContainer.addEventListener('mouseup', dragEnd);
                 sliderContainer.addEventListener('mouseleave', (e) => { if(isDragging) dragEnd(e) });
                 sliderContainer.addEventListener('touchend', dragEnd);
-                
                 window.addEventListener('resize', () => goToSlide(currentIndex));
-
-                // Inisialisasi posisi
+                
                 goToSlide(0);
+
+                popupOverlay.querySelectorAll('.slide img').forEach(img => {
+                    img.onclick = (e) => {
+                         // Cek apakah ini 'drag' atau 'click'
+                        const movedBy = getPositionX(e) - startPosX;
+                        if (isDragging && Math.abs(movedBy) > 10) {
+                            return; // Jangan zoom jika sedang drag
+                        }
+                        
+                        const imageUrl = e.target.src;
+                        showLightbox(imageUrl);
+                    };
+                });
 
                 popupOverlay.querySelector('#close-popup-button').onclick = () => {
                     popupOverlay.classList.remove('show');
                     popupOverlay.addEventListener('transitionend', () => popupOverlay.remove(), { once: true });
                 };
             }
-
-            // Logika click-hand sudah di-handle di dalam HTML dan CSS baru
         });
     </script>
 </body>
 </html>
-

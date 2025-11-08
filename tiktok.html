@@ -17,8 +17,14 @@
             --text-secondary: var(--light-text-color); --border-color: var(--border-color-light); --shadow-color: var(--shadow-light);
         }
         body.dark-mode {
-            --bg-body: #000000; --bg-container: #1c1c1e; --text-primary: #f5f5f7;
-            --text-secondary: #8e8e93; --border-color: #3a3a3c; --shadow-color: rgba(0, 0, 0, 0.4);
+            /* Warna TikTok */
+            --primary-color: #25f4ee; 
+            --bg-body: #010101; 
+            --bg-container: #1c1c1e; 
+            --text-primary: #f5f5f7;
+            --text-secondary: #8e8e93; 
+            --border-color: #3a3a3c; 
+            --shadow-color: rgba(0, 0, 0, 0.4);
         }
         
         body {
@@ -30,7 +36,6 @@
         .container {
             position: relative; 
             background-color: var(--bg-container); 
-            /* MODIFIKASI: Estetika border-radius dan shadow */
             border-radius: 20px; 
             box-shadow: 0 8px 32px var(--shadow-color);
             padding: 30px 25px; width: 100%; max-width: 500px; text-align: center;
@@ -43,68 +48,57 @@
             justify-content: center; text-decoration: none; font-size: 1.2em; transition: all 0.2s ease;
         }
         .back-button:hover {
-            background-color: var(--primary-color); color: white; border-color: var(--primary-color);
+            background-color: var(--primary-color); color: var(--bg-body); border-color: var(--primary-color);
         }
         
         @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
         
-        /* MODIFIKASI: Jarak margin disesuaikan */
         h1 { 
-            margin-top: 40px; /* Beri ruang untuk tombol kembali */
-            color: var(--text-primary); margin-bottom: 10px; font-weight: 700; 
+            margin-top: 40px; color: var(--text-primary); margin-bottom: 10px; font-weight: 700; 
             display: flex; align-items: center; justify-content: center; gap: 12px; 
         }
         p.subtitle { color: var(--text-secondary); margin-bottom: 25px; }
-        .input-group { display: flex; margin-bottom: 15px; } /* MODIFIKASI: Margin */
 
-        /* ▼▼▼ MODIFIKASI: TOMBOL TOKO BARU DITAMBAHKAN ▼▼▼ */
-        .store-button {
+        /* --- PERUBAHAN LAYOUT: Tombol di Bawah --- */
+        .input-group {
             display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            text-decoration: none;
-            background-color: transparent;
-            color: var(--primary-color);
-            border: 2px solid var(--primary-color);
-            padding: 12px 20px;
-            border-radius: 12px;
-            font-weight: 600;
-            margin-bottom: 30px; /* Jarak ke footer */
-            transition: all 0.3s ease;
-            font-size: 1em;
+            flex-direction: column; /* Ubah ke kolom */
+            gap: 12px; /* Jarak antara input dan tombol */
+            margin-bottom: 20px;
         }
-        .store-button:hover {
-            background-color: var(--primary-color);
-            color: var(--white-color);
-            box-shadow: 0 5px 15px rgba(0, 122, 255, 0.4);
-            transform: translateY(-2px);
-        }
-        .store-button i {
-            transition: transform 0.3s ease;
-        }
-        .store-button:hover i {
-            transform: scale(1.1);
-        }
-        /* ▲▲▲ AKHIR TOMBOL TOKO ▲▲▲ */
-
         #tiktok-url {
-            flex-grow: 1; padding: 14px; border: 1px solid var(--border-color);
-            border-radius: 12px 0 0 12px; background-color: var(--bg-body);
-            color: var(--text-primary); font-size: 1em; border-right: none;
+            width: 100%;
+            padding: 14px; 
+            border: 1px solid var(--border-color);
+            border-radius: 12px; /* Semua sudut rounded */
+            background-color: var(--bg-body);
+            color: var(--text-primary); 
+            font-size: 1em;
+            box-sizing: border-box; /* Penting untuk padding */
         }
         #download-btn {
-            padding: 14px 20px; border: none; background-color: var(--primary-color); color: white;
-            border-radius: 0 12px 12px 0; cursor: pointer; font-weight: 600; font-size: 1em;
-            display: flex; align-items: center; justify-content: center; transition: background-color 0.2s ease;
-            overflow: hidden; /* MODIFIKASI: Untuk animasi ikon */
+            width: 100%; /* Lebar penuh */
+            padding: 14px 20px; 
+            border: none; 
+            background-color: var(--primary-color); 
+            color: var(--bg-body); /* Ubah warna teks agar kontras */
+            border-radius: 12px; /* Semua sudut rounded */
+            cursor: pointer; 
+            font-weight: 600; 
+            font-size: 1em;
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            transition: background-color 0.2s ease, transform 0.2s ease;
         }
-        /* MODIFIKASI: Animasi ikon download */
+        /* --- AKHIR PERUBAHAN LAYOUT --- */
+
         #download-btn i {
             transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
-        #download-btn:not(:disabled):hover i {
-            transform: scale(1.1) rotate(5deg);
+        #download-btn:not(:disabled):hover {
+            transform: translateY(-2px);
+            filter: brightness(1.1);
         }
         #download-btn:disabled { background-color: var(--light-text-color); cursor: not-allowed; }
         .spinner {
@@ -119,13 +113,42 @@
             cursor: pointer; font-size: 1.2em; display: flex; align-items: center; justify-content: center;
             box-shadow: 0 4px 10px var(--shadow-color); z-index: 1001;
         }
-        .footer { margin-top: 30px; text-align: center; font-size: 0.9em; color: var(--text-secondary); width: 100%; max-width: 500px; }
-        .footer a { color: var(--text-secondary); text-decoration: none; font-weight: 600; display: inline-flex; align-items: center; gap: 8px; transition: color 0.3s ease, text-shadow 0.3s ease; }
-        .footer a:hover { color: var(--primary-color); text-shadow: 0 0 8px var(--primary-color); }
-        .footer .fab.fa-youtube { color: #ff0000; }
-        .footer a:hover .fab.fa-youtube { text-shadow: 0 0 8px #ff0000; }
-        .glow-text { text-shadow: 0 0 5px rgba(0, 122, 255, 0.6); }
-        .glow-youtube { text-shadow: 0 0 5px rgba(255, 0, 0, 0.6); }
+        
+        .footer { 
+            margin-top: 30px; 
+            text-align: center; 
+            font-size: 0.9em; 
+            color: var(--text-secondary);
+            padding-top: 20px; 
+            border-top: 1px solid var(--border-color);
+        }
+        .footer p { margin: 0; }
+        .glow-text { text-shadow: 0 0 5px var(--primary-color); }
+        .footer-buttons { display: flex; gap: 12px; margin-top: 15px; }
+        .footer-btn {
+            flex: 1; padding: 12px; border-radius: 12px; text-decoration: none;
+            font-weight: 600; display: flex; align-items: center; justify-content: center;
+            gap: 8px; transition: transform 0.2s ease, box-shadow 0.2s ease; font-size: 0.95em;
+        }
+        .btn-primary {
+            background-color: var(--primary-color); color: var(--bg-body);
+            box-shadow: 0 4px 12px rgba(37, 244, 238, 0.3);
+        }
+        body:not(.dark-mode) .btn-primary {
+            color: white; /* Jaga warna di light mode */
+            box-shadow: 0 4px 12px rgba(0, 122, 255, 0.3);
+            background-color: #007aff;
+        }
+        .btn-primary:hover { 
+            transform: translateY(-2px); 
+            filter: brightness(1.1);
+        }
+        .btn-secondary {
+            background-color: var(--bg-container); color: var(--text-primary); border: 1px solid var(--border-color);
+        }
+        .btn-secondary:hover { transform: translateY(-2px); border-color: var(--text-primary); }
+        .btn-secondary .fa-youtube { color: #FF0000; }
+        
         .click-animation { position: relative; display: inline-flex; }
         .click-hand {
             position: absolute; bottom: -25px; left: 50%; width: 25px; height: 25px;
@@ -146,30 +169,19 @@
         .popup-overlay.show { display: flex; opacity: 1; }
         .popup {
             background-color: var(--bg-container); color: var(--text-primary); 
-            border-radius: 16px; /* MODIFIKASI: Estetika */
-            padding: 25px; text-align: center; box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            border-radius: 16px; padding: 25px; text-align: center; box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
             width: 90%; max-width: 400px; animation: popIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
         @keyframes popIn { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
         .popup h3 { margin: 0 0 15px; font-size: 1.3em; line-height: 1.4; word-break: break-word; }
         .popup-content { margin-top: 20px; text-align: center; }
         
-        /* MODIFIKASI: Penyesuaian ukuran media */
         .popup-video { 
-            width: 100%; 
-            max-height: 60vh; /* Batasi tinggi berdasarkan viewport */
-            border-radius: 12px; 
-            background-color: #000;
+            width: 100%; max-height: 60vh; border-radius: 12px; background-color: #000;
         }
-        /* MODIFIKASI: CSS untuk foto tunggal */
         .popup-single-image {
-            display: block;
-            max-width: 100%;
-            max-height: 70vh; /* Foto tunggal boleh lebih tinggi */
-            width: auto;
-            height: auto;
-            margin: 0 auto;
-            border-radius: 12px;
+            display: block; max-width: 100%; max-height: 70vh;
+            width: auto; height: auto; margin: 0 auto; border-radius: 12px;
         }
         
         .popup-images {
@@ -182,39 +194,35 @@
             flex-direction: column; align-items: center; gap: 10px;
         }
         
-        /* MODIFIKASI: Penyesuaian ukuran gambar slide */
         .popup-images img {
-            display: block;
-            max-width: 100%;     /* Tidak akan lebih lebar dari container */
-            max-height: 50vh;    /* Batasi tinggi, misal 50% tinggi viewport */
-            width: auto;         /* Biarkan lebar menyesuaikan tinggi */
-            height: auto;        /* Biarkan tinggi menyesuaikan lebar */
-            margin: 0 auto;      /* Pusatkan gambar jika lebih kecil */
-            border-radius: 12px;
-            object-fit: contain; /* Pastikan gambar utuh */
+            display: block; max-width: 100%; max-height: 50vh;
+            width: auto; height: auto; margin: 0 auto; border-radius: 12px;
+            object-fit: contain;
         }
         
         .popup-buttons { display: flex; flex-direction: column; gap: 10px; margin-top: 20px; }
         
-        /* MODIFIKASI: Estetika tombol popup */
         .popup-button { 
             display: block; padding: 12px; border: none; 
-            border-radius: 12px; /* Konsisten */
-            color: white; font-weight: 600; text-decoration: none; 
+            border-radius: 12px; color: white; font-weight: 600; text-decoration: none; 
             text-align: center; transition: all 0.2s ease; 
         }
-        .popup-button:hover {
-            opacity: 0.85;
-            transform: scale(1.02);
-        }
+        .popup-button:hover { opacity: 0.85; transform: scale(1.02); }
         .btn-download-popup-video { background-color: var(--success-color); }
         .btn-download-popup-audio { background-color: var(--warning-color); color: var(--text-color-light); }
-        .btn-download-all-images, .btn-download-single-image { background-color: var(--primary-color); }
+        .btn-download-all-images, .btn-download-single-image { 
+            background-color: var(--primary-color);
+            color: var(--bg-body); /* Warna teks untuk tombol TikTok */
+        }
+        body:not(.dark-mode) .btn-download-all-images,
+        body:not(.dark-mode) .btn-download-single-image {
+            color: white; /* Jaga warna di light mode */
+            background-color: #007aff;
+        }
         
         #close-popup-button {
             width: 100%; margin-top: 15px; padding: 12px; font-weight: 600; cursor: pointer; 
-            border-radius: 12px; /* Konsisten */
-            border: 1px solid var(--border-color); background-color: transparent; color: var(--text-secondary);
+            border-radius: 12px; border: 1px solid var(--border-color); background-color: transparent; color: var(--text-secondary);
         }
         #toast-container { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); z-index: 9999; }
         .toast-notification {
@@ -243,18 +251,20 @@
         
         <div class="input-group">
             <input type="text" id="tiktok-url" placeholder="https://vt.tiktok.com/xxxxxx/">
-            <button id="download-btn"><i class="fas fa-download"></i></button>
+            <button id="download-btn"><i class="fas fa-download"></i> <span>Download</span></button>
         </div>
         
-        <a href="https://toko.rikishop.my.id" target="_blank" class="store-button">
-            <i class="fas fa-store"></i> Kunjungi Toko Kami
-        </a>
         <div class="footer">
-            Powered by <a href="https://toko.rikishop.my.id" target="_blank" style="margin-left: 5px;"><span class="glow-text">Riki Shop</span></a>
-            <span style="margin: 0 10px;">|</span>
-            <a href="https://www.youtube.com/@rikishopreal" target="_blank">
-                <i class="fab fa-youtube glow-youtube"></i> Subscribe
-            </a>
+            <p>Powered by <span class="glow-text">Riki Shop</span></p>
+            <div class="footer-buttons">
+                <a href="https://toko.rikishop.my.id" target="_blank" class="footer-btn btn-primary">
+                    <i class="fas fa-store"></i> Kunjungi Toko
+                </a>
+                <a href="https://www.youtube.com/@rikishopreal" target="_blank" class="footer-btn btn-secondary click-animation">
+                    <i class="fab fa-youtube"></i> Subscribe
+                    <div class="click-hand"></div>
+                </a>
+            </div>
         </div>
     </div>
 
@@ -336,18 +346,20 @@
                         contentHTML += `
                             <div class="image-slide">
                                 <img src="${displayUrl}" alt="TikTok Slide ${index + 1}">
-                                <a href="${generateProxyUrl(imgUrl, 'jpg')}" class="popup-button btn-download-single-image" style="width:100%"><i class="fas fa-download"></i> Foto ${index + 1}</a>
                             </div>
                         `;
                     });
                     contentHTML += '</div>';
+                    // Tombol download di luar slider
+                    result.slides.forEach((slide, index) => {
+                         buttonsHTML += `<a href="${generateProxyUrl(slide.url, 'jpg')}" class="popup-button btn-download-single-image"><i class="fas fa-download"></i> Foto ${index + 1}</a>`;
+                    });
+                    // Tombol download all
                     buttonsHTML += `<button id="downloadAllImagesBtn" class="popup-button btn-download-all-images"><i class="fas fa-images"></i> Semua Foto (${result.slides.length})</button>`;
                 
                 } else if (result.photo) {
                     const displayUrl = `/api/imageProxy?url=${encodeURIComponent(result.photo)}`;
-                    // ▼▼▼ MODIFIKASI: Menggunakan class CSS baru untuk foto tunggal ▼▼▼
                     contentHTML = `<div style="text-align:center;"><img src="${displayUrl}" alt="TikTok Photo" class="popup-single-image"></div>`;
-                    // ▲▲▲ AKHIR MODIFIKASI ▲▲▲
                     buttonsHTML += `<a href="${generateProxyUrl(result.photo, 'jpg')}" class="popup-button btn-download-all-images"><i class="fas fa-image"></i> Download Foto</a>`;
                 
                 } else if (result.video_nowm) {
@@ -400,18 +412,8 @@
                     };
                 }
             }
-            
-            const footer = document.querySelector('.footer');
-            if(footer) {
-                const youtubeLink = footer.querySelector('a[href*="youtube.com"]');
-                if (youtubeLink) {
-                    const hand = document.createElement('div');
-                    hand.className = 'click-hand';
-                    youtubeLink.classList.add('click-animation');
-                    youtubeLink.appendChild(hand);
-                }
-            }
         });
     </script>
 </body>
 </html>
+

@@ -21,7 +21,6 @@
             --text-secondary: #8e8e93; --border-color: #3a3a3c; --shadow-color: rgba(0, 0, 0, 0.4);
         }
         
-        /* KODE INI MEMBUAT TAMPILAN SELALU DI TENGAH & RESPONSIVE */
         body {
             font-family: 'Poppins', -apple-system, BlinkMacSystemFont, sans-serif;
             background-color: var(--bg-body); color: var(--text-primary); margin: 0;
@@ -29,51 +28,61 @@
             min-height: 100vh; padding: 20px; box-sizing: border-box; transition: background-color 0.3s ease;
         }
         .container {
-            position: relative; /* Diperlukan untuk tombol kembali */
-            background-color: var(--bg-container); border-radius: 24px; box-shadow: 0 10px 40px var(--shadow-color);
+            position: relative; background-color: var(--bg-container); border-radius: 24px; box-shadow: 0 10px 40px var(--shadow-color);
             padding: 30px 25px; width: 100%; max-width: 500px; text-align: center;
             animation: fadeIn 0.5s cubic-bezier(0.4, 0, 0.2, 1); box-sizing: border-box;
         }
         .back-button {
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            background-color: var(--bg-body);
-            color: var(--text-secondary);
-            border: 1px solid var(--border-color);
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-decoration: none;
-            font-size: 1.2em;
-            transition: all 0.2s ease;
+            position: absolute; top: 20px; left: 20px; background-color: var(--bg-body);
+            color: var(--text-secondary); border: 1px solid var(--border-color); width: 40px;
+            height: 40px; border-radius: 50%; display: flex; align-items: center;
+            justify-content: center; text-decoration: none; font-size: 1.2em; transition: all 0.2s ease;
         }
         .back-button:hover {
             background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
-            color: white;
-            border-color: transparent;
+            color: white; border-color: transparent;
         }
-        /* AKHIR DARI KODE RESPONSIVE */
         
         @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
         h1 { margin-top: 30px; color: var(--text-primary); margin: 0 0 10px; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 12px; }
         p.subtitle { color: var(--text-secondary); margin-bottom: 30px; }
-        .input-group { display: flex; margin-bottom: 20px; }
+        
+        /* --- PERUBAHAN LAYOUT: Tombol di Bawah --- */
+        .input-group {
+            display: flex;
+            flex-direction: column; /* Ubah ke kolom */
+            gap: 12px; /* Jarak antara input dan tombol */
+            margin-bottom: 20px;
+        }
         #insta-url {
-            flex-grow: 1; padding: 14px; border: 1px solid var(--border-color);
-            border-radius: 12px 0 0 12px; background-color: var(--bg-body);
-            color: var(--text-primary); font-size: 1em; border-right: none;
+            width: 100%;
+            padding: 14px; 
+            border: 1px solid var(--border-color);
+            border-radius: 12px; /* Semua sudut rounded */
+            background-color: var(--bg-body);
+            color: var(--text-primary); 
+            font-size: 1em;
+            box-sizing: border-box; /* Penting untuk padding */
         }
         #download-btn {
-            padding: 14px 20px; border: none; background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%); color: white;
-            border-radius: 0 12px 12px 0; cursor: pointer; font-weight: 600; font-size: 1em;
-            display: flex; align-items: center; justify-content: center; transition: filter 0.2s ease;
+            width: 100%; /* Lebar penuh */
+            padding: 14px 20px; 
+            border: none; 
+            background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%); 
+            color: white;
+            border-radius: 12px; /* Semua sudut rounded */
+            cursor: pointer; 
+            font-weight: 600; 
+            font-size: 1em;
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            transition: filter 0.2s ease, transform 0.2s ease;
         }
-        #download-btn:hover { filter: brightness(1.1); }
-        #download-btn:disabled { background: var(--light-text-color); cursor: not-allowed; filter: none; }
+        /* --- AKHIR PERUBAHAN LAYOUT --- */
+        
+        #download-btn:hover { filter: brightness(1.1); transform: translateY(-2px); }
+        #download-btn:disabled { background: var(--light-text-color); cursor: not-allowed; filter: none; transform: none; }
         .spinner {
             width: 20px; height: 20px; border: 3px solid rgba(255, 255, 255, 0.3);
             border-top-color: #fff; border-radius: 50%; display: block;
@@ -87,63 +96,29 @@
             box-shadow: 0 4px 10px var(--shadow-color); z-index: 1001;
         }
         
-        /* --- FOOTER BARU YANG ESTETIK --- */
         .footer { 
-            margin-top: 30px; 
-            text-align: center; 
-            font-size: 0.9em; 
-            color: var(--text-secondary); 
-            width: 100%; 
-            max-width: 500px;
-            padding-top: 20px; 
-            border-top: 1px solid var(--border-color);
+            margin-top: 30px; text-align: center; font-size: 0.9em; 
+            color: var(--text-secondary); width: 100%; max-width: 500px;
+            padding-top: 20px; border-top: 1px solid var(--border-color);
         }
         .footer p { margin: 0; }
         .glow-text { text-shadow: 0 0 5px var(--primary-color); }
-
-        .footer-buttons {
-            display: flex;
-            gap: 12px;
-            margin-top: 15px; /* Jarak dari teks "Powered by" */
-        }
+        .footer-buttons { display: flex; gap: 12px; margin-top: 15px; }
         .footer-btn {
-            flex: 1;
-            padding: 12px;
-            border-radius: 12px;
-            text-decoration: none;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-            font-size: 0.95em;
+            flex: 1; padding: 12px; border-radius: 12px; text-decoration: none;
+            font-weight: 600; display: flex; align-items: center; justify-content: center;
+            gap: 8px; transition: transform 0.2s ease, box-shadow 0.2s ease; font-size: 0.95em;
         }
         .btn-primary {
-            /* Warna gradien Instagram */
             background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
-            color: white;
-            box-shadow: 0 4px 12px rgba(225, 48, 108, 0.3); /* Sesuai --primary-color */
+            color: white; box-shadow: 0 4px 12px rgba(225, 48, 108, 0.3);
         }
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 16px rgba(225, 48, 108, 0.4);
-            filter: brightness(1.1);
-        }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 16px rgba(225, 48, 108, 0.4); filter: brightness(1.1); }
         .btn-secondary {
-            background-color: var(--bg-container);
-            color: var(--text-primary);
-            border: 1px solid var(--border-color);
+            background-color: var(--bg-container); color: var(--text-primary); border: 1px solid var(--border-color);
         }
-        .btn-secondary:hover {
-            transform: translateY(-2px);
-            border-color: var(--text-primary);
-        }
-        .btn-secondary .fa-youtube {
-            color: #FF0000;
-        }
-        /* --- AKHIR FOOTER BARU --- */
-
+        .btn-secondary:hover { transform: translateY(-2px); border-color: var(--text-primary); }
+        .btn-secondary .fa-youtube { color: #FF0000; }
         .click-animation { position: relative; display: inline-flex; }
         .click-hand {
             position: absolute; bottom: -25px; left: 50%; width: 25px; height: 25px;
@@ -173,26 +148,30 @@
         .media-container {
             display: flex; overflow-x: auto; scroll-snap-type: x mandatory;
             -webkit-overflow-scrolling: touch; gap: 15px; padding: 10px 0; scrollbar-width: none;
+            border-radius: 12px;
         }
         .media-container::-webkit-scrollbar { display: none; }
         .media-slide {
             flex: 0 0 100%; scroll-snap-align: center; display: flex;
             flex-direction: column; align-items: center; gap: 10px;
         }
-        
-        /* --- PERBAIKAN UKURAN GAMBAR --- */
         .media-slide img, .media-slide video {
-            width: 100%;
-            object-fit: contain;
-            border-radius: 12px;
-            aspect-ratio: 4 / 5; /* Rasio potret standar Instagram */
-            background-color: var(--bg-body); /* Latar belakang jika gambar tidak pas */
-            /* height: auto; Dihapus */
-            /* max-height: 450px; Dihapus */
+            width: 100%; object-fit: contain; border-radius: 12px;
+            aspect-ratio: 4 / 5; background-color: var(--bg-body);
         }
-        /* --- AKHIR PERBAIKAN --- */
-
-        .popup-button { display: block; padding: 12px; border: none; border-radius: 10px; color: white; font-weight: 600; text-decoration: none; text-align: center; background-color: var(--primary-color); }
+        
+        .slide-indicator {
+            font-size: 0.9em; color: var(--text-secondary);
+            margin-top: 15px; height: 1.2em;
+        }
+        .popup-button { 
+            display: block; padding: 12px; border: none; border-radius: 10px; color: white; 
+            font-weight: 600; text-decoration: none; text-align: center; 
+            background-color: var(--primary-color);
+            margin-top: 10px;
+        }
+        .popup-button:empty { display: none; }
+        
         #close-popup-button {
             width: 100%; margin-top: 15px; padding: 12px; font-weight: 600; cursor: pointer; border-radius: 10px;
             border: 1px solid var(--border-color); background-color: transparent; color: var(--text-secondary);
@@ -220,12 +199,12 @@
     </a>
         <h1><i class="fab fa-instagram"></i> Instagram Downloader</h1>
         <p class="subtitle">Tempelkan link foto, video, atau reels Instagram untuk mengunduh.</p>
+        
         <div class="input-group">
             <input type="text" id="insta-url" placeholder="https://www.instagram.com/reel/...">
-            <button id="download-btn"><i class="fas fa-download"></i></button>
+            <button id="download-btn"><i class="fas fa-download"></i> <span>Download</span></button>
         </div>
         
-        <!-- FOOTER BARU DITERAPKAN DI SINI -->
         <div class="footer">
             <p>Powered by <span class="glow-text">Riki Shop</span></p>
             <div class="footer-buttons">
@@ -287,7 +266,7 @@
                     const result = await response.json();
                     if (!response.ok) throw new Error(result.message || 'Gagal memproses link.');
                     showToast('Berhasil mendapatkan data!', 'success');
-                    showResultPopup(result);
+                    showResultPopup(result); // result adalah array media
                 } catch (error) {
                     showToast(error.message, 'error');
                 } finally {
@@ -296,7 +275,7 @@
                 }
             });
 
-            function showResultPopup(result) {
+            function showResultPopup(mediaArray) {
                 const existingPopup = document.getElementById('download-popup');
                 if (existingPopup) existingPopup.remove();
 
@@ -304,40 +283,78 @@
                 popupOverlay.id = 'download-popup';
                 popupOverlay.className = 'popup-overlay';
 
-                let contentHTML = '<div class="media-container">';
-                
-                result.forEach((item, index) => {
+                let slidesHTML = '';
+                mediaArray.forEach((item, index) => {
                     const isVideo = item.kualitas.toLowerCase().includes('video');
                     const thumbnailUrl = `/api/imageProxy?url=${encodeURIComponent(item.thumbnail)}`;
-                    const downloadUrl = `/api/downloadProxy?url=${encodeURIComponent(item.url_download)}&filename=instagram_${Date.now()}.${isVideo ? 'mp4' : 'jpg'}`;
                     
                     let mediaElement = isVideo 
                         ? `<video src="${item.url_download}" controls poster="${thumbnailUrl}"></video>`
                         : `<img src="${thumbnailUrl}" alt="Instagram Media ${index + 1}">`;
-                    
-                    let buttonText = isVideo ? `Download Video` : `Download Foto`;
-                    if (result.length > 1) {
-                        buttonText += ` ${index + 1}`;
-                    }
 
-                    contentHTML += `
-                        <div class="media-slide">
+                    slidesHTML += `
+                        <div class="media-slide" 
+                             data-is-video="${isVideo}" 
+                             data-download-url="${item.url_download}">
                             ${mediaElement}
-                            <a href="${downloadUrl}" class="popup-button" style="width:100%"><i class="fas fa-download"></i> ${buttonText}</a>
                         </div>
                     `;
                 });
-                contentHTML += '</div>';
 
                 popupOverlay.innerHTML = `
                     <div class="popup">
-                        <h3>Konten Ditemukan (${result.length})</h3>
-                        <div class="popup-content">${contentHTML}</div>
+                        <h3>Konten Ditemukan</h3>
+                        <div class="popup-content">
+                            <div class="media-container">${slidesHTML}</div>
+                            <div class="slide-indicator"></div>
+                            <a id="insta-dynamic-download-btn" class="popup-button"></a>
+                        </div>
                         <button id="close-popup-button">Tutup</button>
                     </div>
                 `;
+                
                 document.body.appendChild(popupOverlay);
                 setTimeout(() => popupOverlay.classList.add('show'), 10);
+
+                const mediaContainer = popupOverlay.querySelector('.media-container');
+                const indicator = popupOverlay.querySelector('.slide-indicator');
+                const dynamicDownloadBtn = popupOverlay.querySelector('#insta-dynamic-download-btn');
+                const slides = popupOverlay.querySelectorAll('.media-slide');
+                const totalSlides = slides.length;
+
+                function updateDownloadButton(index) {
+                    const currentSlide = slides[index];
+                    const isVideo = currentSlide.dataset.isVideo === 'true';
+                    const downloadUrl = currentSlide.dataset.downloadUrl;
+                    const filename = `instagram_${Date.now()}.${isVideo ? 'mp4' : 'jpg'}`;
+                    
+                    const proxyDownloadUrl = `/api/downloadProxy?url=${encodeURIComponent(downloadUrl)}&filename=${filename}`;
+                    
+                    let buttonText = isVideo ? `Download Video` : `Download Foto`;
+                    if (totalSlides > 1) {
+                        buttonText += ` (${index + 1} / ${totalSlides})`;
+                    }
+                    
+                    dynamicDownloadBtn.href = proxyDownloadUrl;
+                    dynamicDownloadBtn.innerHTML = `<i class="fas fa-download"></i> ${buttonText}`;
+                    
+                    if (totalSlides > 1) {
+                        indicator.textContent = `Geser untuk media lain (${index + 1} / ${totalSlides})`;
+                    }
+                }
+
+                let scrollTimeout;
+                mediaContainer.addEventListener('scroll', () => {
+                    clearTimeout(scrollTimeout);
+                    scrollTimeout = setTimeout(() => {
+                        const scrollLeft = mediaContainer.scrollLeft;
+                        const slideWidth = mediaContainer.clientWidth;
+                        const currentIndex = Math.round(scrollLeft / slideWidth);
+                        updateDownloadButton(currentIndex);
+                    }, 100);
+                });
+
+                updateDownloadButton(0);
 
                 const close = () => {
                     popupOverlay.classList.remove('show');
@@ -345,10 +362,7 @@
                 };
                 popupOverlay.querySelector('#close-popup-button').onclick = close;
             }
-            
-            // Logika click-hand sudah di-handle di dalam HTML dan CSS baru
         });
     </script>
 </body>
 </html>
-

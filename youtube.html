@@ -21,7 +21,6 @@
             --text-secondary: #8e8e93; --border-color: #3a3a3c; --shadow-color: rgba(0, 0, 0, 0.4);
         }
         
-        /* CSS UNTUK TAMPILAN RESPONSIVE & SELALU DI TENGAH */
         body {
             font-family: 'Poppins', -apple-system, BlinkMacSystemFont, sans-serif;
             background-color: var(--bg-body); color: var(--text-primary); margin: 0;
@@ -29,50 +28,59 @@
             min-height: 100vh; padding: 20px; box-sizing: border-box; transition: background-color 0.3s ease;
         }
        .container {
-            position: relative; /* Diperlukan untuk tombol kembali */
+            position: relative;
             background-color: var(--bg-container); border-radius: 24px; box-shadow: 0 10px 40px var(--shadow-color);
             padding: 30px 25px; width: 100%; max-width: 500px; text-align: center;
             animation: fadeIn 0.5s cubic-bezier(0.4, 0, 0.2, 1); box-sizing: border-box;
         }
         .back-button {
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            background-color: var(--bg-body);
-            color: var(--text-secondary);
-            border: 1px solid var(--border-color);
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-decoration: none;
-            font-size: 1.2em;
-            transition: all 0.2s ease;
+            position: absolute; top: 20px; left: 20px; background-color: var(--bg-body);
+            color: var(--text-secondary); border: 1px solid var(--border-color); width: 40px;
+            height: 40px; border-radius: 50%; display: flex; align-items: center;
+            justify-content: center; text-decoration: none; font-size: 1.2em; transition: all 0.2s ease;
         }
-        .back-button:hover {
-            background-color: var(--primary-color);
-            color: white;
-            border-color: var(--primary-color);
-        }
+        .back-button:hover { background-color: var(--primary-color); color: white; border-color: var(--primary-color); }
         
         @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
         h1 { margin-top: 30px; color: var(--text-primary); margin: 0 0 10px; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 12px; }
         p.subtitle { color: var(--text-secondary); margin-bottom: 30px; }
-        .input-group { display: flex; margin-bottom: 20px; }
+
+        /* --- PERUBAHAN LAYOUT: Tombol di Bawah --- */
+        .input-group {
+            display: flex;
+            flex-direction: column; /* Ubah ke kolom */
+            gap: 12px; /* Jarak antara input dan tombol */
+            margin-bottom: 20px;
+        }
         #yt-url {
-            flex-grow: 1; padding: 14px; border: 1px solid var(--border-color);
-            border-radius: 12px 0 0 12px; background-color: var(--bg-body);
-            color: var(--text-primary); font-size: 1em; border-right: none;
+            width: 100%;
+            padding: 14px; 
+            border: 1px solid var(--border-color);
+            border-radius: 12px; /* Semua sudut rounded */
+            background-color: var(--bg-body);
+            color: var(--text-primary); 
+            font-size: 1em;
+            box-sizing: border-box; /* Penting untuk padding */
         }
         #download-btn {
-            padding: 14px 20px; border: none; background-color: var(--primary-color); color: white;
-            border-radius: 0 12px 12px 0; cursor: pointer; font-weight: 600; font-size: 1em;
-            display: flex; align-items: center; justify-content: center; transition: filter 0.2s ease;
+            width: 100%; /* Lebar penuh */
+            padding: 14px 20px; 
+            border: none; 
+            background-color: var(--primary-color); 
+            color: white;
+            border-radius: 12px; /* Semua sudut rounded */
+            cursor: pointer; 
+            font-weight: 600; 
+            font-size: 1em;
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            transition: filter 0.2s ease, transform 0.2s ease;
         }
-        #download-btn:hover { filter: brightness(1.1); }
-        #download-btn:disabled { background: var(--light-text-color); cursor: not-allowed; filter: none; }
+        /* --- AKHIR PERUBAHAN LAYOUT --- */
+
+        #download-btn:hover { filter: brightness(1.1); transform: translateY(-2px); }
+        #download-btn:disabled { background: var(--light-text-color); cursor: not-allowed; filter: none; transform: none; }
         .spinner {
             width: 20px; height: 20px; border: 3px solid rgba(255, 255, 255, 0.3);
             border-top-color: #fff; border-radius: 50%; display: block;
@@ -86,61 +94,30 @@
             box-shadow: 0 4px 10px var(--shadow-color); z-index: 1001;
         }
 
-        /* --- FOOTER BARU YANG ESTETIK --- */
         .footer { 
-            margin-top: 30px; 
-            text-align: center; 
-            font-size: 0.9em; 
-            color: var(--text-secondary); 
-            width: 100%; 
-            max-width: 500px; 
-            padding-top: 20px; 
-            border-top: 1px solid var(--border-color);
+            margin-top: 30px; text-align: center; font-size: 0.9em; 
+            color: var(--text-secondary); width: 100%; max-width: 500px; 
+            padding-top: 20px; border-top: 1px solid var(--border-color);
         }
         .footer p { margin: 0; }
         .glow-text { text-shadow: 0 0 5px var(--primary-color); }
-
-        .footer-buttons {
-            display: flex;
-            gap: 12px;
-            margin-top: 15px; /* Jarak dari teks "Powered by" */
-        }
+        .footer-buttons { display: flex; gap: 12px; margin-top: 15px; }
         .footer-btn {
-            flex: 1;
-            padding: 12px;
-            border-radius: 12px;
-            text-decoration: none;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-            font-size: 0.95em;
+            flex: 1; padding: 12px; border-radius: 12px; text-decoration: none;
+            font-weight: 600; display: flex; align-items: center; justify-content: center;
+            gap: 8px; transition: transform 0.2s ease, box-shadow 0.2s ease; font-size: 0.95em;
         }
         .btn-primary {
-            background-color: var(--primary-color);
-            color: white;
-            box-shadow: 0 4px 12px rgba(255, 0, 0, 0.3); /* Sesuai --primary-color */
+            background-color: var(--primary-color); color: white;
+            box-shadow: 0 4px 12px rgba(255, 0, 0, 0.3);
         }
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 16px rgba(255, 0, 0, 0.4);
-        }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 16px rgba(255, 0, 0, 0.4); }
         .btn-secondary {
-            background-color: var(--bg-container);
-            color: var(--text-primary);
+            background-color: var(--bg-container); color: var(--text-primary);
             border: 1px solid var(--border-color);
         }
-        .btn-secondary:hover {
-            transform: translateY(-2px);
-            border-color: var(--text-primary);
-        }
-        .btn-secondary .fa-youtube {
-            color: #FF0000;
-        }
-        /* --- AKHIR FOOTER BARU --- */
-        
+        .btn-secondary:hover { transform: translateY(-2px); border-color: var(--text-primary); }
+        .btn-secondary .fa-youtube { color: #FF0000; }
         .click-animation { position: relative; display: inline-flex; }
         .click-hand {
             position: absolute; bottom: -25px; left: 50%; width: 25px; height: 25px;
@@ -154,7 +131,6 @@
             80% { transform: translateX(-50%) translateY(10px); opacity: 0; }
         }
         
-        /* GAYA POPUP */
         .popup-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.6);
             display: none; justify-content: center; align-items: center; z-index: 1000; opacity: 0;
@@ -202,12 +178,12 @@
     </a>
         <h1><i class="fab fa-youtube"></i> YouTube to MP3</h1>
         <p class="subtitle">Tempelkan link video YouTube untuk mengunduh format MP3.</p>
+        
         <div class="input-group">
             <input type="text" id="yt-url" placeholder="https://youtu.be/xxxxxx">
-            <button id="download-btn"><i class="fas fa-download"></i></button>
+            <button id="download-btn"><i class="fas fa-download"></i> <span>Download</span></button>
         </div>
         
-        <!-- FOOTER BARU DITERAPKAN DI SINI -->
         <div class="footer">
             <p>Powered by <span class="glow-text">Riki Shop</span></p>
             <div class="footer-buttons">
@@ -307,10 +283,7 @@
                 };
                 popupOverlay.querySelector('#close-popup-button').onclick = close;
             }
-            
-            // Logika click-hand sudah di-handle di dalam HTML dan CSS baru
         });
     </script>
 </body>
 </html>
-

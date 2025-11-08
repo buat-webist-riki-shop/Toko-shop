@@ -26,86 +26,46 @@
             min-height: 100vh; padding: 20px; box-sizing: border-box; transition: background-color 0.3s ease;
         }
         .container {
-            position: relative; /* Diperlukan untuk tombol kembali */
+            position: relative;
             background-color: var(--bg-container); border-radius: 24px; box-shadow: 0 10px 40px var(--shadow-color);
             padding: 30px 40px; width: 100%; max-width: 500px; text-align: center;
             animation: fadeIn 0.5s cubic-bezier(0.4, 0, 0.2, 1);
         }
         .back-button {
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            background-color: var(--bg-body);
-            color: var(--text-secondary);
-            border: 1px solid var(--border-color);
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-decoration: none;
-            font-size: 1.2em;
-            transition: all 0.2s ease;
+            position: absolute; top: 20px; left: 20px; background-color: var(--bg-body);
+            color: var(--text-secondary); border: 1px solid var(--border-color); width: 40px;
+            height: 40px; border-radius: 50%; display: flex; align-items: center;
+            justify-content: center; text-decoration: none; font-size: 1.2em; transition: all 0.2s ease;
         }
         .back-button:hover {
-            background-color: var(--primary-color);
-            color: white;
-            border-color: var(--primary-color);
+            background-color: var(--primary-color); color: white; border-color: var(--primary-color);
         }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
         h1 {
-            margin-top: 30px; /* Beri sedikit ruang dari tombol kembali */
-            color: var(--text-primary); margin: 0 0 10px; font-weight: 700; display: flex;
+            margin-top: 30px; color: var(--text-primary); margin: 0 0 10px; font-weight: 700; display: flex;
             align-items: center; justify-content: center; gap: 12px;
         }
         p.subtitle { color: var(--text-secondary); margin-bottom: 30px; }
         .upload-area {
-            border: 2px dashed var(--border-color); /* Kembali ke dashed untuk gaya iOS */
-            border-radius: 16px;
-            padding: 40px 20px;
-            cursor: pointer;
-            text-align: center;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            transition: all 0.3s ease;
-            background-color: transparent;
-            position: relative; /* Tambahkan ini */
+            border: 2px dashed var(--border-color); border-radius: 16px; padding: 40px 20px;
+            cursor: pointer; text-align: center; display: flex; flex-direction: column;
+            justify-content: center; align-items: center; transition: all 0.3s ease;
+            background-color: transparent; position: relative;
         }
-        /* Ganti ikon i dengan pseudo-element agar lebih konsisten */
         .upload-area::before {
-            content: '\f0c2'; /* Kode ikon awan dari Font Awesome */
-            font-family: 'Font Awesome 6 Free';
-            font-weight: 900;
-            font-size: 3em;
-            color: var(--primary-color);
-            margin-bottom: 15px;
+            content: '\f0c2'; font-family: 'Font Awesome 6 Free'; font-weight: 900;
+            font-size: 3em; color: var(--primary-color); margin-bottom: 15px;
         }
-        .upload-area:hover {
-            border-color: var(--primary-color);
-            background-color: var(--bg-body);
-        }
+        .upload-area:hover { border-color: var(--primary-color); background-color: var(--bg-body); }
         .upload-area span { display: block; font-weight: 500; }
         #file-input { display: none; }
-        
-        /* --- PERBAIKAN UKURAN GAMBAR PREVIEW --- */
         #preview-container { 
-            margin-top: 20px; 
-            display: grid; 
-            grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); 
-            gap: 12px; 
+            margin-top: 20px; display: grid; 
+            grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); gap: 12px; 
         }
         .preview-image { 
-            width: 100%; 
-            /* height: 80px; Dihapus */
-            aspect-ratio: 1 / 1; /* Ditambahkan: Membuat preview kotak */
-            object-fit: cover; 
-            border-radius: 12px; 
+            width: 100%; aspect-ratio: 1 / 1; object-fit: cover; border-radius: 12px; 
         }
-        /* --- AKHIR PERBAIKAN --- */
-
         #upload-button {
             width: 100%; padding: 15px; margin-top: 25px; background-color: var(--primary-color); color: white;
             border: none; border-radius: 12px; font-size: 1.1em; font-weight: 600; cursor: pointer; display: none;
@@ -126,82 +86,43 @@
             box-shadow: 0 4px 10px var(--shadow-color); z-index: 1001;
         }
         
-        /* --- FOOTER BARU YANG ESTETIK --- */
         .footer {
-            margin-top: 30px;
-            padding-top: 20px;
-            border-top: 1px solid var(--border-color); /* Garis pemisah estetik */
-            text-align: center;
-            font-size: 0.9em;
-            color: var(--text-secondary);
+            margin-top: 30px; padding-top: 20px; border-top: 1px solid var(--border-color);
+            text-align: center; font-size: 0.9em; color: var(--text-secondary);
         }
         .footer p { margin: 0; }
         .glow-text { text-shadow: 0 0 5px var(--primary-color); }
-
-        .footer-buttons {
-            display: flex;
-            gap: 12px;
-            margin-top: 15px; /* Jarak dari teks "Powered by" */
-        }
+        .footer-buttons { display: flex; gap: 12px; margin-top: 15px; }
         .footer-btn {
-            flex: 1;
-            padding: 12px;
-            border-radius: 12px;
-            text-decoration: none;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-            font-size: 0.95em;
+            flex: 1; padding: 12px; border-radius: 12px; text-decoration: none;
+            font-weight: 600; display: flex; align-items: center; justify-content: center;
+            gap: 8px; transition: transform 0.2s ease, box-shadow 0.2s ease; font-size: 0.95em;
         }
         .btn-primary {
-            background-color: var(--primary-color);
-            color: white;
-            box-shadow: 0 4px 12px rgba(0, 122, 255, 0.3); /* Sesuai --primary-color */
+            background-color: var(--primary-color); color: white;
+            box-shadow: 0 4px 12px rgba(0, 122, 255, 0.3);
         }
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 16px rgba(0, 122, 255, 0.4);
-        }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 16px rgba(0, 122, 255, 0.4); }
         .btn-secondary {
-            background-color: var(--bg-container);
-            color: var(--text-primary);
-            border: 1px solid var(--border-color);
+            background-color: var(--bg-container); color: var(--text-primary); border: 1px solid var(--border-color);
         }
-        .btn-secondary:hover {
-            transform: translateY(-2px);
-            border-color: var(--text-primary);
-        }
-        .btn-secondary .fa-youtube {
-            color: #FF0000;
-        }
-        /* --- AKHIR FOOTER BARU --- */
-
+        .btn-secondary:hover { transform: translateY(-2px); border-color: var(--text-primary); }
+        .btn-secondary .fa-youtube { color: #FF0000; }
         .click-animation { position: relative; }
         .click-hand {
-            position: absolute;
-            bottom: -30px; /* Pindahkan ke bawah */
-            left: 50%; /* Tengah horizontal */
-            transform: translateX(-50%) rotate(-90deg); /* Geser ke tengah dan putar ke atas */
-            width: 25px;
-            height: 25px;
+            position: absolute; bottom: -30px; left: 50%;
+            transform: translateX(-50%) rotate(-90deg); width: 25px; height: 25px;
             background-image: url('https://em-content.zobj.net/source/twitter/376/backhand-index-pointing-right_1f449.png');
-            background-size: contain; background-repeat: no-repeat;
-            opacity: 0;
-            transform-origin: top center; /* Ubah origin rotasi */
-            animation: clicking-up 2s infinite ease-in-out 1s; /* Ganti nama animasi */
-            pointer-events: none;
+            background-size: contain; background-repeat: no-repeat; opacity: 0;
+            transform-origin: top center; animation: clicking-up 2s infinite ease-in-out 1s; pointer-events: none;
         }
-        @keyframes clicking-up { /* Animasi menunjuk ke atas */
+        @keyframes clicking-up {
             0%, 80%, 100% { opacity: 0; transform: translateX(-50%) rotate(-90deg) scale(0.9); }
             10%, 50% { opacity: 1; transform: translateX(-50%) rotate(-90deg) scale(1); }
             30% { transform: translateX(-50%) rotate(-90deg) scale(0.85); }
             60% { opacity: 0; transform: translateX(-50%) rotate(-90deg) scale(0.9); }
         }
 
-        /* GAYA POPUP */
         .popup-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.6);
             display: none; justify-content: center; align-items: center; z-index: 1000; opacity: 0;
@@ -217,18 +138,22 @@
         .popup .icon { font-size: 3em; color: var(--success-color); margin-bottom: 15px; }
         .popup h3 { margin: 0 0 15px; font-size: 1.4em; }
         .popup-results-container { max-height: 250px; overflow-y: auto; margin-top: 20px; text-align: left; }
+        
         .popup-results-container .result-item {
-            display: flex; align-items: center; margin-bottom: 10px; background-color: var(--bg-body);
-            padding: 8px; border-radius: 12px;
+            margin-bottom: 15px; background-color: var(--bg-body);
+            padding: 12px; border-radius: 12px;
         }
         .popup-results-container .result-item input {
-            flex-grow: 1; padding: 10px; border: 1px solid var(--border-color); border-radius: 8px 0 0 8px;
-            background-color: var(--bg-container); color: var(--text-primary); font-family: monospace; border-right: none;
+            width: 100%; padding: 10px; border: 1px solid var(--border-color);
+            border-radius: 8px; background-color: var(--bg-container);
+            color: var(--text-primary); font-family: monospace; box-sizing: border-box;
         }
         .popup-results-container .result-item button {
-            padding: 10px 15px; border: none; background-color: var(--primary-color); color: white;
-            border-radius: 0 8px 8px 0; cursor: pointer; font-weight: 600;
+            width: 100%; margin-top: 8px; padding: 10px 15px;
+            border: none; background-color: var(--primary-color); color: white;
+            border-radius: 8px; cursor: pointer; font-weight: 600;
         }
+        
         .popup #close-popup-button {
             width: 100%; margin-top: 20px; padding: 12px; font-weight: 600; font-size: 1em;
             border-radius: 10px; cursor: pointer; border: none; background-color: var(--secondary-color);
@@ -252,13 +177,12 @@
         <label for="file-input" class="upload-area" id="upload-area">
             <span id="upload-text">Klik atau seret gambar ke sini</span>
         </label>
-        <input type="file" id="file-input" accept="image/jpeg, image/png, image/gif, image/webp" multiple>
+        <input type="file" id="file-input" accept="image/*" multiple>
         
         <div id="preview-container"></div>
         
         <button id="upload-button">Unggah Gambar</button>
 
-        <!-- FOOTER BARU DITERAPKAN DI SINI -->
         <div class="footer">
             <p>Powered by <span class="glow-text">Riki Shop</span></p>
             <div class="footer-buttons">
@@ -396,7 +320,6 @@
                     button.onclick = (e) => {
                         const input = e.target.previousElementSibling;
                         input.select();
-                        // Gunakan document.execCommand untuk kompatibilitas iframe
                         try {
                             document.execCommand('copy');
                             e.target.textContent = 'Tersalin!';
@@ -417,11 +340,8 @@
                 selectedFiles = [];
                 fileInput.value = '';
             }
-
-            // Logika click-hand sudah di-handle di dalam HTML dan CSS baru
         });
     </script>
 
 </body>
 </html>
-
