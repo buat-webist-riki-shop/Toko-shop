@@ -446,7 +446,7 @@
 
                 function dragStart(e) {
                     isDragging = true;
-                    startPosX = getPositionX(e);
+                    startPosX = getPositionX(e); // Catat posisi X saat mulai
                     animationID = requestAnimationFrame(animation);
                     sliderWrapper.style.transition = 'none';
                 }
@@ -464,10 +464,11 @@
                     isDragging = false;
                     cancelAnimationFrame(animationID);
                     
-                    const movedBy = getPositionX(e) - startPosX;
+                    // Gunakan getPositionX(e) untuk mendapatkan posisi akhir
+                    const finalPosX = getPositionX(e);
+                    const movedBy = finalPosX - startPosX;
                     const swipeThreshold = 50; // Jarak minimal untuk geser
 
-                    // Hanya pindah slide jika bukan cuma klik (movedBy kecil)
                     if (Math.abs(movedBy) > swipeThreshold) {
                         if (movedBy < -swipeThreshold && currentIndex < totalSlides - 1) currentIndex += 1;
                         if (movedBy > swipeThreshold && currentIndex > 0) currentIndex -= 1;
@@ -492,18 +493,31 @@
                 
                 goToSlide(0);
 
+                // --- BAGIAN YANG DIPERBAIKI ---
                 popupOverlay.querySelectorAll('.slide img').forEach(img => {
                     img.onclick = (e) => {
-                         // Cek apakah ini 'drag' atau 'click'
-                        const movedBy = getPositionX(e) - startPosX;
-                        if (isDragging && Math.abs(movedBy) > 10) {
-                            return; // Jangan zoom jika sedang drag
+                        // Cek apakah ini 'drag' atau 'click'
+                        
+                        // Ambil posisi X saat mouse/jari dilepas (event 'click' terjadi)
+                        const releasePosX = getPositionX(e);
+                        
+                        // Bandingkan dengan posisi X saat mouse/jari ditekan (variabel startPosX)
+                        // 'startPosX' sudah ada dari fungsi 'dragStart' di atasnya
+                        const movedBy = releasePosX - startPosX;
+
+                        // JIKA pergerakan mouse/jari lebih dari 10px,
+                        // kita anggap itu adalah 'drag' (geser), BUKAN 'click'.
+                        if (Math.abs(movedBy) > 10) {
+                            return; // Jangan lakukan apa-apa (jangan buka zoom)
                         }
                         
+                        // JIKA gerakannya kecil (di bawah 10px),
+                        // itu adalah 'click' murni.
                         const imageUrl = e.target.src;
-                        showLightbox(imageUrl);
+                        showLightbox(imageUrl); // Tampilkan gambar dalam mode zoom (lightbox)
                     };
                 });
+                // --- AKHIR BAGIAN YANG DIPERBAIKI ---
 
                 popupOverlay.querySelector('#close-popup-button').onclick = () => {
                     popupOverlay.classList.remove('show');
