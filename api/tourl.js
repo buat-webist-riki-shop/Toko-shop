@@ -2,7 +2,6 @@ import { promises as fs } from 'fs';
 import { IncomingForm } from 'formidable';
 import { ImageUploadService } from 'node-upload-images';
 import path from 'path';
-import sharp from 'sharp'; // Impor library Sharp
 
 export const config = {
     api: {
@@ -25,24 +24,13 @@ export default async function handler(request, response) {
         }
 
         const fileContent = await fs.readFile(imageFile.filepath);
-
-        // --- KONVERSI GAMBAR KE JPG ---
-        // Apapun format inputnya (PNG, WEBP, GIF, dll.),
-        // akan dikonversi ke JPG dengan kualitas 90%.
-        const outputBuffer = await sharp(fileContent)
-            .jpeg({ quality: 90 })
-            .toBuffer();
-        
-        const outputExtension = '.jpg'; // Nama file ekstensi baru
-        const newFilename = `by_rikishopreal${outputExtension}`;
-        // --- AKHIR KONVERSI ---
+        const fileExtension = path.extname(imageFile.originalFilename);
+        const newFilename = `by_rikishopreal${fileExtension}`;
         
         const service = new ImageUploadService('pixhost.to');
+        const { directLink } = await service.uploadFromBinary(fileContent, newFilename);
         
-        // Unggah buffer gambar yang sudah dikonversi
-        const { directLink } = await service.uploadFromBinary(outputBuffer, newFilename);
-        
-        await fs.unlink(imageFile.filepath); // Hapus file temp
+        await fs.unlink(imageFile.filepath);
 
         response.status(200).json({ link: directLink });
 
