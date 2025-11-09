@@ -11,14 +11,24 @@ export default async function handler(request, response) {
             'cdninstagram.com', 
             '123tokyo.xyz',
             'googlevideo.com',
-            'replicate.delivery' // <-- DOMAIN PENTING UNTUK HASIL HD
+            'replicate.delivery',
+            'cdn.instasave.website' // <-- DOMAIN BARU DITAMBAHKAN
         ];
+        
         const urlHost = new URL(url).hostname;
+        
         if (!allowedDomains.some(domain => urlHost.endsWith(domain))) {
+            console.warn(`Domain ditolak oleh Download Proxy: ${urlHost}`);
             return response.status(403).json({ message: 'Domain tidak diizinkan.' });
         }
 
-        const externalResponse = await fetch(url);
+        const externalResponse = await fetch(url, {
+            headers: {
+                // Tambahkan Referer untuk beberapa CDN yang membutuhkannya
+                'Referer': 'https://www.instagram.com/'
+            }
+        });
+
         if (!externalResponse.ok) throw new Error(`Gagal mengambil file: Status ${externalResponse.status}`);
         
         response.setHeader('Content-Disposition', `attachment; filename="${filename || 'download'}"`);

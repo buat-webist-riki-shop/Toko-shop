@@ -9,15 +9,26 @@ export default async function handler(request, response) {
             'tiktokcdn.com', 
             'rapidcdn.app', 
             'cdninstagram.com',
-            'pixhost.to',           // Jika Anda menggunakan Pixhost untuk upload gambar
-            'replicate.delivery'    // <-- DOMAIN PENTING UNTUK HASIL HD
+            'pixhost.to',
+            'replicate.delivery',
+            'cdn.instasave.website' // <-- DOMAIN BARU DITAMBAHKAN
         ];
+        
         const urlHost = new URL(url).hostname;
+        
+        // Cek apakah host diizinkan
         if (!allowedDomains.some(domain => urlHost.endsWith(domain))) {
+             console.warn(`Domain ditolak oleh Image Proxy: ${urlHost}`);
              return response.status(403).send('Domain not allowed.');
         }
 
-        const externalResponse = await fetch(url);
+        const externalResponse = await fetch(url, {
+             headers: {
+                // Tambahkan Referer untuk beberapa CDN yang membutuhkannya
+                'Referer': 'https://www.instagram.com/'
+            }
+        });
+        
         if (!externalResponse.ok) return response.status(externalResponse.status).send('Failed to fetch image.');
         
         const contentType = externalResponse.headers.get('content-type');
