@@ -705,7 +705,38 @@
             "discountEndDate": null
         }
     ],
-    "Stock Akun": [],
+    "Stock Akun": [
+        {
+            "id": 62,
+            "nama": "NEW STOCK FF OLD SG TEROMPET",
+            "harga": 125000,
+            "hargaAsli": 125000,
+            "deskripsiPanjang": "VAULT 200+ || BAJU ITEM POLOS ON || TAS KELINCI PING ON || LOG GOOGLE || UDAH DI BIND TAPI EMAIL BIND NYA MATI || DATA ALL AMAN 100% || KELENGKAPAN CEK SS SAN GESER AJA",
+            "createdAt": "2025-11-14T03:50:42.396Z",
+            "nomorWA": "",
+            "images": [
+                "https://img1.pixhost.to/images/10149/660695563_by_rikishopreal.jpg",
+                "https://img1.pixhost.to/images/10149/660695564_by_rikishopreal.jpg",
+                "https://img1.pixhost.to/images/10149/660695566_by_rikishopreal.jpg",
+                "https://img1.pixhost.to/images/10149/660695568_by_rikishopreal.jpg",
+                "https://img1.pixhost.to/images/10149/660695574_by_rikishopreal.jpg",
+                "https://img1.pixhost.to/images/10149/660695571_by_rikishopreal.jpg",
+                "https://img1.pixhost.to/images/10149/660695576_by_rikishopreal.jpg",
+                "https://img1.pixhost.to/images/10149/660695586_by_rikishopreal.jpg",
+                "https://img1.pixhost.to/images/10149/660695580_by_rikishopreal.jpg",
+                "https://img1.pixhost.to/images/10149/660695583_by_rikishopreal.jpg",
+                "https://img1.pixhost.to/images/10149/660695585_by_rikishopreal.jpg",
+                "https://img1.pixhost.to/images/10149/660695579_by_rikishopreal.jpg",
+                "https://img1.pixhost.to/images/10149/660695572_by_rikishopreal.jpg",
+                "https://img1.pixhost.to/images/10149/660695581_by_rikishopreal.jpg",
+                "https://img1.pixhost.to/images/10149/660695582_by_rikishopreal.jpg",
+                "https://img1.pixhost.to/images/10149/660695578_by_rikishopreal.jpg",
+                "https://img1.pixhost.to/images/10149/660695577_by_rikishopreal.jpg",
+                "https://img1.pixhost.to/images/10149/660695584_by_rikishopreal.jpg"
+            ],
+            "menuContent": ""
+        }
+    ],
     "Logo": [],
     "Suntik Sosmed": []
 }
