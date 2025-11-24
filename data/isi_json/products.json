@@ -709,8 +709,8 @@
         {
             "id": 63,
             "nama": "NEW STOCK FF SG METRO OREN",
-            "harga": 250000,
-            "hargaAsli": 250000,
+            "harga": 200000,
+            "hargaAsli": 200000,
             "deskripsiPanjang": "VAULT 300+ || BAJU ITEM ON || ANIMASI LOBY ON || EFEK MEDKIT ON || TINJU ON || BANDEL RAMPAGE ON || BUKU LEB 2 ON || BIND KOSONG || LOG GOOGLE || DATA ALL AMAN 100% || SPCEK LENGKAP GESER AJA FOTO NYA",
             "createdAt": "2025-11-14T04:02:41.418Z",
             "nomorWA": "",
@@ -739,7 +739,9 @@
                 "https://img1.pixhost.to/images/10150/660697219_by_rikishopreal.jpg",
                 "https://img1.pixhost.to/images/10150/660697221_by_rikishopreal.jpg"
             ],
-            "menuContent": ""
+            "menuContent": "",
+            "category": "Stock Akun",
+            "discountEndDate": null
         },
         {
             "id": 62,
