@@ -744,8 +744,8 @@
         {
             "id": 62,
             "nama": "NEW STOCK FF OLD SG TEROMPET",
-            "harga": 125000,
-            "hargaAsli": 125000,
+            "harga": 100000,
+            "hargaAsli": 100000,
             "deskripsiPanjang": "VAULT 200+ || BAJU ITEM POLOS ON || TAS KELINCI PING ON || LOG GOOGLE || UDAH DI BIND TAPI EMAIL BIND NYA MATI || DATA ALL AMAN 100% || KELENGKAPAN CEK SS SAN GESER AJA",
             "createdAt": "2025-11-14T03:50:42.396Z",
             "nomorWA": "",
@@ -769,7 +769,9 @@
                 "https://img1.pixhost.to/images/10149/660695577_by_rikishopreal.jpg",
                 "https://img1.pixhost.to/images/10149/660695584_by_rikishopreal.jpg"
             ],
-            "menuContent": ""
+            "menuContent": "",
+            "category": "Stock Akun",
+            "discountEndDate": null
         }
     ],
     "Logo": [],
